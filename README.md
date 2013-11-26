@@ -1,0 +1,4 @@
+kurea
+=====
+
+an irc bot
