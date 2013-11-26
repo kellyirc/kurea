@@ -14,6 +14,14 @@
     "readmeFilename": "README.md",
     "dependencies": {
         "nedb": "*",
-    "grunt-contrib-less": "~0.7.0"
+        "mocha": "*",
+        "chai": "*",
+        "grunt": "*",
+        "grunt-cli": "*",
+        "grunt-contrib-watch": "*",
+        "grunt-contrib-coffee": "*",
+        "grunt-contrib-jshint": "*",
+        "grunt-contrib-uglify": "*",
+        "grunt-mocha-test": "*"
     }
 }
