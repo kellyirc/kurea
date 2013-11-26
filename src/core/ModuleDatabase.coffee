@@ -13,19 +13,26 @@ class ModuleDatabase
 		@path = "#{dataStoreFolder}/#{@root}/#{@label}.kdb"
 		@db = new Database { autoload: true, filename: @path }
 
-	insert: (data, callback) => @db.insert data, callback
+	insert: (data, callback) =>
+		@db.insert data, callback
 
-	remove: (query, options, callback) => @db.remove query, options, callback
+	remove: (query, options, callback) =>
+		@db.remove query, options, callback
 
-	count: (data, callback) => @db.count data, callback
+	count: (data, callback) =>
+		@db.count data, callback
 
-	update: (query, update, options, callback) => @db.update query, update, options, callback
+	update: (query, update, options, callback) =>
+		@db.update query, update, options, callback
 
-	find: (terms, callback) => @db.find terms, callback
+	find: (terms, callback) =>
+		@db.find terms, callback
 
-	ensureIndex: (data, callback) => @db.ensureIndex data, callback
+	ensureIndex: (data, callback) =>
+		@db.ensureIndex data, callback
 
-	destroy: () => fs.unlink @path
+	destroy: () =>
+		fs.unlink @path
 
 	constructor: (@root, @label) ->
 		#gotta think of a way to include versioning and migrating
