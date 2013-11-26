@@ -1,0 +1,19 @@
+{
+    "name": "kurea",
+    "version": "0.0.0",
+    "description": "IRC Bot",
+    "scripts": {
+        "test": "grunt test"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/kellyirc/kurea.git"
+    },
+    "author": "",
+    "license": "MIT",
+    "readmeFilename": "README.md",
+    "dependencies": {
+        "nedb": "*",
+    "grunt-contrib-less": "~0.7.0"
+    }
+}
