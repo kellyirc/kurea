@@ -1,15 +1,22 @@
 
-class TestModule extends Module
-	@shortName = 'test'
-	constructor: () ->
-		x = super.newDatabase 'test'
-
+#test dependencies
 chai = require 'chai'
 chai.should()
 
-bot = require '../kurea.coffee'
+#bot dependencies
+Bot = require '../kurea'
+Module = Bot.Module
 
+#test class
+class TestModule extends Module
+	shortName: 'test1'
+		
+	init: () =>
+		@x = @newDatabase 'test'
+
+#test class initialization
 testModule = new TestModule()
+testModule.init()
 
 describe 'ModuleDatabase', ->
 	it 'should require a name', ->

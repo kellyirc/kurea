@@ -13,7 +13,7 @@ module.exports = (grunt) ->
 
         concat:
             dist:
-                src: ['src/core/*.coffee']
+                src: ['src/core/ModuleDatabase.coffee', 'src/core/Module.coffee']
                 dest: '<%= pkg.name %>.coffee'
 
         watch:
@@ -47,6 +47,7 @@ module.exports = (grunt) ->
     grunt.event.on 'coffee.error', (msg) ->
         grunt.log.write msg
 
+    grunt.registerTask 'build', ['coffeelint:dev', 'concat:dist']
     grunt.registerTask 'test', ['coffeelint:dev', 'concat:dist', 'mochaTest']
     grunt.registerTask 'default', ['coffeelint:dev', 'concat:dist', 'mochaTest']
     grunt.registerTask 'dev', ['watch:dev']

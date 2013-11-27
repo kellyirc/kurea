@@ -1,7 +1,9 @@
+ModuleDatabase = ModuleDatabase || require('./ModuleDatabase').ModuleDatabase
 
 class Module
+	constructor: () ->
 
-	newDatabase: (name) ->
+	newDatabase: (name) =>
 		new ModuleDatabase @shortName,name
 
-	constructor: () ->
+exports.Module = Module

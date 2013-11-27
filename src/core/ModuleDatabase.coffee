@@ -38,3 +38,5 @@ class ModuleDatabase
 		#gotta think of a way to include versioning and migrating
 		@version = 0
 		@load()
+
+exports.ModuleDatabase = ModuleDatabase
