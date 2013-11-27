@@ -35,3 +35,9 @@ describe 'PermissionManager', ->
 		it 'should consider two completely different permissions without any shared parents not a match', ->
 			permissionManager.matchPermissions("lasers.disable", "alderaan.destroy").should.equal false
 			permissionManager.matchPermissions("channel.user.mode.modify", "pizza.eat").should.equal false
+
+		it 'should consider a single asterisk ("*") to match any permission', ->
+			permissionManager.matchPermissions("*", "alderaan.destroy").should.equal true
+			permissionManager.matchPermissions("*", "machinery.boat.enable").should.equal true
+			permissionManager.matchPermissions("*", "channel.user.mode.modify").should.equal true
+			permissionManager.matchPermissions("channel.user.mode.destroy", "*").should.equal true
