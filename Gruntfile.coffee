@@ -13,7 +13,7 @@ module.exports = (grunt) ->
 
         concat:
             dist:
-                src: ['src/core/ModuleDatabase.coffee', 'src/core/Module.coffee']
+                src: ['src/core/ModuleDatabase.coffee', 'src/core/Module.coffee', 'src/core/PermissionManager.coffee']
                 dest: '<%= pkg.name %>.coffee'
 
         watch:
