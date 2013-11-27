@@ -79,6 +79,6 @@ class PermissionManager
 
 		null
 
-module.exports.PermissionManager = PermissionManager
-module.exports.manager = new PermissionManager()
-module.exports.getPermissions = getPermissions
+exports.PermissionManager = PermissionManager
+exports.manager = new PermissionManager()
+exports.getPermissions = getPermissions
