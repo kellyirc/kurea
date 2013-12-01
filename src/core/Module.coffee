@@ -1,4 +1,4 @@
-ModuleDatabase = ModuleDatabase || require('./ModuleDatabase').ModuleDatabase
+ModuleDatabase = require('./ModuleDatabase').ModuleDatabase
 
 class Module
 	constructor: () ->

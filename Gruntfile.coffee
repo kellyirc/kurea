@@ -11,11 +11,6 @@ module.exports = (grunt) ->
         pkg: 
             grunt.file.readJSON('package.json')
 
-        concat:
-            dist:
-                src: ['src/core/ModuleDatabase.coffee', 'src/core/Module.coffee', 'src/core/PermissionManager.coffee', 'src/core/Bot.coffee', 'src/core/Main.coffee']
-                dest: '<%= pkg.name %>.coffee'
-
         watch:
             dev:
                 files: '<%= coffee.dev.src %>'
@@ -24,10 +19,10 @@ module.exports = (grunt) ->
         coffeelint:
             dev:
                 files:
-                    ['<%= concat.dist.src %>']
+                    src: ['src/*.coffee']
             dist:
                 files:
-                    ['<%= pkg.name %>.coffee']
+                    src: ['src/*.coffee']
             options:
                 no_tabs: #using tabs!
                     level: 'ignore'
@@ -47,7 +42,7 @@ module.exports = (grunt) ->
     grunt.event.on 'coffee.error', (msg) ->
         grunt.log.write msg
 
-    grunt.registerTask 'build', ['coffeelint:dev', 'concat:dist']
-    grunt.registerTask 'test', ['coffeelint:dev', 'concat:dist', 'mochaTest']
-    grunt.registerTask 'default', ['coffeelint:dev', 'concat:dist', 'mochaTest']
+    grunt.registerTask 'build', ['coffeelint:dev']
+    grunt.registerTask 'test', ['coffeelint:dev', 'mochaTest']
+    grunt.registerTask 'default', ['coffeelint:dev', 'mochaTest']
     grunt.registerTask 'dev', ['watch:dev']

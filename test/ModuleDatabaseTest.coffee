@@ -4,8 +4,7 @@ chai = require 'chai'
 chai.should()
 
 #bot dependencies
-Bot = require '../kurea'
-Module = Bot.Module
+Module = require('../src/core/Module').Module
 
 #test class
 class TestModule extends Module
