@@ -1,10 +1,12 @@
 Bot = require('./Bot').Bot
+ModuleManager = require('./ModuleManager').ModuleManager
 
 class BotManager
 	constructor: () ->
 		@bots = []
+		@moduleManager = new ModuleManager()
 
 		# Testin' games
-		@bots.push new Bot()
+		@bots.push new Bot(@)
 
 exports.BotManager = BotManager

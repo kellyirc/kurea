@@ -1,7 +1,7 @@
 irc = require 'irc'
 
 class Bot
-	constructor: () ->
+	constructor: (@botManager) ->
 		@conn = new irc.Client 'irc.esper.net', 'Moop',
 			channels: [
 				'#kellyirc'
@@ -14,7 +14,7 @@ class Bot
 			console.log '>>>', @messageToString(msg)
 
 		@conn.on 'message', (from, to, text, msg) =>
-			# let module manager handle text messages
+			@botManager.moduleManager.handleMessage(@, from, to, text)
 
 	messageToString: (msg) ->
 		return "#{if msg.prefix? then ':' + msg.prefix + ' ' else ''}#{msg.rawCommand} #{msg.args.map((a) -> '"' + a + '"').join(' ')}"
