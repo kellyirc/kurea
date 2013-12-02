@@ -9,7 +9,8 @@ class Module
 	hasPermission: (user, permission) =>
 		# request a match check to the PermissionManager in ModuleManager
 
-	useCommand: (user, command, params) =>
+	# The args object contains: bot, channel, user, command, params
+	useCommand: (args) =>
 		# should be overridden to handle command usage
 
 exports.Module = Module
