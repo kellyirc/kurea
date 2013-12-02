@@ -14,7 +14,7 @@ module.exports = (grunt) ->
         watch:
             dev:
                 files: '<%= coffee.dev.src %>'
-                tasks: ['concat:dist', 'coffeelint:dev', 'mochaTest:dist']
+                tasks: ['coffeelint:dev', 'mochaTest:dist']
 
         coffeelint:
             dev:
