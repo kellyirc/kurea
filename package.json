@@ -1,29 +1,29 @@
 {
-    "name": "kurea",
-    "version": "0.0.0",
-    "description": "IRC Bot",
-    "scripts": {
-        "test": "grunt test"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git://github.com/kellyirc/kurea.git"
-    },
-    "author": "",
-    "license": "MIT",
-    "readmeFilename": "README.md",
-    "dependencies": {
-        "irc": "*",
-        "nedb": "*",
-        "mocha": "*",
-        "chai": "*",
-        "grunt": "*",
-        "grunt-cli": "*",
-        "grunt-coffeelint": "*",
-        "grunt-contrib-watch": "*",
-        "grunt-contrib-coffee": "*",
-        "grunt-contrib-concat": "*",
-        "grunt-contrib-uglify": "*",
-        "grunt-mocha-test": "*"
-    }
+  "name": "kurea",
+  "version": "0.0.0",
+  "description": "IRC Bot",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/kellyirc/kurea.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "dependencies": {
+    "irc": "*",
+    "nedb": "*",
+    "mocha": "*",
+    "chai": "*",
+    "grunt": "*",
+    "grunt-cli": "*",
+    "grunt-coffeelint": "*",
+    "grunt-contrib-watch": "*",
+    "grunt-contrib-coffee": "*",
+    "grunt-contrib-uglify": "*",
+    "grunt-mocha-test": "*",
+    "grunt-clear": "*"
+  }
 }

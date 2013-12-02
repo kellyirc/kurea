@@ -1,11 +1,11 @@
 module.exports = (grunt) ->
 
-    grunt.task.loadNpmTasks 'grunt-contrib-concat'
     grunt.task.loadNpmTasks 'grunt-contrib-watch'
     grunt.task.loadNpmTasks 'grunt-contrib-jshint'
     grunt.task.loadNpmTasks 'grunt-contrib-uglify'
     grunt.task.loadNpmTasks 'grunt-mocha-test'
     grunt.task.loadNpmTasks 'grunt-coffeelint'
+    grunt.task.loadNpmTasks 'grunt-clear'
 
     grunt.initConfig
         pkg: 
@@ -14,7 +14,7 @@ module.exports = (grunt) ->
         watch:
             dev:
                 files: ['src/**/*.coffee']
-                tasks: ['coffeelint:dev', 'mochaTest:dist']
+                tasks: ['clear', 'coffeelint:dev', 'mochaTest:dist']
 
         coffeelint:
             dev:
