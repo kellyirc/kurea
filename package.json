@@ -24,6 +24,7 @@
     "grunt-contrib-coffee": "*",
     "grunt-contrib-uglify": "*",
     "grunt-mocha-test": "0.8.0",
-    "grunt-clear": "*"
+    "grunt-clear": "*",
+    "underscore": "~1.5.2"
   }
 }
