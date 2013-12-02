@@ -7,6 +7,6 @@ class BotManager
 		@moduleManager = new ModuleManager()
 
 		# Testin' games
-		@bots.push new Bot(@)
+		@bots.push new Bot(@, "./config.json")
 
 exports.BotManager = BotManager
