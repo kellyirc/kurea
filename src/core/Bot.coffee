@@ -4,7 +4,7 @@ class Bot
 	constructor: () ->
 		@conn = new irc.Client 'irc.esper.net', 'Moop',
 			channels: [
-				'#warcan'
+				'#kellyirc'
 			]
 
 		@conn.on 'error', (msg) =>
