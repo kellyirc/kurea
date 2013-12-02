@@ -21,6 +21,10 @@ class Bot
 		if typeof config is "string"
 			config = require path.resolve(config)
 
+		@name = config.name
+		@nick = config.nick # TODO: keep better track of this, it can change
+		@server = config.server
+
 		@conn = new irc.Client config.server, config.nick, config
 
 		@conn.on 'error', (msg) =>

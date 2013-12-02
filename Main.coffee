@@ -1,3 +1,3 @@
 BotManager = require('./src/core/BotManager').BotManager
 
-botManager = new BotManager()
+botManager = new BotManager('./config.json');

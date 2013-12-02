@@ -1,5 +1,15 @@
 {
-	"server": "irc.esper.net",
-	"nick": "Moop",
-	"channels": ["#kellyirc"]
+	"default": {
+		"nick": "Moop"
+	},
+
+	"EsperNet": {
+		"server": "irc.esper.net",
+		"channels": ["#kellyirc"]
+	},
+
+	"FreeNode": {
+		"server": "irc.freenode.net",
+		"channels": ["#kurea"]
+	}
 }
