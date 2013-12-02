@@ -23,7 +23,7 @@
     "grunt-contrib-watch": "*",
     "grunt-contrib-coffee": "*",
     "grunt-contrib-uglify": "*",
-    "grunt-mocha-test": "*",
+    "grunt-mocha-test": "0.8.0",
     "grunt-clear": "*"
   }
 }
