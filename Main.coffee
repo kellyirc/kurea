@@ -1,3 +1,3 @@
-Bot = require('./src/core/Bot').Bot
+BotManager = require('./src/core/BotManager').BotManager
 
-bot = new Bot()
+botManager = new BotManager()

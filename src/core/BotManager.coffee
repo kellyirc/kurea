@@ -1,5 +1,10 @@
+Bot = require('./Bot').Bot
+
 class BotManager
-	constructor: () =>
+	constructor: () ->
 		@bots = []
+
+		# Testin' games
+		@bots.push new Bot()
 
 exports.BotManager = BotManager
