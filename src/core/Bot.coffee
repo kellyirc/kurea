@@ -13,6 +13,9 @@ class Bot
 		@conn.on 'raw', (msg) =>
 			console.log '>>>', @messageToString(msg)
 
+		@conn.on 'message', (from, to, text, msg) =>
+			# let module manager handle text messages
+
 	messageToString: (msg) ->
 		return "#{if msg.prefix? then ':' + msg.prefix + ' ' else ''}#{msg.rawCommand} #{msg.args.map((a) -> '"' + a + '"').join(' ')}"
 
