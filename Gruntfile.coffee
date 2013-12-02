@@ -13,16 +13,16 @@ module.exports = (grunt) ->
 
         watch:
             dev:
-                files: '<%= coffee.dev.src %>'
+                files: ['src/**/*.coffee']
                 tasks: ['coffeelint:dev', 'mochaTest:dist']
 
         coffeelint:
             dev:
                 files:
-                    src: ['src/*.coffee']
+                    src: ['src/**/*.coffee']
             dist:
                 files:
-                    src: ['src/*.coffee']
+                    src: ['src/**/*.coffee']
             options:
                 no_tabs: #using tabs!
                     level: 'ignore'
