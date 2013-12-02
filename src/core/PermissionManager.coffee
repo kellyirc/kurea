@@ -1,12 +1,15 @@
 getPermissions = (user) ->
-	if user is 'CoolDude210' then ["access.get", "userdata"]
-	else if user is 'CakeRox' then ["*"]
+	perms =
+		KR: ["*"]
+
+	perms[user] ? []
 
 class PermissionManager
 	constructor: () ->
 
 	match: (user, permissionString) ->
 		permissionSet = getPermissions(user)
+
 		for permission in permissionSet
 			if @matchPermissions(permission, permissionString) then return true
 
