@@ -7,8 +7,9 @@ class Module
 	newDatabase: (name) =>
 		new ModuleDatabase @shortName, name
 
-	hasPermission: (user, permission) =>
+	hasPermission: (bot, user, permission) =>
 		# request a match check to the PermissionManager in ModuleManager
+		bot.botManager.permissionManager.match(user, permission)
 
 	hasCommand: (command) =>
 		command in @commands

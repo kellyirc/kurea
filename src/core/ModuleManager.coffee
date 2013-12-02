@@ -1,6 +1,8 @@
+TestModule = require('../modules/TestModule').TestModule # Temporary !!!
+
 class ModuleManager
 	constructor: ->
-		@modules = []
+		@modules = [new TestModule()]
 
 	handleMessage: (bot, from, to, message) =>
 		match = /^!(.+?)(?:\s+(.+))?$/.exec(message)
