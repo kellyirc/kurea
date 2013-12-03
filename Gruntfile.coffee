@@ -13,7 +13,7 @@ module.exports = (grunt) ->
 
         watch:
             dev:
-                files: ['src/**/*.coffee']
+                files: ['src/**/*.coffee', 'test/**/*.coffee']
                 tasks: ['clear', 'coffeelint:dev', 'mochaTest:dist']
 
         coffeelint:
