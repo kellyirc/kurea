@@ -1,6 +1,7 @@
 
 Database = require 'nedb'
 fs = require 'fs'
+rimraf = require 'rimraf'
 
 class ModuleDatabase
 
@@ -10,8 +11,8 @@ class ModuleDatabase
 		if not @label?.length then throw new Error("Database must have a name.")
 		if not @root?.length then throw new Error("Module must have a shortName of length 1 or greater.")
 
-		@path = "#{dataStoreFolder}/#{@root}/#{@label}.kdb"
-		@db = new Database { autoload: true, filename: @path }
+		path = "#{dataStoreFolder}/#{@root}/#{@label}.kdb"
+		@db = new Database { autoload: true, filename: path }
 
 	insert: (data, callback) =>
 		@db.insert data, callback
@@ -31,8 +32,9 @@ class ModuleDatabase
 	ensureIndex: (data, callback) =>
 		@db.ensureIndex data, callback
 
-	destroy: () =>
-		fs.unlink @path
+	destroy: (callback) =>
+		callback ?= ->
+		rimraf @db.filename, callback
 
 	constructor: (@root, @label) ->
 		#gotta think of a way to include versioning and migrating
