@@ -4,13 +4,11 @@ class JoinModule extends Module
 	constructor: ->
 		super()
 
-		@commands.push "join"
+		@addRoute "join :chan", (origin, route) =>
+			[bot, user, channel, chan] = [origin.bot, origin.user, origin.channel, route.params.chan]
 
-	useCommand: (args) =>
-		[bot, user, channel, params] = [args.bot, args.user, args.channel, args.params]
-
-		# TODO: error checking and spliting for multiple joins
-		bot.join params, =>
-			bot.say channel, "I have joined #{params}."
+			# TODO: error checking and spliting for multiple joins
+			bot.join chan, =>
+				bot.say channel, "I have joined #{chan}."
 
 exports.JoinModule = JoinModule

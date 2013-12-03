@@ -7,14 +7,16 @@ class ModuleManager
 		@modules = [new TestModule(), new JoinModule(), new PartModule()]
 
 	handleMessage: (bot, from, to, message) =>
-		match = /^!(.+?)(?:\s+(.+))?$/.exec(message)
+		match = /^!(.+)$/.exec(message)
 		return if match is null
 
-		[command, params] = match[1..2]
+		command = match[1]
 
-		console.log "Handling command #{command} with params '#{params}'"
+		console.log "Handling '#{command}'"
 
 		for module in @modules
-			module.useCommand({ bot: bot, channel: to, user: from, command: command, params: params }) if module.hasCommand(command)
+			route = module.router.match(command)
+			console.log route
+			route.fn( { bot: bot, channel: to, user: from }, route ) if route?
 
 exports.ModuleManager = ModuleManager

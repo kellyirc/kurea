@@ -4,13 +4,11 @@ class PartModule extends Module
 	constructor: ->
 		super()
 
-		@commands.push "part"
+		@addRoute "part :chan", (origin, route) =>
+			[bot, user, channel, chan] = [origin.bot, origin.user, origin.channel, route.params.chan]
 
-	useCommand: (args) =>
-		[bot, user, channel, params] = [args.bot, args.user, args.channel, args.params]
-
-		# TODO: error checking
-		bot.part params, =>
-			bot.say channel, "I have left #{params}."
+			# TODO: error checking
+			bot.part chan, =>
+				bot.say channel, "I have left #{chan}."
 
 exports.PartModule = PartModule
