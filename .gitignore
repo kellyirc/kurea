@@ -6,7 +6,7 @@ lib-cov
 *.out
 *.pid
 *.gz
-*.kdb
+*.kdb*
 
 pids
 logs
@@ -14,3 +14,4 @@ results
 
 npm-debug.log
 node_modules
+data
