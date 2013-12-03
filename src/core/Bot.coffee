@@ -53,7 +53,7 @@ class Bot
 
 		leaveListener = (leftChannel) =>
 			index = channels.indexOf leftChannel
-			unless index is -1
+			unless index is -1 # TODO: shouldn't need this?
 				channels.splice index, 1
 		@conn.on 'part', leaveListener
 		@conn.on 'kick', leaveListener

@@ -10,7 +10,7 @@ class PartModule extends Module
 		[bot, user, channel, params] = [args.bot, args.user, args.channel, args.params]
 
 		# TODO: error checking
-		bot.part params, => 
+		bot.part params, =>
 			bot.say channel, "I have left #{params}."
 
 exports.PartModule = PartModule
