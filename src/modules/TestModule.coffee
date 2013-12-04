@@ -11,6 +11,7 @@ class TestModule extends Module
 				bot.say(channel, "You do not have the necessary permission! This requires test.use!")
 				return
 
-			bot.say(channel, "Testing!")
+			bot.say(channel, "Hi, my name is #{bot.getName()} but you can call me #{bot.getNick()}!")
+			bot.say(channel, "I'm currently in the server #{bot.getServer()} in the channels #{(key for key, value of bot.getChannels()).join(", ")}!")
 
 exports.TestModule = TestModule

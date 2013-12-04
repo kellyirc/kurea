@@ -23,15 +23,10 @@ class Bot
 
 		# Private members
 		name = config.name
-		nick = config.nick # TODO: keep better track of this, it can change
-		server = config.server
-		channels = []
 
 		# Accessor for private members
 		@getName = -> name
-		@getNick = -> nick
-		@getServer = -> server
-		@getChannels = -> channels.slice 0 # Clone the array
+
 
 		@conn = new irc.Client config.server, config.nick, config
 
@@ -41,33 +36,29 @@ class Bot
 		@conn.on 'raw', (msg) =>
 			console.log '>>>', @messageToString(msg)
 
-		@conn.on 'registered', (msg) =>
-			nick = msg.args[0] # The nick we connected with
-
-
-		@conn.on 'nick', (oldNick, newNick, chans, msg) =>
-			nick = newNick if oldNick is nick
-
-		@conn.on 'join', (chan, nick, msg) =>
-			channels.push chan if nick is @getNick()
-
-		leaveListener = (leftChannel) =>
-			index = channels.indexOf leftChannel
-			unless index is -1 # TODO: shouldn't need this?
-				channels.splice index, 1
-		@conn.on 'part', leaveListener
-		@conn.on 'kick', leaveListener
-		@conn.on 'kill', (nick, reason, chan) -> leaveListener chan
-
-		@conn.on 'quit', (nick, reason, channels, message) =>
-			if nick is @getNick() # The Bot quit the server
-				channels = []
-
 		@conn.on 'message', (from, to, text, msg) =>
 			@botManager.moduleManager.handleMessage(@, from, to, text)
 
 	messageToString: (msg) ->
 		return "#{if msg.prefix? then ':' + msg.prefix + ' ' else ''}#{msg.rawCommand} #{msg.args.map((a) -> '"' + a + '"').join(' ')}"
+
+	### 
+	Returns an object like this
+	{ 
+		'#someloserschannel': {
+			key: '#someloserschannel',
+ 			serverName: '#someloserschannel',
+ 			users: { Moop: '@', Jar: '' },
+ 			mode: '+nt',
+ 			created: '1386192406' },
+ 		'#kellyirc': ...
+	}
+	###
+	getChannels: -> JSON.parse(JSON.stringify(@conn.chans)) # Clone the object
+
+	getNick: -> @conn.nick
+
+	getServer: -> @conn.opt.server
 
 # Wraps functions from irc.Client
 for f in wrapperFuncs
