@@ -49,13 +49,13 @@ class Bot
 		chan = chan.toLowerCase()
 		users = {}
 		users = @conn.chans[chan].users if @conn.chans[chan]?
-		key for key,value of @conn.chans[chan].users;
+		key for key,value of @conn.chans[chan].users
 
 	getUsersWithPrefix: (chan) ->
 		chan = chan.toLowerCase()
 		users = {}
 		users = @conn.chans[chan].users if @conn.chans[chan]?
-		value+key for key,value of @conn.chans[chan].users;
+		value+key for key,value of @conn.chans[chan].users
 
 	getTopic: (chan) ->
 		return @conn.chans[chan].topic if @conn.chans[chan]?
