@@ -40,21 +40,26 @@ class Bot
 			@botManager.moduleManager.handleMessage(@, from, to, text)
 
 	messageToString: (msg) ->
-		return "#{if msg.prefix? then ':' + msg.prefix + ' ' else ''}#{msg.rawCommand} #{msg.args.map((a) -> '"' + a + '"').join(' ')}"
+		return "#{if msg.prefix? then ':' + msg.prefix + ' ' else ''}#{msg.rawCommand} #{msg.args.map((a) -> '"' + a + '"')}"
 
-	### 
-	Returns an object like this
-	{ 
-		'#someloserschannel': {
-			key: '#someloserschannel',
- 			serverName: '#someloserschannel',
- 			users: { Moop: '@', Jar: '' },
- 			mode: '+nt',
- 			created: '1386192406' },
- 		'#kellyirc': ...
-	}
-	###
-	getChannels: -> JSON.parse(JSON.stringify(@conn.chans)) # Clone the object
+	# Returns the channels the bot is currently in.
+	getChannels: -> chan for chan of @conn.chans # Clone the object
+
+	getUsers: (chan) ->
+		chan = chan.toLowerCase()
+		users = {}
+		users = @conn.chans[chan].users if @conn.chans[chan]?
+		key for key,value of @conn.chans[chan].users;
+
+	getUsersWithPrefix: (chan) ->
+		chan = chan.toLowerCase()
+		users = {}
+		users = @conn.chans[chan].users if @conn.chans[chan]?
+		value+key for key,value of @conn.chans[chan].users;
+
+	getTopic: (chan) ->
+		return @conn.chans[chan].topic if @conn.chans[chan]?
+		return ''
 
 	getNick: -> @conn.nick
 

@@ -8,8 +8,7 @@ class BotManager
 	constructor: (config) ->
 		if typeof config is "string"
 			config = require path.resolve(config)
-		unless config.default?
-			config.default = {}
+		config.default ?= {}
 
 		@bots = []
 		@moduleManager = new ModuleManager()
