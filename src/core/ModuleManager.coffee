@@ -1,10 +1,11 @@
 TestModule = require('../modules/TestModule').TestModule # Temporary !!!
 JoinModule = require('../modules/JoinModule').JoinModule # Temporary !!!
 PartModule = require('../modules/PartModule').PartModule # Temporary !!!
+DiceModule = require('../modules/DiceModule').DiceModule # Temporary !!!
 
 class ModuleManager
 	constructor: ->
-		@modules = [new TestModule(), new JoinModule(), new PartModule()]
+		@modules = [new TestModule(), new JoinModule(), new PartModule(), new DiceModule()]
 
 	handleMessage: (bot, from, to, message) =>
 		match = /^!(.+)$/.exec(message)
