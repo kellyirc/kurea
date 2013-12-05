@@ -1,4 +1,4 @@
-Module = require('../core/Module').Module
+Module = require('../../core/Module').Module
 
 class PartModule extends Module
 	shortName: "Part"

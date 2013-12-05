@@ -1,4 +1,4 @@
-Module = require('../core/Module').Module
+Module = require('../../core/Module').Module
 
 class JoinModule extends Module
 	shortName: "Join"
