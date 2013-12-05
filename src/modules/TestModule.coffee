@@ -1,6 +1,10 @@
 Module = require('../core/Module').Module
 
 class TestModule extends Module
+	shortName: "Test"
+	helpText:
+		default: "Some test stuff."
+		secretilluminaticommand: "no longer a secret"
 	constructor: ->
 		super()
 

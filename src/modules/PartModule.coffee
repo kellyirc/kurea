@@ -1,6 +1,9 @@
 Module = require('../core/Module').Module
 
 class PartModule extends Module
+	shortName: "Part"
+	helpText:
+		default: "Leaves a channel. Delimit channels by spaces or commas. If no channels given, will leave this channel. USAGE: !part {channel1} {channel2}..."
 	constructor: ->
 		super()
 
@@ -10,7 +13,7 @@ class PartModule extends Module
 			# TODO: allow part messages
 			for chan in chans
 				bot.part chan, ->
-					bot.say channel, "I have left #{chan}."
+					@reply origin, "I have left #{chan}."
 		@addRoute "part", (origin, route) =>
 			[bot, user, channel] = [origin.bot, origin.user, origin.channel]
 			bot.part channel
