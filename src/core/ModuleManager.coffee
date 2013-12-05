@@ -21,7 +21,7 @@ class ModuleManager
 					route.fn( origin, route )
 				catch e
 					console.log "Your module is bad and you should feel bad:"
-					console.log "\t", e
+					console.log e.stack
 			
 
 exports.ModuleManager = ModuleManager
