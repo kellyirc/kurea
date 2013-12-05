@@ -2,13 +2,10 @@ fs = require 'fs'
 _ = require 'underscore'
 file = require 'file'
 
-moduleFiles = []
+moduleFiles = {}
 modules = {}
 
 basePath = __dirname+'/../modules'
-
-file.walkSync basePath, (start, dirs, files) ->
-	moduleFiles.push (files.map (f) -> start+'\\'+f)...
 
 reloadFileModules = (file) ->
 	fileModules = {}
@@ -21,17 +18,24 @@ reloadFileModules = (file) ->
 
 watchFile = (file) ->
 	
-	modules[file] = reloadFileModules file
-	
+	moduleFiles[file] = reloadFileModules file
+	for moduleName, module of moduleFiles[file]
+		modules[moduleName] = module
+
 	fs.watchFile file, _.debounce ((event, filename) ->
 		delete require.cache[require.resolve file]
-		delete modules[file]
-		modules[file] = reloadFileModules file
+		for moduleName, module of moduleFiles[file]
+			delete module[moduleName]
+		delete moduleFiles[file]
+
+		moduleFiles[file] = reloadFileModules file
+		for moduleName, module of moduleFiles[file]
+			modules[moduleName] = module
 	), 200
 
 
-
-moduleFiles.forEach (f) ->
-	watchFile f
+file.walkSync basePath, (start, dirs, files) ->
+	for f in (files.map (f) -> start+'\\'+f)
+		watchFile f
 
 exports.ModuleList = modules

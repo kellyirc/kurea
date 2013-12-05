@@ -9,12 +9,15 @@ class ModuleManager
 		command = match[1]
 
 		console.log "Handling '#{command}'"
-
-		for moduleFile of @modules
-			for moduleAssoc of @modules[moduleFile]
-				module = @modules[moduleFile][moduleAssoc]
-				route = module.router.match(command)
-				console.log route
-				route.fn( { bot: bot, channel: to, user: from }, route ) if route?
+		console.log @modules
+		for moduleName, module of @modules
+			route = module.router.match(command)
+			console.log route
+			origin =
+				bot: bot
+				user: from
+				channel: if to is bot.getNick() then undefined else to
+				isPM: to is bot.getNick()
+			route.fn( origin, route ) if route?
 
 exports.ModuleManager = ModuleManager

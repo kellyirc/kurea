@@ -65,6 +65,8 @@ class Bot
 
 	getServer: -> @conn.opt.server
 
+	getModules: -> @botManager.moduleManager.modules
+
 # Wraps functions from irc.Client
 for f in wrapperFuncs
 	Bot::[f] = do (f) ->
