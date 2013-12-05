@@ -1,4 +1,4 @@
-Module = require('../core/Module').Module
+Module = require('../../core/Module').Module
 
 class DiceModule extends Module
 	roll: (lower, upper, base = 0) ->
