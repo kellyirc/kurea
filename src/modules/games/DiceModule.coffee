@@ -1,4 +1,5 @@
 Module = require('../../core/Module').Module
+color = require 'irc-colors'
 
 class DiceModule extends Module
 	shortName: "Roll"
@@ -15,6 +16,6 @@ class DiceModule extends Module
 			[bot, user, channel, left, right] = [origin.bot, origin.user, origin.channel, route.params.left, route.params.right]
 
 			value = @roll parseInt(left), parseInt(right)
-			bot.say channel, "#{user}, your #{left}d#{right} rolled #{value}."
+			bot.say channel, "#{user}, your #{left}d#{right} rolled #{color.bold(value)}."
 
 exports.DiceModule = DiceModule
