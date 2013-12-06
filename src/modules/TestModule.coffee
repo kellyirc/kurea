@@ -20,6 +20,16 @@ class TestModule extends Module
 			bot.say(channel, "My user manager is #{bot.userManager.shortName}!")
 			bot.say(channel, "Your username is #{bot.userManager.getUsername(origin)}!")
 
+		permtest = (origin, route) =>
+			perm = route.params.perm ? "access.test"
+			if @hasPermission origin, perm
+				@reply origin, "You have permission #{perm}!"
+			else
+				@reply origin, "BEEP BEEP you lack permission #{perm}"
+
+		@addRoute "permtest", permtest
+		@addRoute "permtest :perm", permtest
+
 		@addRoute "info :chan", (origin, route) =>
 			[bot, channel, user, chan] = [origin.bot, origin.channel, origin.user, route.params.chan]
 			bot.say channel, "These users are in #{chan}: #{bot.getUsersWithPrefix(chan).join(", ")}"
