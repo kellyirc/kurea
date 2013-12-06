@@ -14,6 +14,6 @@ class FlipModule extends Module
 
 			answer = if Math.random() > 0.5 then 'heads' else 'tails'
 
-			bot.say channel, "#{user} flipped a coin, and the result was #{color.bold(answer)}."
+			@reply origin, "#{user} flipped a coin, and the result was #{color.bold(answer)}."
 
 exports.FlipModule = FlipModule
