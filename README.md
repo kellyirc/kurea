@@ -11,4 +11,4 @@ The versioning is displayed as [major].[minor].[moduleCount]. Why? Because why n
 Contributing
 ============
 
-If you add a new module, bump the module count in the version. Thanks!
+If you add a new module, bump the module count in the version. Thanks! Or maybe you could contribute by making a grunt task that does this!
