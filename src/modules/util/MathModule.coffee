@@ -1,6 +1,7 @@
 Module = require('../../core/Module').Module
 color = require 'irc-colors'
-math = require('mathjs')()
+parser = require('mathjs')().parser()
+
 class MathModule extends Module
 	shortName: "Math"
 	helpText:
@@ -13,10 +14,13 @@ class MathModule extends Module
 		@addRoute "calc *", @execute
 
 	execute: (origin, route) =>
-		expr = route.splats[0]
+		# Since we can't type new lines, pipe characters will separate multiple expressions
+		expr = route.splats[0].replace /\|/g, '\n'
 		try
-			result = math.eval(expr)
-			@reply origin, "#{origin.user}, your answer is #{result}"
+			result = parser.eval(expr)
+			if result instanceof Object # For multiple results
+				result = (value for key, value of result).join(", ")
+			@reply origin, "#{origin.user}, your answer is #{color.bold(result)}"
 		catch e
 			@reply origin, "Unable to evaluate expression: #{e.message}"
 
