@@ -15,7 +15,7 @@ class MathModule extends Module
 
 	execute: (origin, route) =>
 		# Since we can't type new lines, pipe characters will separate multiple expressions
-		expr = route.splats[0].replace /\|/g, '\n'
+		expr = route.splats[0].split('|').join('\n')
 		try
 			result = parser.eval(expr)
 			if result instanceof Object # For multiple results
