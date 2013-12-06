@@ -11,9 +11,9 @@ class Module
 	addRoute: (path, fn) =>
 		@router.addRoute(path, fn)
 
-	hasPermission: (bot, user, permission) =>
+	hasPermission: (origin, permission) =>
 		# request a match check to the PermissionManager in ModuleManager
-		bot.botManager.permissionManager.match(user, permission)
+		origin.bot.botManager.permissionManager.match(origin, permission)
 
 	reply: (origin, msg) ->
 		if not origin.isPM
