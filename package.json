@@ -1,9 +1,10 @@
 {
   "name": "kurea",
-  "version": "0.0.0",
+  "version": "0.5.12",
   "description": "IRC Bot",
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt test",
+    "start": "coffee Main.coffee"
   },
   "repository": {
     "type": "git",
@@ -23,12 +24,12 @@
     "grunt-coffeelint": "*",
     "grunt-contrib-watch": "*",
     "grunt-contrib-coffee": "*",
-    "grunt-contrib-uglify": "*",
     "grunt-mocha-test": "0.8.0",
     "grunt-clear": "*",
     "underscore": "~1.5.2",
     "routes": "~0.2.0",
     "rimraf": "*",
-    "file": "~0.2.1"
+    "file": "~0.2.1",
+    "mathjs": "~0.16.0"
   }
 }

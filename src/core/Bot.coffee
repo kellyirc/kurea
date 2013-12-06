@@ -67,6 +67,30 @@ class Bot
 
 	getModules: -> @botManager.moduleManager.modules
 
+	# Attempts to change nick.
+	# On success callback is called with (undefined, oldnick, newnick, channels, msg).
+	# On error callback is called with (err) where err is the error object (see 'error' event in irc.Client).
+	changeNick: (desiredNick, callback) ->
+		@conn.send 'NICK', desiredNick
+
+		nickListener = (oldnick, newnick, channels, message) =>
+			if newnick is desiredNick
+				removeListeners()
+				callback undefined, oldnick, newnick, channels, message
+
+		errListener = (msg) =>
+			if 431 <= msg.rawCommand <= 436 # irc errors for nicks
+				removeListeners()
+				callback msg
+
+		removeListeners = =>
+			@conn.removeListener 'raw', errListener
+			@conn.removeListener 'nick', nickListener
+
+		@conn.on 'nick', nickListener
+		@conn.on 'raw', errListener
+
+
 # Wraps functions from irc.Client
 for f in wrapperFuncs
 	Bot::[f] = do (f) ->

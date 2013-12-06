@@ -1,4 +1,5 @@
 fs = require 'fs'
+path = require 'path'
 _ = require 'underscore'
 file = require 'file'
 
@@ -35,7 +36,7 @@ watchFile = (file) ->
 
 
 file.walkSync basePath, (start, dirs, files) ->
-	for f in (files.map (f) -> start+'\\'+f)
+	for f in (files.map (f) -> start+path.sep+f)
 		watchFile f
 
 exports.ModuleList = modules

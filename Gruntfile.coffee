@@ -1,8 +1,6 @@
 module.exports = (grunt) ->
 
     grunt.task.loadNpmTasks 'grunt-contrib-watch'
-    grunt.task.loadNpmTasks 'grunt-contrib-jshint'
-    grunt.task.loadNpmTasks 'grunt-contrib-uglify'
     grunt.task.loadNpmTasks 'grunt-mocha-test'
     grunt.task.loadNpmTasks 'grunt-coffeelint'
     grunt.task.loadNpmTasks 'grunt-clear'

@@ -10,7 +10,7 @@ class ModuleManager
 
 		console.log "Handling '#{command}'"
 		for moduleName, module of @modules
-			route = module.router.match(command)
+			route = module.router.match(command.split('%').join('%25')) # Router doesn't like %'s
 			if route?
 				origin =
 					bot: bot

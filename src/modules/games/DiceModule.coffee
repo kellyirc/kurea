@@ -16,6 +16,6 @@ class DiceModule extends Module
 			[bot, user, channel, left, right] = [origin.bot, origin.user, origin.channel, route.params.left, route.params.right]
 
 			value = @roll parseInt(left), parseInt(right)
-			bot.say channel, "#{user}, your #{left}d#{right} rolled #{color.bold(value)}."
+			@reply origin, "#{user}, your #{left}d#{right} rolled #{color.bold(value)}."
 
 exports.DiceModule = DiceModule
