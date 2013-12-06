@@ -1,14 +1,8 @@
-getPermissions = (origin) ->
-	perms =
-		KR: ["*"]
-
-	perms[origin.user] ? []
-
 class PermissionManager
 	constructor: () ->
 
 	match: (origin, permissionString) ->
-		permissionSet = getPermissions(origin)
+		permissionSet = @getPermissions(origin)
 
 		for permission in permissionSet
 			if @matchPermissions(permission, permissionString) then return true
@@ -30,5 +24,11 @@ class PermissionManager
 			return permission.substring 0, lastDot
 
 		null
+
+	getPermissions = (origin) ->
+		perms =
+			KR: ["*"]
+
+		perms[origin.user] ? []
 
 exports.PermissionManager = PermissionManager
