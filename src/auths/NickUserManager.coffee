@@ -1,7 +1,7 @@
 UserManager = require('../core/UserManager').UserManager
 
 class NickUserManager extends UserManager
-	shortName = "nick"
+	shortName: "nick"
 
 	getUsername: (origin) ->
 		console.log "Inside of NickUserManager!!"
