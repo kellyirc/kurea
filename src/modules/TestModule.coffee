@@ -17,6 +17,8 @@ class TestModule extends Module
 
 			bot.say(channel, "Hi, my name is #{bot.getName()} but you can call me #{bot.getNick()}!")
 			bot.say(channel, "I'm currently in the server #{bot.getServer()} in the channels #{bot.getChannels().join(", ")}!")
+			bot.say(channel, "My user manager is #{bot.userManager.shortName}!")
+			bot.say(channel, "Your username is #{bot.userManager.getUsername(origin)}!")
 
 		@addRoute "info :chan", (origin, route) =>
 			[bot, channel, user, chan] = [origin.bot, origin.channel, origin.user, route.params.chan]
