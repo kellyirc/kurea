@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "description": "IRC Bot",
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt test",
+    "start": "coffee Main.coffee"
   },
   "repository": {
     "type": "git",
