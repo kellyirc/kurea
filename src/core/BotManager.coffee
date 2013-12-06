@@ -18,7 +18,7 @@ class BotManager
 		@userManagerClasses = @loadUserManagers(__dirname + '/../auths')
 
 		for key, value of config when key isnt "default"
-			@bots.push new Bot(@, _({name: key, auth: "nickserv"}).extend(config.default, value))
+			@bots.push new Bot(@, _({name: key, auth: "nick"}).extend(config.default, value))
 
 	loadUserManagers: (path) ->
 		managerClasses = {}
