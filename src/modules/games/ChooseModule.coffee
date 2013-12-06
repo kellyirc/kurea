@@ -13,6 +13,6 @@ class ChooseModule extends Module
 			[bot, user, channel, left, right] = [origin.bot, origin.user, origin.channel, route.params.left, route.params.right]
 
 			choice = if Math.random() > 0.5 then left else right
-			bot.say channel, "#{user}, for your certain predicament, I choose #{color.bold(choice)}."
+			@reply origin, "#{user}, for your certain predicament, I choose #{color.bold(choice)}."
 
 exports.ChooseModule = ChooseModule
