@@ -30,6 +30,8 @@ class PermissionManager
 	getPermissions: (origin, callback) ->
 		perms =
 			KR: ["access", "machinery.boat"]
+			IdleMaster: ["access"]
+			FireFreek: ["access"]
 
 		origin.bot.userManager.getUsername origin, (err, username) =>
 			callback(null, perms[username] ? [])
