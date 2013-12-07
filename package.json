@@ -1,6 +1,6 @@
 {
   "name": "kurea",
-  "version": "0.0.0",
+  "version": "0.5.12",
   "description": "IRC Bot",
   "scripts": {
     "test": "grunt test",
