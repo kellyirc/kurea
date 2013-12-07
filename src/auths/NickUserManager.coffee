@@ -3,9 +3,10 @@ UserManager = require('../core/UserManager').UserManager
 class NickUserManager extends UserManager
 	shortName: "nick"
 
-	getUsername: (origin) ->
+	getUsername: (origin, callback) ->
 		console.log "Inside of NickUserManager!!"
-		return origin.user
+		
+		callback(null, origin.user)
 
 exports.name = NickUserManager::shortName
 exports.AuthClass = NickUserManager

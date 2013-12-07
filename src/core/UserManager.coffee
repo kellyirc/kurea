@@ -1,8 +1,8 @@
 class UserManager
 	constructor: ->
 
-	getUsername: (origin) ->
+	getUsername: (origin, callback) ->
 		# Should be overridden by subclasses depending on method used
-		console.log "Inside of UserManager!!"
+		callback(null, null)
 
 exports.UserManager = UserManager
