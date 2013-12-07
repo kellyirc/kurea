@@ -11,6 +11,6 @@ class PingModule extends Module
     @addRoute "ping", (origin, route) =>
       [bot, channel] = [origin.bot, origin.channel]
       
-      @reply origin, "Ping! #{bot.getUsers(channel).join(", ")}" 
+      @reply origin, "Ping! #{bot.getUsers(channel).join(", ")}"
       
 exports.PingModule = PingModule
