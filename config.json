@@ -1,15 +1,13 @@
 {
-	"default": {
-		"nick": "Moop"
-	},
-
-	"EsperNet": {
-		"server": "irc.esper.net",
-		"channels": ["#kellyirc"]
-	},
-
-	"FreeNode": {
-		"server": "irc.freenode.net",
-		"channels": ["#kurea"]
+	"nick": "Moop",
+	"bots": {
+		"Moop-Esper": {
+			"server": "irc.esper.net",
+			"channels": ["#kellyirc", "#kurea"]
+		},
+		"FreeNode": {
+			"server": "irc.freenode.net",
+			"channels": ["#kurea"]
+		}
 	}
 }

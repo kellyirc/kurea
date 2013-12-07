@@ -7,18 +7,18 @@ ModuleManager = require('./ModuleManager').ModuleManager
 PermissionManager = require('./PermissionManager').PermissionManager
 
 class BotManager
-	constructor: (config) ->
-		if typeof config is "string"
-			config = require path.resolve(config)
-		config.default ?= {}
+	constructor: (@config) ->
+		if typeof @config is "string"
+			@config = require path.resolve(@config)
 
 		@bots = []
 		@moduleManager = new ModuleManager()
 		@permissionManager = new PermissionManager()
 		@userManagerClasses = @loadUserManagers(__dirname + '/../auths')
 
-		for key, value of config when key isnt "default"
-			@bots.push new Bot(@, _({name: key, auth: "nick"}).extend(config.default, value))
+		globalConfig = _.omit(@config, 'bots')
+		for botName, botConfig of @config.bots
+			@bots.push new Bot(@, _.extend({name: botName, auth: "nick"}, globalConfig, botConfig))
 
 	loadUserManagers: (path) ->
 		managerClasses = {}

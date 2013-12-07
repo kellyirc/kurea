@@ -14,12 +14,9 @@ class MathModule extends Module
 		@addRoute "calc *", @execute
 
 	execute: (origin, route) =>
-		# Since we can't type new lines, pipe characters will separate multiple expressions
-		expr = route.splats[0].split('|').join('\n')
+		expr = route.splats[0]
 		try
 			result = parser.eval(expr)
-			if result instanceof Object # For multiple results
-				result = (value for key, value of result).join(", ")
 			@reply origin, "#{origin.user}, your answer is #{color.bold(result)}"
 		catch e
 			@reply origin, "Unable to evaluate expression: #{e.message}"

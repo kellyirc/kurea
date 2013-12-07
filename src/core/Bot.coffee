@@ -17,18 +17,15 @@ wrapperFuncs = [
 ]
 
 class Bot
-	constructor: (@botManager, config) ->
-		if typeof config is "string"
-			config = require path.resolve(config)
-
+	constructor: (@botManager, @config) ->
 		# Private members
-		name = config.name
+		name = @config.name
 
 		# Accessor for private members
 		@getName = -> name
 
 		@userManager = new @botManager.userManagerClasses[config.auth]()
-		@conn = new irc.Client config.server, config.nick, config
+		@conn = new irc.Client @config.server, @config.nick, @config
 
 		@conn.on 'error', (msg) =>
 			console.log 'Error: ', msg
