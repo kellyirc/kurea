@@ -1,5 +1,6 @@
 Module = require('../core/Module').Module
 Q = require('q')
+fs = require('fs')
 
 class TestModule extends Module
 	shortName: "Test"
@@ -19,14 +20,22 @@ class TestModule extends Module
 			bot.say(channel, "Hi, my name is #{bot.getName()} but you can call me #{bot.getNick()}!")
 			bot.say(channel, "I'm currently in the server #{bot.getServer()} in the channels #{bot.getChannels().join(", ")}!")
 			bot.say(channel, "My user manager is #{bot.userManager.shortName}!")
-			bot.say(channel, "Your username is #{bot.userManager.getUsername(origin)}!")
+
+			bot.userManager.getUsername origin, (err, username) =>
+				if err?
+					bot.say(channel, "Welp error: #{err}")
+					return
+
+				bot.say(channel, "Your username is #{username}!")
 
 		permtest = (origin, route) =>
 			perm = route.params.perm ? "access.test"
-			if @hasPermission origin, perm
-				@reply origin, "You have permission #{perm}!"
-			else
-				@reply origin, "BEEP BEEP you lack permission #{perm}"
+
+			@hasPermission origin, perm, (err, matched) =>
+				if matched
+					@reply origin, "You have permission #{perm}!"
+				else
+					@reply origin, "BEEP BEEP you lack permission #{perm}"
 
 		@addRoute "permtest", permtest
 		@addRoute "permtest :perm", permtest
@@ -38,8 +47,28 @@ class TestModule extends Module
 
 		@addRoute "qtest", (origin, route) =>
 			Q.fcall ->
-				console.log "Hurr"
-			.then ->
-				console.log "Durr"
+				Q.nfcall fs.readFile, "package.json"
+
+			.then (x) ->
+				console.log "Durr", "ALRIGHT #{x}"
+
+			.fail (err) ->
+				console.log "Error:", err
+
+		@addRoute "qtest :other", (origin, route) =>
+			Q.fcall =>
+				other = route.params.other
+				perm = "access.test"
+
+				Q.all [
+					Q.nfcall @hasPermission, origin, perm
+					Q.nfcall @hasPermission, {bot: origin.bot, channel: origin.channel, user: other}, perm
+				]
+
+			.then (matches) ->
+				console.log "The matches are", matches
+
+			.fail (err) ->
+				console.log "THIS IS AN ERROR:", err
 
 exports.TestModule = TestModule
