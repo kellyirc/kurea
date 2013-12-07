@@ -9,9 +9,8 @@ class PingModule extends Module
     super()
     
     @addRoute "ping", (origin, route) =>
-      [bot, chan] = [origin.bot, origin.chan]
+      [bot, channel] = [origin.bot, origin.channel]
       
-      names = bot.getUsers(chan)
-      @reply origin, "Ping! #{s}" for s in names
+      @reply origin, "Ping! #{bot.getUsers(channel).join(", ")}" 
       
 exports.PingModule = PingModule
