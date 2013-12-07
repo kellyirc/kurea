@@ -32,6 +32,8 @@ watchFile = (file) ->
 		moduleFiles[file] = reloadFileModules file
 		for moduleName, module of moduleFiles[file]
 			modules[moduleName] = module
+
+		console.log "^--- Loaded [#{(m.shortName for name, m of moduleFiles[file]).join(', ')}] from #{path.resolve(file)}"
 	), 200
 
 
