@@ -2,6 +2,36 @@ Module = require('../../core/Module').Module
 color = require 'irc-colors'
 Swagger = require "swagger-client"
 
+partsOfSpeech = [
+	"noun"
+	"adjective"
+	"verb"
+	"adverb"
+	"interjection"
+	"pronoun"
+	"preposition"
+	"abbreviation"
+	"affix"
+	"article"
+	"auxiliary-verb"
+	"conjunction"
+	"definite-article"
+	"family-name"
+	"given-name"
+	"idiom"
+	"imperative"
+	"noun-plural"
+	"noun-posessive"
+	"past-participle"
+	"phrasal-prefix"
+	"proper-noun"
+	"proper-noun-plural"
+	"proper-noun-posessive"
+	"suffix"
+	"verb-intransitive"
+	"verb-transitive"
+]
+
 class WordnikModule extends Module
 	shortName: "Wordnik"
 	helpText:
@@ -12,6 +42,7 @@ class WordnikModule extends Module
 		synonym: "Gets synonyms for the given word. Usage: !synonym [word]"
 		antonym: "Gets antonyms for the given word. Usage: !antonym [word]"
 		wordoftheday: "Gets the word of the day. Usage: !wordoftheday"
+		randomwords: "Gets some random words. Usage !randomwords {part of speech}. Available parts of speech: noun, adjective, verb, adverb, interjection, pronoun, preposition, abbreviation, affix, article, auxiliary-verb, conjunction, definite-article, family-name, given-name, idiom, imperative, noun-plural, noun-posessive, past-participle, phrasal-prefix, proper-noun, proper-noun-plural, proper-noun-posessive, suffix, verb-intransitive, verb-transitive"
 
 	constructor: ->
 		super()
@@ -25,7 +56,7 @@ class WordnikModule extends Module
 				@reply origin, "Sorry, the Wordnik API isn't ready yet."
 				return
 
-			@swagger.apis.word.getDefinitions 
+			@swagger.apis.word.getDefinitions
 				word: route.params.word
 				limit: 1,
 				(data) =>
@@ -53,7 +84,7 @@ class WordnikModule extends Module
 				@reply origin, "Sorry, the Wordnik API isn't ready yet."
 				return
 
-			@swagger.apis.word.getTopExample 
+			@swagger.apis.word.getTopExample
 				word: route.params.word
 				(data) =>
 					try
@@ -74,7 +105,7 @@ class WordnikModule extends Module
 				@reply origin, "Sorry, the Wordnik API isn't ready yet."
 				return
 
-			@swagger.apis.word.getRelatedWords 
+			@swagger.apis.word.getRelatedWords
 				word: route.params.word
 				relationshipTypes: 'rhyme'
 				limitPerRelationshipType: 30
@@ -97,7 +128,7 @@ class WordnikModule extends Module
 				@reply origin, "Sorry, the Wordnik API isn't ready yet."
 				return
 
-			@swagger.apis.word.getRelatedWords 
+			@swagger.apis.word.getRelatedWords
 				word: route.params.word
 				relationshipTypes: 'synonym'
 				limitPerRelationshipType: 30
@@ -120,7 +151,7 @@ class WordnikModule extends Module
 				@reply origin, "Sorry, the Wordnik API isn't ready yet."
 				return
 
-			@swagger.apis.word.getRelatedWords 
+			@swagger.apis.word.getRelatedWords
 				word: route.params.word
 				relationshipTypes: 'antonym'
 				limitPerRelationshipType: 30
@@ -143,7 +174,7 @@ class WordnikModule extends Module
 				@reply origin, "Sorry, the Wordnik API isn't ready yet."
 				return
 
-			@swagger.apis.words.getWordOfTheDay 
+			@swagger.apis.words.getWordOfTheDay
 				date: new Date().toISOString()[0...10]
 				(data) =>
 					try
@@ -158,5 +189,53 @@ class WordnikModule extends Module
 						@reply origin, "Unable to find word of the day."
 				(err) =>
 					@reply origin, "Error finding word of the day."
+
+		@addRoute "randomwords", (origin, route) =>
+			if not @swagger.ready
+				@reply origin, "Sorry, the Wordnik API isn't ready yet."
+				return
+
+			@swagger.apis.words.getRandomWords
+				minLength: 3
+				limit: 10
+				(data) =>
+					try
+						response = JSON.parse(data.content.data.toString()) # wow gross
+						if response.size is 0
+							@reply origin, "No random words?"
+							return
+						words = color.green (entry.word for entry in response).join(", ")
+						@reply origin, "I can think of these off the top of my head: #{words}"
+					catch e
+						console.log e.message
+						@reply origin, "Unable to get random words"
+				(err) =>
+					@reply origin, "Error getting random words."
+
+		@addRoute "randomwords :pos", (origin, route) =>
+			if not @swagger.ready
+				@reply origin, "Sorry, the Wordnik API isn't ready yet."
+				return
+			pos = route.params.pos.toLowerCase()
+			if not (pos in partsOfSpeech)
+				@reply origin, "That's not a valid part of speech."
+				return
+			@swagger.apis.words.getRandomWords
+				includePartOfSpeech: route.params.pos
+				minLength: 3
+				limit: 10
+				(data) =>
+					try
+						response = JSON.parse(data.content.data.toString()) # wow gross
+						if response.size is 0
+							@reply origin, "No random words?"
+							return
+						words = color.green (entry.word for entry in response).join(", ")
+						@reply origin, "I can think of these off the top of my head: #{words}"
+					catch e
+						console.log e.message
+						@reply origin, "Unable to get random words"
+				(err) =>
+					@reply origin, "Error getting random words."
 
 exports.WordnikModule = WordnikModule
