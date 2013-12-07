@@ -5,12 +5,12 @@ class PingModule extends Module
 	helpText:
 	  default: "Ping all users in the channel. Don't annoy them too much, now!"
 	  
-  constructor: ->
-    super()
+	constructor: ->
+		super()
     
-    @addRoute "ping", (origin, route) =>
-      [bot, channel] = [origin.bot, origin.channel]
+		@addRoute "ping", (origin, route) =>
+			[bot, channel] = [origin.bot, origin.channel]
       
-      @reply origin, "Ping! #{bot.getUsers(channel).join(", ")}"
+			@reply origin, "Ping! #{bot.getUsers(channel).join(", ")}"
       
 exports.PingModule = PingModule
