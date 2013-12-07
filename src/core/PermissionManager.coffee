@@ -26,7 +26,7 @@ class PermissionManager
 		null
 
 	getPermissions = (origin) ->
-		username = origin.bot.userManager.getUsername(origin)
+		username = origin.user
 
 		perms =
 			KR: ["*"]
