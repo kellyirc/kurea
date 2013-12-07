@@ -6,12 +6,9 @@ class NickServUserManager extends UserManager
 	getUsername: (origin, callback) ->
 		console.log "Inside of NickServUserManager!!"
 
-		# username = null
-		# origin.bot.whois origin.user, (info) ->
-		# 	console.log "Got the info, it's #{info.account}"
-		# 	username = info.account
-
-		callback(null, origin.user)
+		origin.bot.whois origin.user, (info) ->
+			console.log "Got the info, it's #{info.account}"
+			callback(null, info.account)
 
 exports.name = NickServUserManager::shortName
 exports.AuthClass = NickServUserManager
