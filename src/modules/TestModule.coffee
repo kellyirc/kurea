@@ -1,4 +1,5 @@
 Module = require('../core/Module').Module
+Q = require('q')
 
 class TestModule extends Module
 	shortName: "Test"
@@ -34,4 +35,11 @@ class TestModule extends Module
 			[bot, channel, user, chan] = [origin.bot, origin.channel, origin.user, route.params.chan]
 			bot.say channel, "These users are in #{chan}: #{bot.getUsersWithPrefix(chan).join(", ")}"
 			bot.say channel, "The topic is: #{bot.getTopic(chan)}"
+
+		@addRoute "qtest", (origin, route) =>
+			Q.fcall ->
+				console.log "Hurr"
+			.then ->
+				console.log "Durr"
+
 exports.TestModule = TestModule
