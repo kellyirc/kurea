@@ -30,10 +30,12 @@ class TestModule extends Module
 
 		permtest = (origin, route) =>
 			perm = route.params.perm ? "access.test"
-			if @hasPermission origin, perm
-				@reply origin, "You have permission #{perm}!"
-			else
-				@reply origin, "BEEP BEEP you lack permission #{perm}"
+
+			@hasPermission origin, perm, (err, matched) =>
+				if matched
+					@reply origin, "You have permission #{perm}!"
+				else
+					@reply origin, "BEEP BEEP you lack permission #{perm}"
 
 		@addRoute "permtest", permtest
 		@addRoute "permtest :perm", permtest

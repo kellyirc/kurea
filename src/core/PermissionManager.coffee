@@ -1,11 +1,13 @@
 class PermissionManager
 	constructor: () ->
 
-	match: (origin, permissionString) ->
-		permissionSet = @getPermissions(origin)
+	match: (origin, permissionString, callback) ->
+		@getPermissions origin, (err, permissionSet) =>
+			callback(null, @matchSet(permissionSet, permissionString))
 
+	matchSet: (permissionSet, permissionToMatch) ->
 		for permission in permissionSet
-			if @matchPermissions(permission, permissionString) then return true
+			if @matchPermissions(permission, permissionToMatch) then return true
 
 		false
 
@@ -25,12 +27,11 @@ class PermissionManager
 
 		null
 
-	getPermissions = (origin) ->
-		username = origin.user
-
+	getPermissions: (origin, callback) ->
 		perms =
-			KR: ["*"]
+			KR: ["access", "machinery.boat"]
 
-		perms[username] ? []
+		origin.bot.userManager.getUsername origin, (err, username) =>
+			callback(null, perms[username] ? [])
 
 exports.PermissionManager = PermissionManager
