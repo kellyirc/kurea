@@ -1,5 +1,6 @@
 Module = require('../core/Module').Module
 Q = require('q')
+fs = require('fs')
 
 class TestModule extends Module
 	shortName: "Test"
@@ -38,8 +39,12 @@ class TestModule extends Module
 
 		@addRoute "qtest", (origin, route) =>
 			Q.fcall ->
-				console.log "Hurr"
-			.then ->
-				console.log "Durr"
+				Q.nfcall fs.readFile, "package.json"
+
+			.then (x) ->
+				console.log "Durr", "ALRIGHT #{x}"
+
+			.fail (err) ->
+				console.log "Error:", err
 
 exports.TestModule = TestModule
