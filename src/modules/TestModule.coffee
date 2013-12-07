@@ -20,7 +20,13 @@ class TestModule extends Module
 			bot.say(channel, "Hi, my name is #{bot.getName()} but you can call me #{bot.getNick()}!")
 			bot.say(channel, "I'm currently in the server #{bot.getServer()} in the channels #{bot.getChannels().join(", ")}!")
 			bot.say(channel, "My user manager is #{bot.userManager.shortName}!")
-			bot.say(channel, "Your username is #{bot.userManager.getUsername(origin)}!")
+
+			bot.userManager.getUsername origin, (err, username) =>
+				if err?
+					bot.say(channel, "Welp error: #{err}")
+					return
+
+				bot.say(channel, "Your username is #{username}!")
 
 		permtest = (origin, route) =>
 			perm = route.params.perm ? "access.test"
