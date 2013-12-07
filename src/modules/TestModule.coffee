@@ -55,4 +55,20 @@ class TestModule extends Module
 			.fail (err) ->
 				console.log "Error:", err
 
+		@addRoute "qtest :other", (origin, route) =>
+			Q.fcall =>
+				other = route.params.other
+				perm = "access.test"
+
+				Q.all [
+					Q.nfcall @hasPermission, origin, perm
+					Q.nfcall @hasPermission, {bot: origin.bot, channel: origin.channel, user: other}, perm
+				]
+
+			.then (matches) ->
+				console.log "The matches are", matches
+
+			.fail (err) ->
+				console.log "THIS IS AN ERROR:", err
+
 exports.TestModule = TestModule
