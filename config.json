@@ -5,9 +5,12 @@
 			"server": "irc.esper.net",
 			"channels": ["#kellyirc", "#kurea"]
 		},
-		"FreeNode": {
+		"Moop-FreeNode": {
 			"server": "irc.freenode.net",
 			"channels": ["#kurea"]
 		}
+	},
+	"apiKeys": {
+		"wordnik": "35357a15cc56445a9600f093f24011f7d4e7094b1b0eaf1d5"
 	}
 }

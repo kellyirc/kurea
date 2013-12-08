@@ -2,8 +2,12 @@ Router = require "routes"
 ModuleDatabase = require('./ModuleDatabase').ModuleDatabase
 
 class Module
-	constructor: () ->
+	constructor: (@moduleManager) ->
 		@router = new Router()
+
+	getBotManager: -> @moduleManager.botManager
+
+	getApiKey: (name) -> @getBotManager().config.apiKeys[name]
 
 	newDatabase: (name) =>
 		new ModuleDatabase @shortName, name

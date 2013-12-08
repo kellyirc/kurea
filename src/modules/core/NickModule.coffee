@@ -5,8 +5,8 @@ class NickModule extends Module
 	helpText:
 		default: "Change my nick. USAGE: !nick [new nick]"
 
-	constructor: ->
-		super()
+	constructor: (moduleManager) ->
+		super(moduleManager)
 
 		@addRoute "nick :nick", (origin, route) =>
 			origin.bot.changeNick route.params.nick, (err, oldnick, newnick, channels, msg) =>

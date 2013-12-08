@@ -1,6 +1,6 @@
 class ModuleManager
-	constructor: ->
-		@modules = require('./ModuleFinder').ModuleList
+	constructor: (@botManager) ->
+		@modules = require('./ModuleFinder').buildModuleList(@)
 
 	handleMessage: (bot, from, to, message) =>
 		match = /^!(.+)$/.exec(message)

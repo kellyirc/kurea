@@ -4,8 +4,8 @@ class JoinModule extends Module
 	shortName: "Join"
 	helpText:
 		default: "Joins a channel. Delimit channels by spaces or commas. USAGE: !join [channel1] {channel2} {channel3}..."
-	constructor: ->
-		super()
+	constructor: (moduleManager) ->
+		super(moduleManager)
 
 		@addRoute "join *", (origin, route) =>
 			[bot, user, channel, chans] = [origin.bot, origin.user, origin.channel, route.splats[0].split(/[\s,]+/)]

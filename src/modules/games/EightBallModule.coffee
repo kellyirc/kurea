@@ -67,8 +67,8 @@ class EightBallModule extends Module
 	helpText:
 		default: "Ask the magical witty sentient 8-ball any yes-or-no question you desire! USAGE: !8ball"
 
-	constructor: ->
-		super()
+	constructor: (moduleManager) ->
+		super(moduleManager)
 
 		@addRoute "8ball :left", (origin, route) =>
 			[bot, user, channel, left] = [origin.bot, origin.user, origin.channel, route.params.left]

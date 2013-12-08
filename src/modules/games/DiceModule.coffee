@@ -9,8 +9,8 @@ class DiceModule extends Module
 		base += Math.floor(Math.random() * upper) + 1 until lower-- is 0
 		base
 
-	constructor: ->
-		super()
+	constructor: (moduleManager) ->
+		super(moduleManager)
 
 		@addRoute "roll :left(\\d+)d:right(\\d+)", (origin, route) =>
 			[bot, user, channel, left, right] = [origin.bot, origin.user, origin.channel, route.params.left, route.params.right]

@@ -12,7 +12,7 @@ class BotManager
 			@config = require path.resolve(@config)
 
 		@bots = []
-		@moduleManager = new ModuleManager()
+		@moduleManager = new ModuleManager(@)
 		@permissionManager = new PermissionManager()
 		@userManagerClasses = @loadUserManagers(__dirname + '/../auths')
 
