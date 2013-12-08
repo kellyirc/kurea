@@ -14,9 +14,13 @@ reloadFileModules = (file) ->
 	fileModules = {}
 
 	try
-	moduleContainerObject = require file
-	for k of moduleContainerObject
-		fileModules[k] = new moduleContainerObject[k] if k.indexOf 'Module' isnt -1
+		moduleContainerObject = require file
+
+		for k of moduleContainerObject
+			fileModules[k] = new moduleContainerObject[k] if k.indexOf 'Module' isnt -1
+	catch e
+		console.log "There was a problem while loading #{file}"
+		console.error e
 
 	fileModules
 
