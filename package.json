@@ -33,6 +33,7 @@
     "mathjs": "~0.16.0",
     "q": "~0.9.7",
     "swagger-client": "~2.0.7",
-    "underscore.string": "~2.3.3"
+    "underscore.string": "~2.3.3",
+    "watch": "~0.8.0"
   }
 }
