@@ -3,13 +3,14 @@ class ModuleManager
 		@modules = require('./ModuleFinder').buildModuleList(@)
 
 	handleMessage: (bot, from, to, message) =>
-		match = /^!(.+)$/.exec(message)
-		return if match is null
 
-		command = match[1]
-
-		console.log "Handling '#{command}'"
 		for moduleName, module of @modules
+
+			match = new RegExp("^\\#{module.commandPrefix}(.+)$").exec(message)
+			continue if match is null
+
+			command = match[1]
+
 			route = module.router.match(command.split('%').join('%25')) # Router doesn't like %'s
 			if route?
 				origin =

@@ -29,4 +29,6 @@ class Module
 	helpText:
 		default: "There is no help text for this module."
 
+	commandPrefix: "!"
+
 exports.Module = Module
