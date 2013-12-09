@@ -9,7 +9,7 @@ class SeenModule extends Module
 		super(moduleManager)
 		@db = @newDatabase("last-seen")
 
-		@on 'message#', (nick, to, text, msg) =>
+		@on 'message#', (bot, nick, to, text, msg) =>
 			query =
 				nick: nick
 			update =

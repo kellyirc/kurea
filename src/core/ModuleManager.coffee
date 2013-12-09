@@ -30,6 +30,8 @@ class ModuleManager extends EventEmitter
 					console.error "Your module is bad and you should feel bad:"
 					console.error e.stack
 
+
+
 	addListener: (event, listener) ->
 		@on event, listener
 	on: (event, listener) ->
@@ -38,7 +40,18 @@ class ModuleManager extends EventEmitter
 			@botListeners[event].push listener
 
 			for bot in @botManager.bots
-				bot.conn.on event, listener
+				do (bot) =>
+					listenerWrapper = (args...) =>
+						try
+							index = @botListeners[event].indexOf(listener)
+							if index isnt -1
+								listener bot, args...
+							else
+								@removeListener event, listener
+						catch e
+							console.error "Error in module bot listener"
+							console.error e.stack
+					bot.conn.on event, listenerWrapper
 
 		else
 			super(event, listener)
@@ -48,10 +61,15 @@ class ModuleManager extends EventEmitter
 			@botListeners[event].push listener
 			self = @
 			for bot in @botManager.bots
-				bot.conn.once event, () ->
-					index = self.botListeners[event].indexOf(listener)
-					self.botListeners[event].splice index, 1 if index isnt -1
-					listener.apply this, arguments
+				do (bot) =>
+					bot.conn.once event, (args...) ->
+						try
+							index = self.botListeners[event].indexOf(listener)
+							self.botListeners[event].splice index, 1 if index isnt -1
+							listener bot, args...
+						catch e
+							console.error "Error in module bot listener"
+							console.error e.stack
 		else
 			super(event, listener)
 
