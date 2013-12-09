@@ -5,7 +5,7 @@ fs = require('fs')
 class TestModule extends Module
 	shortName: "Test"
 	helpText:
-		default: "Some funky test stuff."
+		default: "Some test stuff."
 		secretilluminaticommand: "no longer a secret"
 
 	constructor: (moduleManager) ->

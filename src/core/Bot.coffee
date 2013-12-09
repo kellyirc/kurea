@@ -61,7 +61,7 @@ class Bot
 		@conn = new irc.Client @config.server, @config.nick, @config
 
 		@conn.on 'error', (msg) =>
-			console.log 'Error: ', msg
+			console.error 'Error: ', msg
 
 		@conn.on 'raw', (msg) =>
 			console.log '>>>', @messageToString msg if @config.verbose
