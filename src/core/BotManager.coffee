@@ -9,16 +9,16 @@ PermissionManager = require('./PermissionManager').PermissionManager
 class BotManager
 	constructor: (@config) ->
 		if typeof @config is "string"
-			@config = require path.resolve(@config)
+			@config = require path.resolve @config
 
 		@bots = []
-		@moduleManager = new ModuleManager(@)
+		@moduleManager = new ModuleManager @
 		@permissionManager = new PermissionManager()
-		@userManagerClasses = @loadUserManagers(__dirname + '/../auths')
+		@userManagerClasses = @loadUserManagers __dirname + '/../auths'
 
 		globalConfig = _.omit(@config, 'bots')
 		for botName, botConfig of @config.bots
-			@bots.push new Bot(@, _.extend({name: botName, auth: "nick"}, globalConfig, botConfig))
+			@bots.push new Bot @, _.extend({name: botName, auth: "nick"}, globalConfig, botConfig)
 
 	loadUserManagers: (path) ->
 		managerClasses = {}

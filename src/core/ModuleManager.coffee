@@ -2,18 +2,18 @@ EventEmitter = require('events').EventEmitter
 
 class ModuleManager extends EventEmitter
 	constructor: (@botManager) ->
-		@modules = require('./ModuleFinder').buildModuleList(@)
+		@modules = require('./ModuleFinder').buildModuleList @
 
 	handleMessage: (bot, from, to, message) =>
 
 		for moduleName, module of @modules
 
-			match = new RegExp("^\\#{module.commandPrefix}(.+)$").exec(message)
+			match = new RegExp("^\\#{module.commandPrefix}(.+)$").exec message
 			continue if match is null
 
 			command = match[1]
 
-			route = module.router.match(command.split('%').join('%25')) # Router doesn't like %'s
+			route = module.router.match command.split('%').join('%25') # Router doesn't like %'s
 			if route?
 				origin =
 					bot: bot
@@ -21,7 +21,7 @@ class ModuleManager extends EventEmitter
 					channel: if to is bot.getNick() then undefined else to
 					isPM: to is bot.getNick()
 				try
-					route.fn( origin, route )
+					route.fn origin, route
 				catch e
 					console.log "Your module is bad and you should feel bad:"
 					console.log e.stack

@@ -32,11 +32,11 @@ class Module extends EventEmitter
 		@moduleManager.once event, listener
 
 	addRoute: (path, fn) =>
-		@router.addRoute(path, fn)
+		@router.addRoute path, fn
 
 	hasPermission: (origin, permission, callback) =>
 		# request a match check to the PermissionManager in ModuleManager
-		origin.bot.botManager.permissionManager.match(origin, permission, callback)
+		origin.bot.botManager.permissionManager.match origin, permission, callback
 
 	reply: (origin, msg) ->
 		if not origin.isPM
