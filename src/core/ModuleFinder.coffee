@@ -37,6 +37,7 @@ removeFile = (file) ->
 	delete require.cache[require.resolve file]
 	for moduleName, module of moduleFiles[file]
 		delete modules[moduleName]
+		module.destroy()
 	delete moduleFiles[file]
 
 buildModuleList = (moduleManager) ->
