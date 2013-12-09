@@ -20,7 +20,7 @@ reloadFileModules = (file, moduleManager) ->
 				fileModules[k] = new moduleContainerObject[k](moduleManager)
 	catch e
 		console.log "There was a problem while loading #{file}"
-		console.error e
+		console.error e.stack
 
 	fileModules
 
