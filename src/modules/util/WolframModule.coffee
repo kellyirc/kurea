@@ -21,7 +21,7 @@ class WolframModule extends Module
 				try
 					if err?
 						@reply origin, "Error making query."
-						console.log JSON.stringify(err)
+						console.error JSON.stringify(err)
 						return
 					if response.queryresult.$.success is 'false'
 						@reply origin, "Wolfram did not understand your query."
@@ -43,7 +43,7 @@ class WolframModule extends Module
 								@reply origin, "#{title}: #{texts}"
 				catch e
 					@reply origin, "Error handling query. (#{e.message})"
-					console.log e.stack
+					console.error e.stack
 	parseResponse: (response) ->
 		result = {}
 		primary = undefined
