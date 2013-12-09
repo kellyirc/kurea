@@ -12,7 +12,11 @@ class GitUpdateModule extends Module
 	constructor: (moduleManager) ->
 		super(moduleManager)
 
-		apiKey = @getApiKey 'github'
+		accessToken = @getApiKey 'github'
+
+		if not accessToken?
+			console.log "No access token specified in config files; I will now stop functioning completely because yeah."
+			return
 
 		@defaultGitHubParams =
 			hostname: "api.github.com"
@@ -21,14 +25,22 @@ class GitUpdateModule extends Module
 
 		[@owner, @repo, @head] = ["kellyirc", "kurea", "master"]
 
-		@addRoute "git-check", (origin, route) =>
-			@checkUpdate(apiKey)
+		autoUpdateId = setInterval ->
+			@checkUpdate accessToken
+		, 10 * 60 * 1000
+
+		@addRoute "update", (origin, route) =>
+			@checkUpdate accessToken, origin
+
+		@addRoute "auto-update :min", (origin, route) =>
+			timeMin = route.params.min
+
+			if timeMin is "never"
+				clearInterval autoUpdateId
+				@reply origin, "Disabled auto-update checking. (CANNOT BE RE-ENABLED AT THIS TIME)"
+		
 
 	getCurrentCommit: (callback) =>
-		# if @lastCommit?
-		# 	callback null, @lastCommit
-		# 	return
-
 		Q.nfcall fs.readFile, ".git/HEAD",
 			encoding: "utf-8"
 
@@ -46,21 +58,20 @@ class GitUpdateModule extends Module
 		.fail (err) =>
 			callback err, null
 
-	checkUpdate: (apiKey) ->
+	checkUpdate: (accessToken, origin) ->
 		@getCurrentCommit (err, hash) =>
 			if err?
 				console.error "There was a problem!"
 				console.error err.stack
 
 			compareOptions =
-				auth: "#{apiKey}:x-oauth-basic"
+				auth: "#{accessToken}:x-oauth-basic"
 				path: "/repos/#{@owner}/#{@repo}/compare/#{hash}...#{@head}"
 
-			console.log "Creating request..."
+			console.log "Checking for update..."
+			@reply origin, "Checking for updates..." if origin?
 
 			req = https.request _.extend(compareOptions, @defaultGitHubParams), (res) =>
-				console.log "statusCode: #{res.statusCode}; #{res.headers['x-ratelimit-remaining']} of #{res.headers['x-ratelimit-limit']} requests left."
-
 				chunks = []
 				res.on 'data', (data) =>
 					chunks.push data
@@ -70,55 +81,45 @@ class GitUpdateModule extends Module
 
 					if data.commits.length > 0
 						console.log "Update available!"
-						@update data
+						@update data, origin
 					else
 						console.log "No need to update..."
+						@reply origin, "No new commits available; no update is performed." if origin?
 
 			req.on 'error', (e) -> console.error e.stack
 			req.end()
 
-	update: (data) ->
+	update: (data, origin) ->
 		[meh..., last] = data.commits
 		headHash = last.sha
 		console.log "Updating to #{headHash}"
 
 		modulesOnly = _.all (file.filename for file in data.files), (v) => _.str.startsWith(v, "src/modules/")
 
-		# promises = []
+		Q.fcall =>
+			console.log "Running 'git pull'..."
+			@reply origin, "Pulling new commits..." if origin?
 
-		# for file in data.files
-		# 	filename = path.resolve file.filename
-		# 	console.log "File #{filename} is updated"
+			deferred = Q.defer()
 
-		# 	promises.push Q.fcall =>
-		# 		deferred = Q.defer()
+			gitPull = child_process.exec "git pull", (err, stdout, stderr) ->
+				if err? then deferred.reject err
 
-		# 		https.get "https://raw.github.com/#{@owner}/#{@repo}/#{headHash}/#{file.filename}", (res) =>
-		# 			console.log "statusCode: #{res.statusCode};"
+			gitPull.stdout.on 'data', (chunk) -> console.log "#{chunk}"
+			gitPull.stderr.on 'data', (chunk) -> console.error "#{chunk}"
+			gitPull.on 'close', (code, signal) -> deferred.resolve code, signal
 
-		# 			chunks = []
-		# 			res.on 'data', (data) =>
-		# 				chunks.push data
-		# 			.on 'end', =>
-		# 				contents = Buffer.concat(chunks).toString()
+			deferred.promise
 
-		# 				fs.writeFileSync filename, contents
-		# 				deferred.resolve contents
-		# 			.on 'error', (err) =>
-		# 				deferred.reject err
-
-		# 		deferred
-
-		# Q.all(promises)
-
-		Q.nfcall child_process.exec, "git pull"
-
-		.then (stdout, stderr) =>
+		.then (code, signal) =>
 			console.log "Updated all files to #{headHash}"
+			@reply origin, "Updated all files to latest commit." if origin?
 			# @lastCommit = headHash
 
+			# console.log "modulesOnly = #{modulesOnly}"
 			if not modulesOnly
-				console.log "Update contains files that are not modules; a restart is required"
+				console.log "Update contains files that are not modules; exiting"
+				@reply origin, "Because some of the updated files are not module files, I will restart." if origin?
 				process.exit 0
 
 		.fail (err) =>
