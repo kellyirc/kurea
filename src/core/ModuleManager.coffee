@@ -1,4 +1,6 @@
-class ModuleManager
+EventEmitter = require('events').EventEmitter
+
+class ModuleManager extends EventEmitter
 	constructor: (@botManager) ->
 		@modules = require('./ModuleFinder').buildModuleList(@)
 

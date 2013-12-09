@@ -1,9 +1,15 @@
 Router = require "routes"
 ModuleDatabase = require('./ModuleDatabase').ModuleDatabase
+EventEmitter = require('events').EventEmitter
 
-class Module
+class Module extends EventEmitter
 	constructor: (@moduleManager) ->
 		@router = new Router()
+
+	destroy: ->
+		@events.forEach (element) =>
+			@moduleManager.removeListener element.event, element.listener
+		delete @
 
 	getBotManager: -> @moduleManager.botManager
 
@@ -11,6 +17,19 @@ class Module
 
 	newDatabase: (name) =>
 		new ModuleDatabase @shortName, name
+
+	emit: (args...) ->
+		@moduleManager.emit args...
+
+	on: (event, listener) ->
+		@moduleManager.on event,listener
+		@events.push {event: event, listener: listener}
+
+	addListener: (event, listener) ->
+		@on event, listener
+
+	once: (event, listener) ->
+		@moduleManager.once event, listener
 
 	addRoute: (path, fn) =>
 		@router.addRoute(path, fn)
@@ -24,6 +43,8 @@ class Module
 			origin.bot.say origin.channel, msg
 		else
 			origin.bot.say origin.user, msg
+
+	events: []
 
 	shortName: "Unnamed"
 	helpText:
