@@ -12,7 +12,12 @@ class WolframModule extends Module
 	constructor: (moduleManager) ->
 		super(moduleManager)
 
-		@Wolfram = new Client(@getApiKey('wolfram'))
+		apiKey = @getApiKey('wolfram')
+		if not apiKey?
+			console.error "There's no api key for Wolfram. None of its commands will function."
+			return
+
+		@Wolfram = new Client(apiKey)
 
 		@addRoute "wolfram *", (origin, route) =>
 			[bot, user, channel, isPM] = [origin.bot, origin.user, origin.channel, origin.isPM]

@@ -46,7 +46,11 @@ class WordnikModule extends Module
 
 	constructor: (moduleManager) ->
 		super(moduleManager)
-		Swagger.authorizations.add("key", new Swagger.ApiKeyAuthorization("api_key", @getApiKey('wordnik'), "header"))
+		apiKey = @getApiKey('wordnik')
+		if not apiKey?
+			console.error "There's no api key for Wordnik. None of its commands will function."
+			return
+		Swagger.authorizations.add("key", new Swagger.ApiKeyAuthorization("api_key", apiKey, "header"))
 		@swagger = new Swagger.SwaggerApi {
 			url: "https://api.wordnik.com/v4/resources.json"
 			success: -> console.log "SWAGGER IS READY"
