@@ -5,7 +5,7 @@ BotEvents = require('./Bot').events
 
 class ModuleManager extends EventEmitter
 	constructor: (@botManager) ->
-		@botListeners = {}
+		@botListeners = []
 		@modules = require('./ModuleFinder').buildModuleList @
 
 	handleMessage: (bot, from, to, message) =>
@@ -36,50 +36,52 @@ class ModuleManager extends EventEmitter
 		@on event, listener
 	on: (event, listener) ->
 		if event in BotEvents
-			@botListeners[event] ?= []
-			@botListeners[event].push listener
-
 			for bot in @botManager.bots
 				do (bot) =>
 					listenerWrapper = (args...) =>
 						try
-							index = @botListeners[event].indexOf(listener)
-							if index isnt -1
-								listener bot, args...
-							else
-								@removeListener event, listener
+							listener bot, args...
 						catch e
 							console.error "Error in module bot listener"
 							console.error e.stack
 					bot.conn.on event, listenerWrapper
+					@botListeners.push 
+						event: event
+						listener: listener
+						wrapper: listenerWrapper
+						bot: bot
 
 		else
 			super(event, listener)
 	once: (event, listener) ->
 		if event in BotEvents
-			@botListeners[event] ?= []
-			@botListeners[event].push listener
 			self = @
 			for bot in @botManager.bots
 				do (bot) =>
-					bot.conn.once event, (args...) ->
+					listenerWrapper = (args...) ->
 						try
-							index = self.botListeners[event].indexOf(listener)
-							self.botListeners[event].splice index, 1 if index isnt -1
+							for e, index in botListeners when e.listenerWrapper is listenerWrapper
+								self.botListeners.splice index, 1
 							listener bot, args...
 						catch e
 							console.error "Error in module bot listener"
 							console.error e.stack
+					bot.conn.once event, listenerWrapper
+					@botListeners.push 
+						event: event
+						listener: listener
+						wrapper: listenerWrapper
+						bot: bot
 		else
 			super(event, listener)
 
 	removeListener: (event, listener) ->
 		if event in BotEvents
-			if @botListeners[event]?
-				index = @botListeners[event].indexOf listener
-				@botListeners[event].splice index, 1 if index isnt -1
-				for bot in @botManager.bots
-					bot.conn.removeListener(event, listener)
+			for index in [@botListeners.length - 1..0]
+				e = @botListeners[index]
+				if e.event is event and e.listener is listener
+					e.bot.conn.removeListener(event, e.wrapper)
+					@botListeners.splice index, 1
 		else
 			super(event, listener)
 

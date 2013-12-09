@@ -3,11 +3,10 @@ Module = require('../../core/Module').Module
 class MemoModule extends Module
 	shortName: "Memo"
 	helpText:
-		default: "I'll save messages for people who aren't here now. For multiple nicks, separate by commas. For aliases, separate by slashes. USAGE: !memo [nick(s)]"
+		default: "I'll save messages for people who aren't here now. For multiple nicks, separate by semicolons. For aliases, separate by commas. USAGE: !memo [nick(s)]"
 
 	constructor: (moduleManager) ->
 		super(moduleManager)
-
 		@db = @newDatabase 'memos'
 
 		@on 'names', (bot, channel, nicks) =>
@@ -22,12 +21,16 @@ class MemoModule extends Module
 		@on 'nick', (bot, oldnick, newnick, channels, msg) =>
 			@checkMemos(bot, newnick)
 
+
 		@addRoute 'memo :nicks :message', (origin, route) =>
 			nicks = route.params.nicks
 			for nick in nicks.split ';'
 				do (nick) =>
-					aliases = alias.toLowerCase() for alias in nick.split ','
-					console.log origin.bot.getServer()
+					aliases = nick.toLowerCase().split ','
+					for alias in aliases
+						if @nickIsOnline origin.bot, alias
+							@reply origin, "Silly, #{alias} is online. Tell him/her yourself!"
+							return;
 					@db.insert
 						server: origin.bot.getServer()
 						from: origin.user
@@ -51,6 +54,13 @@ class MemoModule extends Module
 				console.error "Unable to check memos."
 				console.error e.stack
 
+	nickIsOnline: (bot, nick) ->
+		nick = nick.toLowerCase()
+		for chan in bot.getChannels()
+			for user in bot.getUsers(chan)
+				if user.toLowerCase() is nick
+					return true
+		return false
 			
 
 exports.MemoModule = MemoModule

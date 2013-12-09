@@ -5,6 +5,7 @@ EventEmitter = require('events').EventEmitter
 class Module
 	constructor: (@moduleManager) ->
 		@router = new Router()
+		@events = []
 
 	destroy: ->
 		@events.forEach (element) =>
@@ -62,8 +63,6 @@ class Module
 			origin.bot.say origin.channel, msg
 		else
 			origin.bot.say origin.user, msg
-
-	events: []
 
 	shortName: "Unnamed"
 	helpText:
