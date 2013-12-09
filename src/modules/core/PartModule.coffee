@@ -4,8 +4,8 @@ class PartModule extends Module
 	shortName: "Part"
 	helpText:
 		default: "Leaves a channel. Delimit channels by spaces or commas. If no channels given, will leave this channel. USAGE: !part {channel1} {channel2}..."
-	constructor: ->
-		super()
+	constructor: (moduleManager) ->
+		super(moduleManager)
 
 		@addRoute "part *", (origin, route) =>
 			[bot, user, channel, chans] = [origin.bot, origin.user, origin.channel, route.splats[0].split(/[\s,]+/)]

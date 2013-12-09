@@ -4,8 +4,8 @@ class ListModule extends Module
 	shortName: "List"
 	helpText:
 		default: "Lists all the modules this bot has."
-	constructor: ->
-		super()
+	constructor: (moduleManager) ->
+		super(moduleManager)
 
 		@addRoute "list", (origin, route) =>
 			[bot, user, channel] = [origin.bot, origin.user, origin.channel]

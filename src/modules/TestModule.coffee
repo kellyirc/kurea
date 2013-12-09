@@ -7,8 +7,9 @@ class TestModule extends Module
 	helpText:
 		default: "Some test stuff."
 		secretilluminaticommand: "no longer a secret"
-	constructor: ->
-		super()
+
+	constructor: (moduleManager) ->
+		super(moduleManager)
 
 		@addRoute "test", (origin, route) =>
 			[bot, channel, user] = [origin.bot, origin.channel, origin.user]

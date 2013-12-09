@@ -6,8 +6,8 @@ class FlipModule extends Module
 	helpText:
 		default: "Flip a coin, normal style! USAGE: !flip"
 
-	constructor: ->
-		super()
+	constructor: (moduleManager) ->
+		super(moduleManager)
 
 		@addRoute "flip", (origin, route) =>
 			[bot, user, channel] = [origin.bot, origin.user, origin.channel]

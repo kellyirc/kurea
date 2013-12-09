@@ -4,8 +4,8 @@ class HelpModule extends Module
 	shortName: "Help"
 	helpText:
 		default: "Provides helpful information on any module. USAGE: !help [module name | module alias]"
-	constructor: ->
-		super()
+	constructor: (moduleManager) ->
+		super(moduleManager)
 
 		@addRoute "help :name", (origin, route) =>
 			[bot, user, channel, name] = [origin.bot, origin.user, origin.channel, route.params.name.toLowerCase()]

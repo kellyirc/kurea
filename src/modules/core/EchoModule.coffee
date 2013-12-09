@@ -5,8 +5,8 @@ class EchoModule extends Module
 	helpText:
 		default: "I'll say whatever you want me to say. USAGE: !echo [target] [message]"
 
-	constructor: ->
-		super()
+	constructor: (moduleManager) ->
+		super(moduleManager)
 
 		@addRoute "echo :target *", (origin, route) =>
 			origin.bot.say route.params.target, route.splats[0]

@@ -6,8 +6,8 @@ class ChooseModule extends Module
 	helpText:
 		default: "Can't make a decision? I sure can! USAGE: !choose [this] or [that]"
 
-	constructor: ->
-		super()
+	constructor: (moduleManager) ->
+		super(moduleManager)
 
 		@addRoute "choose :left or :right", (origin, route) =>
 			[bot, user, channel, left, right] = [origin.bot, origin.user, origin.channel, route.params.left, route.params.right]

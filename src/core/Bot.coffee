@@ -16,6 +16,37 @@ wrapperFuncs = [
 	'ctcp'
 ]
 
+events = [
+	'registered'
+	'motd'
+	'names'
+	'topic'
+	'join'
+	'part'
+	'quit'
+	'kick'
+	'kill'
+	'message'
+	'message#'
+	'notice'
+	'ping'
+	'pm'
+	'ctcp'
+	'ctcp-notice'
+	'ctcp-privmsg'
+	'ctcp-version'
+	'nick'
+	'invite'
+	'+mode'
+	'-mode'
+	'whois'
+	'channellist_start'
+	'channellist_item'
+	'channellist'
+	'raw'
+	'error'
+]
+
 class Bot
 	constructor: (@botManager, @config) ->
 		# Private members
@@ -33,10 +64,10 @@ class Bot
 			console.log 'Error: ', msg
 
 		@conn.on 'raw', (msg) =>
-			console.log '>>>', @messageToString(msg)
+			console.log '>>>', @messageToString msg if @config.verbose
 
 		@conn.on 'message', (from, to, text, msg) =>
-			@botManager.moduleManager.handleMessage(@, from, to, text)
+			@botManager.moduleManager.handleMessage @, from, to, text
 
 	messageToString: (msg) ->
 		return "#{if msg.prefix? then ':' + msg.prefix + ' ' else ''}#{msg.rawCommand} #{msg.args.map((a) -> '"' + a + '"')}"
@@ -96,3 +127,4 @@ for f in wrapperFuncs
 		-> irc.Client::[f].apply @conn, arguments
 
 exports.Bot = Bot
+exports.events = events

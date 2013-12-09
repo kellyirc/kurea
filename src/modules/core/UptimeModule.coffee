@@ -5,8 +5,8 @@ class UptimeModule extends Module
 	helpText:
 	  default: "See how long I've been going ;)"
 	  
-	constructor: ->
-		super()
+	constructor: (moduleManager) ->
+		super(moduleManager)
     
 		@addRoute "uptime", (origin, route) =>
 			[bot, channel] = [origin.bot, origin.channel]

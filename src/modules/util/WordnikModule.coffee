@@ -44,9 +44,9 @@ class WordnikModule extends Module
 		wordoftheday: "Gets the word of the day. Usage: !wordoftheday"
 		randomwords: "Gets some random words. Usage !randomwords {part of speech}. Available parts of speech: noun, adjective, verb, adverb, interjection, pronoun, preposition, abbreviation, affix, article, auxiliary-verb, conjunction, definite-article, family-name, given-name, idiom, imperative, noun-plural, noun-posessive, past-participle, phrasal-prefix, proper-noun, proper-noun-plural, proper-noun-posessive, suffix, verb-intransitive, verb-transitive"
 
-	constructor: ->
-		super()
-		Swagger.authorizations.add("key", new Swagger.ApiKeyAuthorization("api_key", "35357a15cc56445a9600f093f24011f7d4e7094b1b0eaf1d5", "header"))
+	constructor: (moduleManager) ->
+		super(moduleManager)
+		Swagger.authorizations.add("key", new Swagger.ApiKeyAuthorization("api_key", @getApiKey('wordnik'), "header"))
 		@swagger = new Swagger.SwaggerApi {
 			url: "https://api.wordnik.com/v4/resources.json"
 			success: -> console.log "SWAGGER IS READY"

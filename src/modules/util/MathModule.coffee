@@ -7,8 +7,8 @@ class MathModule extends Module
 	helpText:
 		default: "Evaluates math expressions. USAGE:![math|calc] [expression]"
 
-	constructor: ->
-		super()
+	constructor: (moduleManager) ->
+		super(moduleManager)
 
 		@addRoute "math *", @execute
 		@addRoute "calc *", @execute
