@@ -2,6 +2,7 @@
 	"nick": "Moop",
 	"floodProtection": true,
 	"floodProtectionDelay": "500",
+	"verbose": false,
 	"bots": {
 		"Moop-Esper": {
 			"server": "irc.esper.net",
