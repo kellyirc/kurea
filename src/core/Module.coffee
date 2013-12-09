@@ -2,7 +2,7 @@ Router = require "routes"
 ModuleDatabase = require('./ModuleDatabase').ModuleDatabase
 EventEmitter = require('events').EventEmitter
 
-class Module extends EventEmitter
+class Module
 	constructor: (@moduleManager) ->
 		@router = new Router()
 
@@ -30,6 +30,25 @@ class Module extends EventEmitter
 
 	once: (event, listener) ->
 		@moduleManager.once event, listener
+
+	removeListener: (event, listener) ->
+		index = @events.length - 1
+		while index >= 0
+			e = @events[index]
+			if e.event is event and e.listener is listener
+				@moduleManager.removeListener event, listener
+				@events.splice index, 1
+				break
+			index--
+
+	removeAllListeners: (event) ->
+		index = @events.length - 1
+		while index >= 0
+			e = @events[index]
+			if e.event is event
+				@moduleManager.removeListener e.event, e.listener
+				@events.splice index, 1
+			index--		
 
 	addRoute: (path, fn) =>
 		@router.addRoute(path, fn)

@@ -12,7 +12,6 @@ class BotManager
 			@config = require path.resolve(@config)
 
 		@bots = []
-		@moduleManager = new ModuleManager(@)
 		@permissionManager = new PermissionManager()
 		@userManagerClasses = @loadUserManagers(__dirname + '/../auths')
 
@@ -20,6 +19,8 @@ class BotManager
 		for botName, botConfig of @config.bots
 			@bots.push new Bot(@, _.extend({name: botName, auth: "nick"}, globalConfig, botConfig))
 
+		@moduleManager = new ModuleManager(@)
+		
 	loadUserManagers: (path) ->
 		managerClasses = {}
 
