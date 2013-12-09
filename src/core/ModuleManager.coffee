@@ -45,7 +45,7 @@ class ModuleManager extends EventEmitter
 							console.error "Error in module bot listener"
 							console.error e.stack
 					bot.conn.on event, listenerWrapper
-					@botListeners.push 
+					@botListeners.push
 						event: event
 						listener: listener
 						wrapper: listenerWrapper
@@ -67,7 +67,7 @@ class ModuleManager extends EventEmitter
 							console.error "Error in module bot listener"
 							console.error e.stack
 					bot.conn.once event, listenerWrapper
-					@botListeners.push 
+					@botListeners.push
 						event: event
 						listener: listener
 						wrapper: listenerWrapper

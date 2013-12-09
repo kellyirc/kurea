@@ -30,7 +30,7 @@ class MemoModule extends Module
 					for alias in aliases
 						if @nickIsOnline origin.bot, alias
 							@reply origin, "Silly, #{alias} is online. Tell him/her yourself!"
-							return;
+							return
 					@db.insert
 						server: origin.bot.getServer()
 						from: origin.user

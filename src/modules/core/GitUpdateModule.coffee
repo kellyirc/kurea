@@ -20,7 +20,7 @@ class GitUpdateModule extends Module
 
 		@defaultGitHubParams =
 			hostname: "api.github.com"
-			headers: 
+			headers:
 				"User-Agent": "kellyirc_kurea"
 
 		[@owner, @repo, @head] = ["kellyirc", "kurea", "master"]
