@@ -3,7 +3,7 @@ class PermissionManager
 
 	match: (origin, permissionString, callback) ->
 		@getPermissions origin, (err, permissionSet) =>
-			callback(null, @matchSet(permissionSet, permissionString))
+			callback null, @matchSet(permissionSet, permissionString)
 
 	matchSet: (permissionSet, permissionToMatch) ->
 		for permission in permissionSet
@@ -17,7 +17,7 @@ class PermissionManager
 		until permissionToMatch is null
 			if permissionToMatch is permission then return true
 
-			permissionToMatch = @getParent(permissionToMatch)
+			permissionToMatch = @getParent permissionToMatch
 
 		false
 

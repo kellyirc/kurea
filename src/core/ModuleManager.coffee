@@ -6,18 +6,18 @@ BotEvents = require('./Bot').events
 class ModuleManager extends EventEmitter
 	constructor: (@botManager) ->
 		@botListeners = {}
-		@modules = require('./ModuleFinder').buildModuleList(@)
+		@modules = require('./ModuleFinder').buildModuleList @
 
 	handleMessage: (bot, from, to, message) =>
 
 		for moduleName, module of @modules
 
-			match = new RegExp("^\\#{module.commandPrefix}(.+)$").exec(message)
+			match = new RegExp("^(#{bot.getNick()}[,:]\s?|\\#{module.commandPrefix}+)(.+)$").exec message
 			continue if match is null
 
-			command = match[1]
+			command = match[2].trim() #extra space if you use the nick form. how2regex plz
 
-			route = module.router.match(command.split('%').join('%25')) # Router doesn't like %'s
+			route = module.router.match command.split('%').join('%25') # Router doesn't like %'s
 			if route?
 				origin =
 					bot: bot
@@ -25,7 +25,7 @@ class ModuleManager extends EventEmitter
 					channel: if to is bot.getNick() then undefined else to
 					isPM: to is bot.getNick()
 				try
-					route.fn( origin, route )
+					route.fn origin, route
 				catch e
 					console.error "Your module is bad and you should feel bad:"
 					console.error e.stack
