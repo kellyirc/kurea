@@ -1,5 +1,7 @@
 {
 	"nick": "Moop",
+	"floodProtection": true,
+	"floodProtectionDelay": "500",
 	"bots": {
 		"Moop-Esper": {
 			"server": "irc.esper.net",
@@ -11,6 +13,7 @@
 		}
 	},
 	"apiKeys": {
-		"wordnik": "35357a15cc56445a9600f093f24011f7d4e7094b1b0eaf1d5"
+		"wordnik": "35357a15cc56445a9600f093f24011f7d4e7094b1b0eaf1d5",
+		"wolfram": "UY6XJ8-22G848H5YA"
 	}
 }
