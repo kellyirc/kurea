@@ -57,7 +57,6 @@ class WolframModule extends Module
 					if not _.str.isBlank(text)
 						result[title].push text
 						hasText = true
-				console.log title, hasText, pod.$
 				if not hasText
 					for img in subpod.img
 						result[title].push img.$.src
