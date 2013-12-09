@@ -19,7 +19,7 @@ class SeenModule extends Module
 				chan: to
 			opt =
 				upsert: true
-			@db.update query, update, opt, (err) -> 
+			@db.update query, update, opt, (err) ->
 				console.error err if err?
 
 		@addRoute "seen :nick", (origin, route) =>

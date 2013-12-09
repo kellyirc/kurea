@@ -48,7 +48,7 @@ class Module
 			if e.event is event
 				@moduleManager.removeListener e.event, e.listener
 				@events.splice index, 1
-			index--		
+			index--
 
 	addRoute: (path, fn) =>
 		@router.addRoute path, fn
