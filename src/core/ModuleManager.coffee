@@ -8,10 +8,10 @@ class ModuleManager extends EventEmitter
 
 		for moduleName, module of @modules
 
-			match = new RegExp("^\\#{module.commandPrefix}(.+)$").exec message
+			match = new RegExp("^(#{bot.getNick()}[,:]\s?|\\#{module.commandPrefix}+)(.+)$").exec message
 			continue if match is null
 
-			command = match[1]
+			command = match[2].trim() #extra space if you use the nick form. how2regex plz
 
 			route = module.router.match command.split('%').join('%25') # Router doesn't like %'s
 			if route?
