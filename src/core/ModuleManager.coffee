@@ -1,5 +1,6 @@
 EventEmitter = require('events').EventEmitter
 _ = require 'underscore'
+_.str = require 'underscore.string'
 
 BotEvents = require('./Bot').events
 
@@ -10,12 +11,22 @@ class ModuleManager extends EventEmitter
 
 	handleMessage: (bot, from, to, message) =>
 
+		matchRegex = /(?:(.+)[,:]\s+)?(.+)/
+		match = matchRegex.exec message
+		return if not match?
+
+		[full, targetNick, commandPart] = match
+		return if targetNick? and targetNick isnt bot.getNick()
+		# console.log "targetNick: #{targetNick}; commandPart: #{commandPart}"
+
 		for moduleName, module of @modules
+			if not targetNick?
+				# console.log "Has prefix '#{module.commandPrefix}'?", (_.str.startsWith commandPart, module.commandPrefix)
+				continue if not _.str.startsWith commandPart, module.commandPrefix
 
-			match = new RegExp("^(#{bot.getNick()}[,:]\s?|\\#{module.commandPrefix}+)(.+)$").exec message
-			continue if match is null
+				command = commandPart.substring module.commandPrefix.length
 
-			command = match[2].trim() #extra space if you use the nick form. how2regex plz
+			else command = commandPart
 
 			route = module.router.match command.split('%').join('%25') # Router doesn't like %'s
 			if route?
