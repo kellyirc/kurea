@@ -1,0 +1,20 @@
+{
+	"nick": "Moop",
+	"floodProtection": true,
+	"floodProtectionDelay": "500",
+	"verbose": false,
+	"bots": {
+		"Moop-Esper": {
+			"server": "irc.esper.net",
+			"channels": ["#kellyirc", "#kurea"]
+		},
+		"Moop-FreeNode": {
+			"server": "irc.freenode.net",
+			"channels": ["#kurea"]
+		}
+	},
+	"apiKeys": {
+		"wordnik": "35357a15cc56445a9600f093f24011f7d4e7094b1b0eaf1d5",
+		"wolfram": "UY6XJ8-22G848H5YA"
+	}
+}
