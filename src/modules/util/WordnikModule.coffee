@@ -53,7 +53,6 @@ class WordnikModule extends Module
 		Swagger.authorizations.add("key", new Swagger.ApiKeyAuthorization("api_key", apiKey, "header"))
 		@swagger = new Swagger.SwaggerApi {
 			url: "https://api.wordnik.com/v4/resources.json"
-			success: -> console.log "SWAGGER IS READY"
 		}
 		@addRoute "define :word", (origin, route) =>
 			if not @swagger.ready
