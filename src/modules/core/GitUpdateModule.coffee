@@ -94,7 +94,8 @@ class GitUpdateModule extends Module
 		headHash = last.sha
 		console.log "Updating to #{headHash}"
 
-		modulesOnly = _.all (file.filename for file in data.files), (v) => _.str.startsWith(v, "src/modules/")
+		filenames = (file.filename for file in data.files)
+		modulesOnly = _.all filenames, (v) => _.str.startsWith(v, "src/modules/")
 
 		Q.fcall =>
 			console.log "Running 'git pull'..."
@@ -111,7 +112,21 @@ class GitUpdateModule extends Module
 
 			deferred.promise
 
-		.then (code, signal) =>
+		.then =>
+			if "package.json" in filenames
+				console.log "'npm install'ing potential new deps"
+
+				deferred = Q.defer()
+				gitPull = child_process.exec "npm install", (err, stdout, stderr) ->
+					if err? then deferred.reject err
+
+				gitPull.stdout.on 'data', (chunk) -> console.log "#{chunk}"
+				gitPull.stderr.on 'data', (chunk) -> console.error "#{chunk}"
+				gitPull.on 'close', (code, signal) -> deferred.resolve code, signal
+
+				deferred.promise
+
+		.then =>
 			console.log "Updated all files to #{headHash}"
 			@reply origin, "Updated all files to latest commit." if origin?
 			# @lastCommit = headHash
