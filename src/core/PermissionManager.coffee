@@ -1,8 +1,17 @@
+ModuleDatabase = require('./ModuleDatabase').ModuleDatabase
+Q = require 'q'
+
 class PermissionManager
 	constructor: () ->
+		@db = new ModuleDatabase "_internal", "permissions"
 
 	match: (origin, permissionString, callback) ->
 		@getPermissions origin, (err, permissionSet) =>
+			if err?
+				callback err
+				return
+
+			console.log "Permission set is:", permissionSet
 			callback null, @matchSet(permissionSet, permissionString)
 
 	matchSet: (permissionSet, permissionToMatch) ->
@@ -28,12 +37,26 @@ class PermissionManager
 		null
 
 	getPermissions: (origin, callback) ->
-		perms =
-			KR: ["access", "machinery.boat"]
-			IdleMaster: ["access"]
-			FireFreek: ["access"]
-
 		origin.bot.userManager.getUsername origin, (err, username) =>
-			callback(null, perms[username] ? [])
+			if err? then callback err
+			if not username? then callback new Error("No username was returned")
+
+			else @db.find { username: username.toLowerCase() }, (err, docs) =>
+				if err? then callback err
+				else
+					callback null, docs[0]?.permissions ? []
+
+	addPermission: (targetString, permission, callback) =>
+		# Assuming target is nothing but username ATM...
+		@db.update { username: targetString }, { $push: { permissions: permission } }, { upsert: true }, (err, replacedCount, upsert) =>
+			if err? then callback err
+			else callback null
+
+	dump: =>
+		@db.find {}, (err, docs) =>
+			if err? then console.error err.stack
+			else
+				for doc in docs
+					console.log doc
 
 exports.PermissionManager = PermissionManager
