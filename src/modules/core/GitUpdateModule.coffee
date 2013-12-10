@@ -25,9 +25,9 @@ class GitUpdateModule extends Module
 
 		[@owner, @repo, @head] = ["kellyirc", "kurea", "master"]
 
-		autoUpdateId = setInterval ->
+		autoUpdateId = setInterval =>
 			@checkUpdate accessToken
-		, 10 * 60 * 1000
+		, 8 * 1000
 
 		@addRoute "update", (origin, route) =>
 			@checkUpdate accessToken, origin
