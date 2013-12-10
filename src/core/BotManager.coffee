@@ -25,7 +25,7 @@ class BotManager
 		managerClasses = {}
 
 		file.walkSync path, (start, dirs, files) ->
-			for f in (files.map (f) -> start+'\\'+f)
+			for f in (files.map (f) -> start+'/'+f)
 				auth = require f
 				managerClasses[auth.name] = auth.AuthClass
 				console.log "Added ", auth.name
