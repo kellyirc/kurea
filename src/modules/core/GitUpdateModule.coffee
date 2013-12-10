@@ -51,7 +51,7 @@ class GitUpdateModule extends Module
 				encoding: "utf-8"
 
 		.then (filedata) =>
-			hash = filedata.trim()
+			hash = _.str.trim( filedata )
 			@lastCommit = hash
 			callback null, hash
 
@@ -63,6 +63,7 @@ class GitUpdateModule extends Module
 			if err?
 				console.error "There was a problem!"
 				console.error err.stack
+				return
 
 			compareOptions =
 				auth: "#{accessToken}:x-oauth-basic"
