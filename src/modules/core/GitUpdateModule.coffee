@@ -25,9 +25,9 @@ class GitUpdateModule extends Module
 
 		[@owner, @repo, @head] = ["kellyirc", "kurea", "master"]
 
-		autoUpdateId = setInterval =>
+		@autoUpdateId = setInterval =>
 			@checkUpdate accessToken
-		, 8 * 1000
+		, 10 * 60 * 1000
 
 		@addRoute "update", (origin, route) =>
 			@checkUpdate accessToken, origin
@@ -36,9 +36,16 @@ class GitUpdateModule extends Module
 			timeMin = route.params.min
 
 			if timeMin is "never"
-				clearInterval autoUpdateId
+				clearInterval @autoUpdateId if @autoUpdateId?
+				@autoUpdateId = null
+
 				@reply origin, "Disabled auto-update checking. (CANNOT BE RE-ENABLED AT THIS TIME)"
-		
+
+	destroy: =>
+		console.log "Killing old update interval"
+		clearInterval @autoUpdateId if @autoUpdateId?
+
+		super()
 
 	getCurrentCommit: (callback) =>
 		Q.nfcall fs.readFile, ".git/HEAD",
