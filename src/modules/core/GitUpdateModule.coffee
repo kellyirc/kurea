@@ -147,5 +147,6 @@ class GitUpdateModule extends Module
 
 		.fail (err) =>
 			console.log "Error:", err
+			@reply origin, "There was a problem while updating: #{err.message}" if origin?
 
 exports.GitUpdateModule = GitUpdateModule
