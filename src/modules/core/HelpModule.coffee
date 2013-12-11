@@ -2,8 +2,20 @@ Module = require('../../core/Module').Module
 
 class HelpModule extends Module
 	shortName: "Help"
+
 	helpText:
-		default: "Provides helpful information on any module. USAGE: !help [module name | module alias]"
+		default: "Provides helpful information on any module."
+	usage:
+		default: "help [module name | module alias]"
+
+	getUsageText: (module, alias) ->
+		"«Usage: #{module.commandPrefix}#{module.usage[alias]}»" if module.usage[alias] isnt undefined
+
+	getHelpText: (module, alias) ->
+		usageText = @getUsageText module,alias
+		usageText ?= ''
+		"#{module.helpText[alias]} #{usageText}"
+
 	constructor: (moduleManager) ->
 		super(moduleManager)
 
@@ -13,10 +25,10 @@ class HelpModule extends Module
 			for moduleName, module of bot.getModules()
 				for alias of module.helpText when alias isnt "default"
 					if name is alias.toLowerCase()
-						@reply origin, module.helpText[alias]
+						@reply origin, @getHelpText module, alias
 						return
 				if name is module.shortName.toLowerCase()
-					@reply origin, module.helpText["default"]
+					@reply origin, @getHelpText module, 'default'
 
 
 exports.HelpModule = HelpModule
