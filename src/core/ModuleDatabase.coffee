@@ -3,6 +3,7 @@ Database = require 'nedb'
 fs = require 'fs'
 rimraf = require 'rimraf'
 
+#more info here: https://github.com/louischatriot/nedb/blob/master/README.md
 class ModuleDatabase
 
 	dataStoreFolder = 'data'
