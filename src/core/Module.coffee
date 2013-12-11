@@ -12,6 +12,12 @@ class Module
 			@moduleManager.removeListener element.event, element.listener
 		delete @
 
+	disable: (server, channel) =>
+		@moduleManager.disableModule @, server, channel
+
+	enable: (server, channel) =>
+		@moduleManager.enableModule @, server, channel
+
 	getBotManager: -> @moduleManager.botManager
 
 	getApiKey: (name) -> @getBotManager().config.apiKeys[name]
