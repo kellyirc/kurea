@@ -40,8 +40,8 @@ class ModuleManager extends EventEmitter
 		@moduleActiveSettings.find { name: module.shortName, server: server, channel: channel }, (err, data) ->
 			#I would rather do this somewhere at startup, but...
 			if module.shortName is 'Toggle' or (data isnt [] and data.length is 1 and data[0].isEnabled)
-				deferred.resolve(true) 
-			else 
+				deferred.resolve(true)
+			else
 				deferred.reject(false)
 
 		deferred.promise
@@ -51,8 +51,7 @@ class ModuleManager extends EventEmitter
 			callback docs
 
 	getModuleActiveData: (module, server, channel, callback) =>
-
-		return if module is null 
+		return if module is null
 
 		_getModuleActiveData { name: module.shortName, server: server, channel: channel }, callback
 
@@ -66,7 +65,7 @@ class ModuleManager extends EventEmitter
 
 	enableModule: (module, server, channel) =>
 
-		@moduleActiveSettings.update { name: module.shortName, server: server, channel: channel }, 
+		@moduleActiveSettings.update { name: module.shortName, server: server, channel: channel },
 									{ $set: { isEnabled: true } },
 									{ upsert: true }
 
@@ -74,7 +73,7 @@ class ModuleManager extends EventEmitter
 
 	disableModule: (module, server, channel) =>
 
-		@moduleActiveSettings.update { name: module.shortName, server: server, channel: channel }, 
+		@moduleActiveSettings.update { name: module.shortName, server: server, channel: channel },
 									{ $set: { isEnabled: false } },
 									{ upsert: true }
 

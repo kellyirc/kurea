@@ -5,7 +5,7 @@ parser = require('mathjs')().parser()
 class MathModule extends Module
 	shortName: "Math"
 	helpText:
-		default: "Evaluates math expressions." 
+		default: "Evaluates math expressions."
 	usage:
 		default: "[math|calc] [expression]"
 

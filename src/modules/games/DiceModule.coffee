@@ -4,7 +4,7 @@ color = require 'irc-colors'
 class DiceModule extends Module
 	shortName: "Roll"
 	helpText:
-		default: "Roll some dice, D&D style!" 
+		default: "Roll some dice, D&D style!"
 	usage:
 		default: "roll [#dice]d[#sides]"
 	roll: (lower, upper, base = 0) ->
