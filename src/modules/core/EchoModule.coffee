@@ -3,7 +3,9 @@ Module = require('../../core/Module').Module
 class EchoModule extends Module
 	shortName: "Echo"
 	helpText:
-		default: "I'll say whatever you want me to say. USAGE: !echo [target] [message]"
+		default: "I'll say whatever you want me to say."
+	usage:
+		default: "echo [target] [message]"
 
 	constructor: (moduleManager) ->
 		super(moduleManager)

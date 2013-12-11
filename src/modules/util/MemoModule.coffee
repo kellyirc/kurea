@@ -3,7 +3,9 @@ Module = require('../../core/Module').Module
 class MemoModule extends Module
 	shortName: "Memo"
 	helpText:
-		default: "I'll save messages for people who aren't here now. For multiple nicks, separate by semicolons. For aliases, separate by commas. USAGE: !memo [nick(s)]"
+		default: "I'll save messages for people who aren't here now. For multiple nicks, separate by semicolons. For aliases, separate by commas."
+	usage:
+		default: "memo [nick(s)]"
 
 	constructor: (moduleManager) ->
 		super(moduleManager)
@@ -20,7 +22,6 @@ class MemoModule extends Module
 
 		@on 'nick', (bot, oldnick, newnick, channels, msg) =>
 			@checkMemos(bot, newnick)
-
 
 		@addRoute 'memo :nicks :message', (origin, route) =>
 			nicks = route.params.nicks

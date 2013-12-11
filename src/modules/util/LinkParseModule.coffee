@@ -13,7 +13,7 @@ class LinkParseModule extends Module
 		urlRegex = /(https?:\/\/[^\s]+)/g
 		@on 'message', (bot, sender, channel, message) =>
 			links = message.match urlRegex
-			links.forEach (link) =>
+			links?.forEach (link) =>
 				request link, (e,r,body) =>
 					$ = cheerio.load body
 					title = $('title').text()

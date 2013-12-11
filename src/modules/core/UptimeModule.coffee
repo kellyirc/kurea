@@ -3,7 +3,9 @@ Module = require('../../core/Module').Module
 class UptimeModule extends Module
 	shortName: "Uptime"
 	helpText:
-	  default: "See how long I've been going ;)"
+		default: "See how long I've been going ;)"
+	usage:
+		default: "uptime"
 	  
 	constructor: (moduleManager) ->
 		super(moduleManager)

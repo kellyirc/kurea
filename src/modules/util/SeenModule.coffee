@@ -3,11 +3,13 @@ Module = require('../../core/Module').Module
 class SeenModule extends Module
 	shortName: "Seen"
 	helpText:
-		default: "Find when I last saw someone. USAGE: !seen [nick]"
+		default: "Find when I last saw someone."
+	usage:
+		default: "seen [nick]"
 
 	constructor: (moduleManager) ->
 		super(moduleManager)
-		@db = @newDatabase("last-seen")
+		@db = @newDatabase "last-seen"
 
 		@on 'message#', (bot, nick, to, text, msg) =>
 			query =

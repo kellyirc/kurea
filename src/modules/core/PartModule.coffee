@@ -3,7 +3,10 @@ Module = require('../../core/Module').Module
 class PartModule extends Module
 	shortName: "Part"
 	helpText:
-		default: "Leaves a channel. Delimit channels by spaces or commas. If no channels given, will leave this channel. USAGE: !part {channel1} {channel2}..."
+		default: "Leaves a channel. Delimit channels by spaces or commas. If no channels given, will leave this channel."
+	usage:
+		default: "part {channel1} {channel2}..."
+		
 	constructor: (moduleManager) ->
 		super(moduleManager)
 

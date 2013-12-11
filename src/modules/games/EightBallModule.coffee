@@ -2,6 +2,11 @@ Module = require('../../core/Module').Module
 color = require 'irc-colors'
 
 class EightBallModule extends Module
+	shortName: "8Ball"
+	helpText:
+		default: "Ask the magical witty sentient 8-ball any yes-or-no question you desire!"
+	usage:
+		default: "8ball {question}"
 	responses: [
 		"Yes"
 		"No"
@@ -63,9 +68,6 @@ class EightBallModule extends Module
 		"Only time will tell..."
 		"What do you think?"
 	]
-	shortName: "8Ball"
-	helpText:
-		default: "Ask the magical witty sentient 8-ball any yes-or-no question you desire! USAGE: !8ball"
 
 	constructor: (moduleManager) ->
 		super(moduleManager)

@@ -9,6 +9,14 @@ child_process = require 'child_process'
 class GitUpdateModule extends Module
 	shortName: "GitUpdate"
 
+	helpText: 
+		default: "Update my internals, woooo~"
+		'auto-update': "Change how often I try to update myself."
+
+	usage:
+		default: "update"
+		'auto-update': "auto-update [minutes|never]"
+
 	constructor: (moduleManager) ->
 		super(moduleManager)
 

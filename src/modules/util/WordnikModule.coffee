@@ -36,14 +36,22 @@ class WordnikModule extends Module
 	shortName: "Wordnik"
 	helpText:
 		default: "Accesses Wordnik API for dictionary functions. Current commands: define, example, rhyme, synonym, antonym, wordoftheday"
-		define: "Gets the definition for words. (case-sensitive) Usage: !define [word]"
-		example: "Gets an example sentence using the given word. (case-sensitive) Usage: !example [word]"
-		rhyme: "Gets the first 30 words that rhyme with the given word. Usage: !rhyme [word]"
-		synonym: "Gets synonyms for the given word. Usage: !synonym [word]"
-		antonym: "Gets antonyms for the given word. Usage: !antonym [word]"
-		wordoftheday: "Gets the word of the day. Usage: !wordoftheday"
-		randomwords: "Gets some random words. Usage !randomwords {part of speech}. Available parts of speech: noun, adjective, verb, adverb, interjection, pronoun, preposition, abbreviation, affix, article, auxiliary-verb, conjunction, definite-article, family-name, given-name, idiom, imperative, noun-plural, noun-posessive, past-participle, phrasal-prefix, proper-noun, proper-noun-plural, proper-noun-posessive, suffix, verb-intransitive, verb-transitive"
-
+		define: "Gets the definition for (case-sensitive) words."
+		example: "Gets an example sentence using the given (case-sensitive) word."
+		rhyme: "Gets the first 30 words that rhyme with the given word."
+		synonym: "Gets synonyms for the given word."
+		antonym: "Gets antonyms for the given word."
+		wordoftheday: "Gets the word of the day."
+		randomwords: "Gets some random words. Available parts of speech: noun, adjective, verb, adverb, interjection, pronoun, preposition, abbreviation, affix, article, auxiliary-verb, conjunction, definite-article, family-name, given-name, idiom, imperative, noun-plural, noun-posessive, past-participle, phrasal-prefix, proper-noun, proper-noun-plural, proper-noun-posessive, suffix, verb-intransitive, verb-transitive"
+	usage:
+		define: "define [word]"
+		example: "example [word]"
+		rhyme: "rhyme [word]"
+		synonym: "synonym [word]"
+		antonym: "antonym [word]"
+		wordoftheday: "wordoftheday"
+		randomwords: "randomwords [part-of-speech]"
+		
 	constructor: (moduleManager) ->
 		super(moduleManager)
 		apiKey = @getApiKey('wordnik')
@@ -52,7 +60,8 @@ class WordnikModule extends Module
 			return
 		Swagger.authorizations.add("key", new Swagger.ApiKeyAuthorization("api_key", apiKey, "header"))
 		@swagger = new Swagger.SwaggerApi {
-			url: "https://api.wordnik.com/v4/resources.json"
+			url: "https://api.wordnik.com/v4/resources.json",
+			success: ->
 		}
 		@addRoute "define :word", (origin, route) =>
 			if not @swagger.ready

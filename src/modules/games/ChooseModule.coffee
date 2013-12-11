@@ -4,7 +4,9 @@ color = require 'irc-colors'
 class ChooseModule extends Module
 	shortName: "Choose"
 	helpText:
-		default: "Can't make a decision? I sure can! USAGE: !choose [this] or [that]"
+		default: "Can't make a decision between two things? I sure can!"
+	usage:
+		default: "choose [this] or [that]"
 
 	constructor: (moduleManager) ->
 		super(moduleManager)

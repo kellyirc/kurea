@@ -3,7 +3,9 @@ Module = require('../../core/Module').Module
 class NickModule extends Module
 	shortName: "Nick"
 	helpText:
-		default: "Change my nick. USAGE: !nick [new nick]"
+		default: "Change my nick."
+	usage:
+		default: "nick [new nick]"
 
 	constructor: (moduleManager) ->
 		super(moduleManager)

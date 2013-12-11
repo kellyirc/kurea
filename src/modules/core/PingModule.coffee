@@ -3,7 +3,9 @@ Module = require('../../core/Module').Module
 class PingModule extends Module
 	shortName: "Ping"
 	helpText:
-	  default: "Ping all users in the channel. Don't annoy them too much, now!"
+		default: "Ping all users in the channel. Don't annoy them too much, now!"
+	usage:
+		default: "ping"
 	  
 	constructor: (moduleManager) ->
 		super(moduleManager)

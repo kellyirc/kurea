@@ -4,7 +4,9 @@ jsonver = require('../../../package.json').version
 class VersionModule extends Module
 	shortName: "Version"
 	helpText:
-		default: "Tells you what version this bot is using right now. USAGE: !version"
+		default: "Tells you what version this bot is using right now."
+	usage:
+		default: "version"
 	constructor: (moduleManager) ->
 		super(moduleManager)
 

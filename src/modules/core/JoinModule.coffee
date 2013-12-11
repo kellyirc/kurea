@@ -3,7 +3,9 @@ Module = require('../../core/Module').Module
 class JoinModule extends Module
 	shortName: "Join"
 	helpText:
-		default: "Joins a channel. Delimit channels by spaces or commas. USAGE: !join [channel1] {channel2} {channel3}..."
+		default: "Joins a channel. Delimit channels by spaces or commas."
+	usage:
+		default: "join [channel1] {channel2} {channel3}..."
 	constructor: (moduleManager) ->
 		super(moduleManager)
 

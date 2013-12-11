@@ -4,7 +4,9 @@ color = require 'irc-colors'
 class FlipModule extends Module
 	shortName: "Flip"
 	helpText:
-		default: "Flip a coin, normal style! USAGE: !flip"
+		default: "Flip a coin, normal style!"
+	usage:
+		default: "flip"
 
 	constructor: (moduleManager) ->
 		super(moduleManager)
