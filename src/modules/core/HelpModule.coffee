@@ -9,7 +9,7 @@ class HelpModule extends Module
 		default: "help [module name | module alias]"
 
 	getUsageText: (module, alias) ->
-		"«Usage: #{module.commandPrefix}#{module.usage[alias]}»" if module.usage[alias] isnt undefined
+		"«Usage: #{module.commandPrefix}#{module.usage[alias]}»" if 'usage' of module and alias of module.usage
 
 	getHelpText: (module, alias) ->
 		usageText = @getUsageText module,alias
