@@ -15,7 +15,7 @@ class PartModule extends Module
 
 			# TODO: allow part messages
 			for chan in chans
-				bot.part chan, ->
+				bot.part chan, =>
 					@reply origin, "I have left #{chan}."
 		@addRoute "part", (origin, route) =>
 			[bot, user, channel] = [origin.bot, origin.user, origin.channel]
