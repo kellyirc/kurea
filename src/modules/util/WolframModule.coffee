@@ -6,11 +6,9 @@ _.str = require 'underscore.string'
 class WolframModule extends Module
 	shortName: "Wolfram"
 	helpText:
-		default: "Queries WolframAlpha and ouputs results.  To view image results of queries, try !wolfram-img"
-		"wolfram-img": "Same as !wolfram, but returns images of all the results instead."
+		default: "Queries WolframAlpha and ouputs results."
 	usage:
 		default: "wolfram [query]"
-		"wolfram-img": "wolfram-img [query]"
 
 	constructor: (moduleManager) ->
 		super(moduleManager)
