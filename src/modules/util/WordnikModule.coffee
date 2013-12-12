@@ -50,7 +50,7 @@ class WordnikModule extends Module
 		synonym: "synonym [word]"
 		antonym: "antonym [word]"
 		wordoftheday: "wordoftheday"
-		randomwords: "randomwords [part-of-speech]"
+		randomwords: "randomwords {part-of-speech}"
 		
 	constructor: (moduleManager) ->
 		super(moduleManager)
