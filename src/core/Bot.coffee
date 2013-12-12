@@ -120,6 +120,11 @@ class Bot
 		@conn.on 'nick', nickListener
 		@conn.on 'raw', errListener
 
+	setConfig: (key, value) ->
+		if not (key in @config.overrides)
+			@config.overrides.push key
+		@config[key] = value
+		@botManager.writeConfig()
 
 # Wraps functions from irc.Client
 for f in wrapperFuncs
