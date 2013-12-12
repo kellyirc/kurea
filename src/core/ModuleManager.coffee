@@ -53,7 +53,7 @@ class ModuleManager extends EventEmitter
 	getModuleActiveData: (module, server, channel, callback) =>
 		return if module is null
 
-		_getModuleActiveData { name: module.shortName, server: server, channel: channel }, callback
+		@_getModuleActiveData { name: module.shortName, server: server, channel: channel }, callback
 
 	enableAllModules: (server, channel) =>
 		for moduleName,module of @modules
