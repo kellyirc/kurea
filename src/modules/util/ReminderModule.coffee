@@ -220,6 +220,8 @@ class ReminderModule extends Module
 	constructor: (moduleManager) ->
 		super(moduleManager)
 
+		@reminders = []
+
 		@db = @newDatabase 'reminders'
 
 		@db.find {}, (err, docs) =>
@@ -241,7 +243,7 @@ class ReminderModule extends Module
 				@reply origin, "Alright, I'll remind #{if data.own then 'you' else data.target} to '#{data.task}' in #{timeString data.time}!"
 				console.log data
 
-				# @db.insert data, (err) =>
+				# @db.insert data, (err) => console.log "Insertion: ", if err? then "ERROR: #{err}" else "OK"
 				@startReminder data
 
 			catch e
@@ -250,7 +252,8 @@ class ReminderModule extends Module
 
 	startReminder: (data) ->
 		# setTimeout to handle reminder schtuff
-		setTimeout =>
+		@reminders.push data
+		data.timeoutId = setTimeout =>
 			console.log "Reminder for #{data.target}: #{data.task}"
 		, data.time
 
