@@ -235,6 +235,10 @@ class ReminderModule extends Module
 				data.own = (data.target is 'me' or data.target is origin.user)
 				data.target = origin.user if data.target is 'me'
 
+				if data.time / (24*60*60*1000) > 24.8
+					@reply origin, "Sorry, you can't set a with a duration greater than 24.8 days for now!"
+					return
+
 				@reply origin, "Alright, I'll remind #{if data.own then 'you' else data.target} to '#{data.task}' in #{timeString data.time}!"
 				console.log data
 
