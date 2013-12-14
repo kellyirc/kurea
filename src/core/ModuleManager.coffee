@@ -3,7 +3,6 @@ _ = require 'underscore'
 _.str = require 'underscore.string'
 Database = require 'nedb'
 color = require 'irc-colors'
-Q = require 'q'
 
 BotEvents = require('./Bot').events
 
@@ -34,17 +33,14 @@ class ModuleManager extends EventEmitter
 
 		possibleModule
 
-	canModuleRoute: (module, server, channel) =>
-		deferred = Q.defer()
+	canModuleRoute: (module, server, channel, isPM, callback) =>
+
+		if isPM
+			callback()
+			return
 
 		@moduleActiveSettings.find { name: module.shortName, server: server, channel: channel }, (err, data) ->
-			#I would rather do this somewhere at startup, but...
-			if module.shortName is 'Toggle' or (data isnt [] and data.length is 1 and data[0].isEnabled)
-				deferred.resolve true
-			else
-				deferred.reject false
-
-		[deferred.promise,deferred]
+			callback() if module.shortName is 'Toggle' or (data isnt [] and data.length is 1 and data[0].isEnabled)
 
 	_getModuleActiveData: (search, callback) ->
 		@moduleActiveSettings.find search, (err, docs) ->
@@ -113,11 +109,7 @@ class ModuleManager extends EventEmitter
 				#sigh.
 				routeVariable = routeToMatch
 
-				[routePromise, routeDeferred] = @canModuleRoute module, serverName, to
-
-				if origin.isPM then routeDeferred.resolve true
-
-				routePromise.then ->
+				@canModuleRoute module, serverName, to, origin.isPM, ->
 					try
 						routeVariable.fn origin, routeVariable
 					catch e
