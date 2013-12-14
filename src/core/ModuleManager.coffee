@@ -81,7 +81,7 @@ class ModuleManager extends EventEmitter
 
 	handleMessage: (bot, from, to, message) =>
 
-		matchRegex = /(?:(.+)[,:]\s+)?(.+)/
+		matchRegex = /^(?:([^\s]+)[,:]\s+)?(.+)$/
 		match = matchRegex.exec message
 		return if not match?
 
