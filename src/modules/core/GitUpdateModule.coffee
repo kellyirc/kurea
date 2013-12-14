@@ -23,7 +23,7 @@ class GitUpdateModule extends Module
 		accessToken = @getApiKey 'github'
 
 		if not accessToken?
-			console.log "No access token specified in config files; I will now stop functioning completely because yeah."
+			console.log "No GitHub access token specified in config files; I will not be able to update from GitHub."
 			return
 
 		@defaultGitHubParams =
