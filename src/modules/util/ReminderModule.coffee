@@ -224,8 +224,8 @@ class ReminderModule extends Module
 
 		@db = @newDatabase 'reminders'
 
-		@db.find {}, (err, docs) =>
-			@startReminder doc for doc in docs
+		# @db.find {}, (err, docs) =>
+		# 	@startReminder doc for doc in docs
 
 		@addRoute 'remind :args', (origin, route) =>
 			try
@@ -235,6 +235,8 @@ class ReminderModule extends Module
 
 				data.own = (data.target is 'me' or data.target is origin.user)
 				data.target = origin.user if data.target is 'me'
+
+				data.botName = origin.bot.getName()
 
 				if data.time / (24*60*60*1000) > 24.8
 					@reply origin, "Sorry, you can't set a with a duration greater than 24.8 days for now!"
@@ -255,6 +257,10 @@ class ReminderModule extends Module
 		@reminders.push data
 		data.timeoutId = setTimeout =>
 			console.log "Reminder for #{data.target}: #{data.task}"
+
+			bot = _.find @getBotManager().bots, (bot) => bot.getName() is data.botName
+
+			bot.say data.target, "Hey #{data.target}! #{if data.own then 'You' else data.target} wanted me to remind you to '#{data.task}'!"
 		, data.time
 
 exports.ReminderModule = ReminderModule
