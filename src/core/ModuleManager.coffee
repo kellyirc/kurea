@@ -34,17 +34,17 @@ class ModuleManager extends EventEmitter
 
 		possibleModule
 
-	isModuleActive: (module, server, channel) =>
+	canModuleRoute: (module, server, channel) =>
 		deferred = Q.defer()
 
 		@moduleActiveSettings.find { name: module.shortName, server: server, channel: channel }, (err, data) ->
 			#I would rather do this somewhere at startup, but...
 			if module.shortName is 'Toggle' or (data isnt [] and data.length is 1 and data[0].isEnabled)
-				deferred.resolve(true)
+				deferred.resolve true
 			else
-				deferred.reject(false)
+				deferred.reject false
 
-		deferred.promise
+		[deferred.promise,deferred]
 
 	_getModuleActiveData: (search, callback) ->
 		@moduleActiveSettings.find search, (err, docs) ->
@@ -113,7 +113,11 @@ class ModuleManager extends EventEmitter
 				#sigh.
 				routeVariable = routeToMatch
 
-				@isModuleActive(module, serverName, to).then ->
+				[routePromise, routeDeferred] = @canModuleRoute module, serverName, to
+
+				if origin.isPM then routeDeferred.resolve true
+
+				routePromise.then ->
 					try
 						routeVariable.fn origin, routeVariable
 					catch e
