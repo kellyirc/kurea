@@ -23,8 +23,7 @@ class Lexer
 				tokens.push token if not @tokenMap[token.type].hidden
 				currentPosition = token.end
 			else
-				console.log "Unexpected symbol #{text.charAt(currentPosition)}"
-				return null
+				throw new Error "Unexpected symbol #{text.charAt(currentPosition)}"
 
 		tokens
 
