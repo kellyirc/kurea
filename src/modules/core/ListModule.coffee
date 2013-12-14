@@ -1,5 +1,7 @@
 Module = require('../../core/Module').Module
 colors = require 'irc-colors'
+_ = {} # Don't need to require underscore, just make an empty object so using underscore.string is consistent
+_.str = require 'underscore.string'
 
 class ListModule extends Module
 	shortName: "List"
@@ -20,9 +22,7 @@ class ListModule extends Module
 				data.forEach (module) ->
 					moduleList.push if module.isEnabled then module.name else colors.red module.name
 
-				moduleString = moduleList.join ', '
-
-				@reply origin, "Current modules are: #{moduleString}"
+				@reply origin, "Current modules are: #{_.str.toSentence moduleList}"
 
 			#list = (module.shortName for name, module of bot.getModules()).join(", ")
 			#@reply origin, "Current modules are: #{list}"
