@@ -260,7 +260,10 @@ class ReminderModule extends Module
 
 			bot = _.find @getBotManager().bots, (bot) => bot.getName() is data.botName
 
-			bot.say data.target, "Hey #{data.target}! #{if data.own then 'You' else data.target} wanted me to remind you to '#{data.task}'!"
+			text = "Hey #{data.target}! #{if data.own then 'You' else data.target} wanted me to remind you to '#{data.task}'!"
+
+			bot.say data.target, text
+			bot.notice data.target, text
 		, data.time
 
 exports.ReminderModule = ReminderModule
