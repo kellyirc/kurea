@@ -69,6 +69,8 @@ class Bot
 		@conn.on 'message', (from, to, text, msg) =>
 			@botManager.moduleManager.handleMessage @, from, to, text
 
+		@conn.send 'nickserv', "identify #{@config.password}" if @config.password
+
 	messageToString: (msg) ->
 		return "#{if msg.prefix? then ':' + msg.prefix + ' ' else ''}#{msg.rawCommand} #{msg.args.map((a) -> '"' + a + '"')}"
 

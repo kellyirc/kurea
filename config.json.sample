@@ -21,7 +21,8 @@
 		"Moop-Esper": {
 			"server": "irc.esper.net",
 			"port": "6667",
-			"channels": ["#kellyirc", "#kurea"]
+			"channels": ["#kellyirc", "#kurea"],
+			"password": "insert_password_here"
 		},
 		"Moop-FreeNode": {
 			"server": "irc.freenode.net",
