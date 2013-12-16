@@ -23,7 +23,7 @@ class MemoModule extends Module
 		@on 'nick', (bot, oldnick, newnick, channels, msg) =>
 			@checkMemos(bot, newnick)
 
-		@addRoute 'memo :nicks :message', (origin, route) =>
+		@addRoute 'memo :nicks *', (origin, route) =>
 			nicks = route.params.nicks
 			for nick in nicks.split ';'
 				do (nick) =>
@@ -37,7 +37,7 @@ class MemoModule extends Module
 						from: origin.user
 						time: new Date()
 						to: aliases
-						msg: route.params.message,
+						msg: route.splats[0],
 						(err) =>
 							if err?
 								console.error err
