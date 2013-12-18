@@ -3,7 +3,7 @@ Q = require 'q'
 
 class PermissionManager
 	constructor: () ->
-		@db = new ModuleDatabase "_internal", "permissions"
+		@db = new ModuleDatabase "internal", "permissions"
 
 	match: (origin, permissionString, callback) ->
 		@getPermissions origin, (err, permissionSet) =>
