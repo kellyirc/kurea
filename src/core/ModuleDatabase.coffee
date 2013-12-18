@@ -1,6 +1,7 @@
 
 fs = require 'fs'
-if fs.existsSync '../../config.json'
+
+if fs.existsSync 'config.json'
 	config = require '../../config.json'
 	databaseEngine = config.storage
 	databaseURL = config.storageURL
