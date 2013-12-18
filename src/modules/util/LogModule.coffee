@@ -11,7 +11,7 @@ class LogModule extends Module
 		@db = @newDatabase 'messages'
 
 		@on 'message', (bot, sender, channel, message) =>
-			@db.insert 
+			@db.insert
 				timestamp: new Date()
 				server: bot.getServer()
 				channel: channel
