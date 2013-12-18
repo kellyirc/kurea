@@ -17,6 +17,9 @@
 	"verbose": false,
 	"auth": "nickserv",
 
+	"storage": "mongo",
+	"storageURL": "localhost:28017",
+
 	"bots": {
 		"Moop-Esper": {
 			"server": "irc.esper.net",
