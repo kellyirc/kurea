@@ -50,6 +50,22 @@ class ModuleDatabase
 	ensureIndex: (data, callback) =>
 		@db.ensureIndex data, callback
 
+	# TODO: remove this when nedb adds sorting which should be soon
+	# Sorts documents by given properties to compare.
+	# Each property in the object should either be
+	# 1 for ascending or -1 for descending order.
+	# Example compareProps = {name: 1, age: -1}
+	# Will sort by name alphabetically, then age oldest first
+	sort: (docs, compareProps) ->
+		docs.sort (a, b) ->
+			for prop, order of compareProps
+				if a[prop] < b[prop]
+					return -order
+				if a[prop] > b[prop]
+					return order
+			return 0
+
+
 	destroy: (callback) =>
 		return if databaseEngine is 'mongo'
 		callback ?= ->
