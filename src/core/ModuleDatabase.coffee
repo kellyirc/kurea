@@ -45,7 +45,20 @@ class ModuleDatabase
 		@db.update query, update, options, callback
 
 	find: (terms, callback) =>
-		@db.find terms, callback
+		if databaseEngine is 'mongo'
+			@db.find terms, (e, docs) ->
+				docs.toArray callback
+		else
+			@db.find terms, callback
+
+	findForEach: (terms, callback) =>
+		if databaseEngine is 'mongo'
+			@db.find terms, (e, docs) ->
+				docs.each callback
+		else
+			@db.find terms, (e, docs) ->
+				docs.forEach (doc) ->
+					callback e, doc
 
 	ensureIndex: (data, callback) =>
 		@db.ensureIndex data, callback
