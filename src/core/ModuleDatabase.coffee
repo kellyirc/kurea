@@ -37,7 +37,7 @@ class ModuleDatabase
 
 	remove: (query, options, callback) =>
 		if databaseEngine is 'mongo'
-			@db.remove query
+			@db.remove query, callback
 		else
 			@db.remove query, options, callback
 
