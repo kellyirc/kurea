@@ -36,7 +36,10 @@ class ModuleDatabase
 		@db.insert data, callback
 
 	remove: (query, options, callback) =>
-		@db.remove query, options, callback
+		if databaseEngine is 'mongo'
+			@db.remove query
+		else
+			@db.remove query, options, callback
 
 	count: (data, callback) =>
 		@db.count data, callback
