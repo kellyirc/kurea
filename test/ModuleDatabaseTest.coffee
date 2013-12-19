@@ -1,4 +1,4 @@
-
+###
 #test dependencies
 fs = require 'fs'
 rimraf = require 'rimraf'
@@ -85,6 +85,4 @@ describe 'ModuleDatabase', ->
 					count.should.equal 0
 				testModule.testDb.count {data: 'hello.'},  (error, count) ->
 					count.should.be.at.least 1
-
-
-
+###
