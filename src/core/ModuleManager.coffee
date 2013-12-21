@@ -79,19 +79,17 @@ class ModuleManager extends EventEmitter
 
 	handleMessage: (bot, from, to, message) =>
 
-		matchRegex = /^(?:([^\s]+)[,:]\s+)?(.+)$/
-		match = matchRegex.exec message
-		return if not match?
-
-		[full, targetNick, commandPart] = match
-		return if targetNick? and targetNick isnt bot.getNick()
-		# console.log "targetNick: #{targetNick}; commandPart: #{commandPart}
+		commandPart = message
+		nickUsage = false
+		if (_.str.startsWith commandPart, "#{bot.getNick()}, ") or (_.str.startsWith commandPart, "#{bot.getNick()}: ")
+			nickUsage = true
+			commandPart = commandPart.substring(bot.getNick().length + 2)
 		
 		serverName = bot.conn.opt.server
 		isChannel = 0 is to.indexOf "#"
 
 		for moduleName, module of @modules
-			if not targetNick?
+			if not nickUsage
 				# console.log "Has prefix '#{module.commandPrefix}'?", (_.str.startsWith commandPart, module.commandPrefix)
 				continue if not _.str.startsWith commandPart, module.commandPrefix
 
