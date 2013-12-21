@@ -1,6 +1,7 @@
 # Test dependencies
 chai = require 'chai'
 expect = chai.expect
+should = chai.should()
 
 # Bot dependencies
 PermissionManager = require('../src/core/PermissionManager').PermissionManager
