@@ -10,6 +10,11 @@ module.exports = (Module) ->
 
 			@db = @newDatabase 'messages'
 
+			@getApi().forEach = (callback) =>
+				@db.findForEach {}, callback
+
+			@registerApi()
+
 			@on 'message', (bot, sender, channel, message) =>
 				@db.insert
 					timestamp: new Date()
