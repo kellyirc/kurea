@@ -21,10 +21,6 @@ module.exports = (Module) ->
 				logModule.forEach (err, msg) =>
 					@markov.seed msg.message
 
-			#console.log @messages
-
-			#messages.forEach 
-
 			@on 'message', (bot, sender, channel, message) =>
 
 				@markov.seed message
