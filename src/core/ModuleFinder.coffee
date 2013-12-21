@@ -35,12 +35,12 @@ loadFile = (file, moduleManager) ->
 	for moduleName, module of moduleFiles[file]
 		modules[moduleName] = module
 
-	console.log "--- Loaded [#{(m.shortName for name, m of moduleFiles[file]).join(', ')}] from #{path.resolve(file)}"
+	console.log "--- Loaded [#{(m.shortName for name, m of moduleFiles[file]).join(', ')}]"
 
 removeFile = (file) ->
 	file = path.resolve(file)
 
-	console.log "--- Removing [#{(m.shortName for name, m of moduleFiles[file]).join(', ')}] from #{file}"
+	console.log "--- Removing [#{(m.shortName for name, m of moduleFiles[file]).join(', ')}]"
 
 	delete require.cache[require.resolve file]
 	for moduleName, module of moduleFiles[file]
