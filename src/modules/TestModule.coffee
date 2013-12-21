@@ -1,5 +1,4 @@
 module.exports = (Module) ->
-	console.log Module
 	Q = require('q')
 	fs = require('fs')
 	
