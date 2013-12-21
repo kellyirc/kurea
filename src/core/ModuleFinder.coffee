@@ -13,11 +13,15 @@ basePath = __dirname+'/../modules'
 reloadFileModules = (file, moduleManager) ->
 	fileModules = {}
 	try
-		moduleContainerObject = require file
-		
-		for k of moduleContainerObject
-			if k.indexOf 'Module' isnt -1
-				fileModules[k] = new moduleContainerObject[k](moduleManager)
+		Module = require('./Module').Module
+		classes = require(file)(Module)
+
+		if not classes? then return
+
+		classes = [].concat classes # So whatever is returned, is made into an array
+
+		fileModules[clazz.name] = new clazz(moduleManager) for clazz in classes
+
 	catch e
 		console.log "There was a problem while loading #{file}"
 		console.error e.stack
