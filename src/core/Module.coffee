@@ -1,6 +1,7 @@
 Router = require "routes"
 ModuleDatabase = require('./ModuleDatabase').ModuleDatabase
 EventEmitter = require('events').EventEmitter
+Q = require 'q'
 
 class Module
 	constructor: (@moduleManager) ->
@@ -70,10 +71,22 @@ class Module
 		else
 			origin.bot.say origin.user, msg
 
+	getApi: () -> 
+		@api = { } if not @api
+
+		@api
+
+	registerApi: () ->
+		@moduleManager.registerApi @shortName, @getApi()
+
 	shortName: "Unnamed"
 	helpText:
 		default: "There is no help text for this module."
 
 	commandPrefix: "!"
+
+	#TODO make this a promise
+	#isModuleActive: (bot, channel) ->
+
 
 exports.Module = Module
