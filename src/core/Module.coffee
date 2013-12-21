@@ -71,7 +71,7 @@ class Module
 		else
 			origin.bot.say origin.user, msg
 
-	getApi: () -> 
+	getApi: () ->
 		@api = { } if not @api
 
 		@api

@@ -199,7 +199,7 @@ class ModuleManager extends EventEmitter
 
 		promiseOrValue = if isNewApi then @apiMap[module].promise else @apiMap[module]
 
-		Q.when promiseOrValue, (value) -> 
+		Q.when promiseOrValue, (value) ->
 			callback value
 
 
