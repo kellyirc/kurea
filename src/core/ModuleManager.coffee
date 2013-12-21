@@ -3,12 +3,14 @@ _ = require 'underscore'
 _.str = require 'underscore.string'
 Database = require 'nedb'
 color = require 'irc-colors'
+Q = require 'q'
 
 BotEvents = require('./Bot').events
 
 class ModuleManager extends EventEmitter
 
 	moduleActiveSettings: new Database { autoload: true, filename: 'data/bot-core/module-settings.kdb' }
+	apiMap: {}
 
 	constructor: (@botManager) ->
 		@botListeners = []
@@ -184,5 +186,23 @@ class ModuleManager extends EventEmitter
 			for listener in @botListeners[event]
 				listeners.push listener
 		listeners
+
+	registerApi: (module, api) ->
+		if @apiMap[module] and Q.isPromise @apiMap[module].promise
+			@apiMap[module].resolve api
+		else
+			@apiMap[module] = api
+
+	apiCall: (module, callback) ->
+
+		isNewApi = module not of @apiMap
+
+		@apiMap[module] = Q.defer() if isNewApi
+
+		promiseOrValue = if isNewApi then @apiMap[module].promise else @apiMap[module]
+
+		Q.when promiseOrValue, (value) -> 
+			callback value
+
 
 exports.ModuleManager = ModuleManager
