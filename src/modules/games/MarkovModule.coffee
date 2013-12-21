@@ -1,4 +1,3 @@
-
 markov = require 'markov'
 color = require 'irc-colors'
 
@@ -26,7 +25,7 @@ module.exports = (Module) ->
 				@markov.seed message
 
 				@moduleManager.canModuleRoute @, bot.getServer(), channel, false, =>
-					if Math.random() > 0.9 or message.indexOf(bot.getNick()) isnt -1
+					if Math.random() > 0.96 or message.indexOf(bot.getNick()) isnt -1
 						try
 							bot.say channel, (@markov.respond message).join ' '
 						catch err
