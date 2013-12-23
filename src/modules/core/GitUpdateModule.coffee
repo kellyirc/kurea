@@ -47,7 +47,18 @@ module.exports = (Module) ->
 					clearInterval @autoUpdateId if @autoUpdateId?
 					@autoUpdateId = null
 	
-					@reply origin, "Disabled auto-update checking. (CANNOT BE RE-ENABLED AT THIS TIME)"
+					@reply origin, "Disabled auto-update checking. Re-enable by specifying how often I should check for updates in minutes!"
+
+				else if not isNaN Number(timeMin)
+					clearInterval @autoUpdateId if @autoUpdateId?
+					@autoUpdateId = setInterval =>
+						@checkUpdate accessToken
+					, Number(timeMin) * 60 * 1000
+
+					@reply origin, "I will now check for updates every #{timeMin} minutes!"
+
+				else
+					@reply origin, "Sorry, I don't really understand what that's supposed to mean! Try specifying a number or 'never' instead!"
 	
 		destroy: =>
 			console.log "Killing old update interval"
