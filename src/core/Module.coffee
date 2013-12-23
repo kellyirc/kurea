@@ -17,13 +17,13 @@ class Module
 		@settings =
 			set: (key, value) =>
 				_settings[key] = value
-				@saveSettings()
+				@settings.save()
 
 			get: (key) => _settings[key]
 
-		@saveSettings = () =>
-			fs.mkdirSync "settings" if not fs.existsSync "settings"
-			fs.writeFileSync "settings/#{@shortName}.json", JSON.stringify _settings
+			save: () =>
+				fs.mkdirSync "settings" if not fs.existsSync "settings"
+				fs.writeFileSync "settings/#{@shortName}.json", JSON.stringify _settings
 
 	destroy: ->
 		@events.forEach (element) =>
