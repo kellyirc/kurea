@@ -2,11 +2,28 @@ Router = require "routes"
 ModuleDatabase = require('./ModuleDatabase').ModuleDatabase
 EventEmitter = require('events').EventEmitter
 Q = require 'q'
+fs = require 'fs'
 
 class Module
 	constructor: (@moduleManager) ->
 		@router = new Router()
 		@events = []
+
+		if fs.existsSync "settings/#{@shortName}.json"
+			_settings = JSON.parse (fs.readFileSync "settings/#{@shortName}.json"), {encoding: 'utf-8'}
+
+		_settings ?= {}
+
+		@settings =
+			set: (key, value) =>
+				_settings[key] = value
+				@saveSettings()
+
+			get: (key) => _settings[key]
+
+		@saveSettings = () =>
+			fs.mkdirSync "settings" if not fs.existsSync "settings"
+			fs.writeFileSync "settings/#{@shortName}.json", JSON.stringify _settings
 
 	destroy: ->
 		@events.forEach (element) =>

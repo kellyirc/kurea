@@ -40,6 +40,17 @@ module.exports = (Module) ->
 	
 			@addRoute "permtest", permtest
 			@addRoute "permtest :perm", permtest
+
+			@addRoute "test-set :key :value", (origin, route) =>
+				[key, value] = [route.params.key, route.params.value]
+
+				@settings.set key, value
+				@reply origin, "Set key #{key} to value '#{value}'"
+
+			@addRoute "test-get :key", (origin, route) =>
+				[key, value] = [route.params.key, @settings.get route.params.key]
+				
+				@reply origin, "Key #{key} has the value '#{value}'"
 	
 			@addRoute "info :chan", (origin, route) =>
 				[bot, channel, user, chan] = [origin.bot, origin.channel, origin.user, route.params.chan]

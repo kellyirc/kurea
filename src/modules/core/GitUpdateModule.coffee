@@ -32,10 +32,18 @@ module.exports = (Module) ->
 					"User-Agent": "kellyirc_kurea"
 	
 			[@owner, @repo, @head] = ["kellyirc", "kurea", "master"]
-	
-			@autoUpdateId = setInterval =>
-				@checkUpdate accessToken
-			, 10 * 60 * 1000
+
+			updateInterval = (@settings.get "updateIntervalMinutes") ? 10
+
+			if _.isNumber updateInterval
+				@autoUpdateId = setInterval =>
+					@checkUpdate accessToken
+				, updateInterval * 60 * 1000
+				
+				console.log "Updating every #{updateInterval} minutes"
+
+			else
+				console.log "Auto-update disabled"
 	
 			@addRoute "update", (origin, route) =>
 				@checkUpdate accessToken, origin
@@ -48,14 +56,17 @@ module.exports = (Module) ->
 					@autoUpdateId = null
 	
 					@reply origin, "Disabled auto-update checking. Re-enable by specifying how often I should check for updates in minutes!"
+					@settings.set "updateIntervalMinutes", "never"
 
 				else if not isNaN Number(timeMin)
+					timeMin = Number(timeMin)
 					clearInterval @autoUpdateId if @autoUpdateId?
 					@autoUpdateId = setInterval =>
 						@checkUpdate accessToken
-					, Number(timeMin) * 60 * 1000
+					, timeMin * 60 * 1000
 
 					@reply origin, "I will now check for updates every #{timeMin} minutes!"
+					@settings.set "updateIntervalMinutes", timeMin
 
 				else
 					@reply origin, "Sorry, I don't really understand what that's supposed to mean! Try specifying a number or 'never' instead!"
