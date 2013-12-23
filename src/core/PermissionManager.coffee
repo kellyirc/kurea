@@ -48,9 +48,13 @@ class PermissionManager
 
 	addPermission: (targetString, permission, callback) =>
 		# Assuming target is nothing but username ATM...
-		@db.update { username: targetString }, { $push: { permissions: permission } }, { upsert: true }, (err, replacedCount, upsert) =>
+		target = @parseTarget targetString
+		@db.update { username: target.username }, { $push: { permissions: permission } }, { upsert: true }, (err, replacedCount, upsert) =>
 			if err? then callback err
 			else callback null
+
+	parseTarget: (targetString) =>
+		return { username: targetString } # Placeholder that is compatible with pre-existing behaviour
 
 	dump: =>
 		@db.find {}, (err, docs) =>
