@@ -49,12 +49,32 @@ class PermissionManager
 	addPermission: (targetString, permission, callback) =>
 		# Assuming target is nothing but username ATM...
 		target = @parseTarget targetString
+		console.log target
+		if not target.username?
+			callback new Error("No username specified")
+			return
+
 		@db.update { username: target.username }, { $push: { permissions: permission } }, { upsert: true }, (err, replacedCount, upsert) =>
 			if err? then callback err
 			else callback null
 
 	parseTarget: (targetString) =>
-		return { username: targetString } # Placeholder that is compatible with pre-existing behaviour
+		target = {}
+
+		regex = ///
+			^
+				([^.@].*?)?		# username
+				(?:\.(.+?))?	# group
+				(?:@(.+?))?		# server
+			$
+		///
+
+		match = regex.exec targetString
+		if match?
+			console.log "Match fags", match
+			[full, target.username, target.group, target.server] = match
+
+		target
 
 	dump: =>
 		@db.find {}, (err, docs) =>
