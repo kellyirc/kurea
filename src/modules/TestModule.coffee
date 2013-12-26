@@ -33,6 +33,11 @@ module.exports = (Module) ->
 				perm = route.params.perm ? "access.test"
 	
 				@hasPermission origin, perm, (err, matched) =>
+					if err?
+						console.error err.stack
+						@reply origin, "There was an error! #{err.message}"
+						return
+
 					if matched
 						@reply origin, "You have permission #{perm}!"
 					else
