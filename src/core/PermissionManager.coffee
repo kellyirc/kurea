@@ -46,6 +46,8 @@ class PermissionManager
 			if err? then callback err
 			else if not username? then callback null, []
 
+			else if username.toLowerCase() is origin.bot.config.owner then callback null, ['*']
+
 			else
 				# Q.all([
 				# 	Q.ninvoke(@db.permissions, 'find', { username: username.toLowerCase() })
