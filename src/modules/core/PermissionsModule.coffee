@@ -18,6 +18,15 @@ module.exports = (Module) ->
 	
 					else
 						@reply origin, "Added permission '#{permission}' to #{target}!"
+
+			@addRoute "permissions add-group :target :group", (origin, route) =>
+				[target, group] = [route.params.target.toLowerCase(), route.params.group]
+	
+				@permMan.addGroup origin.bot, target, group, (err) =>
+					if err? then @reply origin, "Uh oh, problem while adding group! #{err}"
+	
+					else
+						@reply origin, "Added group '#{group}' to #{target}!"
 	
 			permtestanFunc = (origin, route) =>
 				permission = route.params.permission

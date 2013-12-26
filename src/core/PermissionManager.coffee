@@ -6,7 +6,9 @@ Q.longStackSupport = true
 
 class PermissionManager
 	constructor: () ->
-		@db = new ModuleDatabase "internal", "permissions"
+		@db = {}
+		@db.permissions = new ModuleDatabase "internal", "permissions"
+		@db.usergroups = new ModuleDatabase "internal", "usergroups"
 
 	match: (origin, permissionString, callback) ->
 		@getPermissions origin, (err, permissionSet) =>
@@ -46,10 +48,11 @@ class PermissionManager
 
 			else
 				Q.all([
-					Q.ninvoke(@db, 'find', { username: username.toLowerCase() })
+					Q.ninvoke(@db.permissions, 'find', { username: username.toLowerCase() })
 						.then (docs) -> _.flatten (doc?.permissions for doc in docs)
 
-					Q.ninvoke(@, 'getGroups', origin).then((groups) => Q.ninvoke @db, 'find', { group: { $in: groups } })
+					Q.ninvoke(@, 'getGroups', origin.bot, username)
+						.then((groups) => Q.ninvoke @db.permissions, 'find', { group: { $in: groups } })
 						.then (docs) -> _.flatten (doc?.permissions for doc in docs)
 				])
 
@@ -58,7 +61,7 @@ class PermissionManager
 					console.log "User permissions:", userPerms
 					console.log "Group permissions:", groupPerms
 
-					# get data from @db.find for username and group
+					# get data from @db.permissions.find for username and group
 					callback null, _.flatten perms
 
 				.fail (err) =>
@@ -66,20 +69,34 @@ class PermissionManager
 					console.log "Problem!!!", err
 					callback err
 
-	getGroups: (origin, callback) =>
-		callback null, ["owner", "testing"]
-
 	addPermission: (targetString, permission, callback) =>
-		# Assuming target is nothing but username ATM...
 		target = @parseTarget targetString
 		console.log target
 		# if not target.username?
 		# 	callback new Error("No username specified")
 		# 	return
 
-		@db.update target, { $push: { permissions: permission } }, { upsert: true }, (err, replacedCount, upsert) =>
+		@db.permissions.update target, { $push: { permissions: permission } }, { upsert: true }, (err, replacedCount, upsert) =>
 			if err? then callback err
 			else callback null
+
+	getGroups: (bot, username, callback) =>
+		Q.ninvoke( @db.usergroups, 'find', { username: username.toLowerCase(), server: bot.getName().toLowerCase() } )
+
+		.then (docs) =>
+			groups = _.flatten (docs[0]?.groups)
+			console.log "Groups for user #{username} @ #{bot.getName()}:", groups
+			callback null, groups
+
+		.fail (err) => callback err
+
+	addGroup: (bot, targetUsername, group, callback) =>
+		@db.usergroups.update { username: targetUsername.toLowerCase(), server: bot.getName().toLowerCase() },
+			{ $push: { groups: group } }, { upsert: true },
+
+			(err, replacedCount, upsert) =>
+				if err? then callback err
+				else callback null
 
 	parseTarget: (targetString) =>
 		target = {}
@@ -100,7 +117,7 @@ class PermissionManager
 		target
 
 	dump: =>
-		@db.find {}, (err, docs) =>
+		@db.permissions.find {}, (err, docs) =>
 			if err? then console.error err.stack
 			else
 				for doc in docs
