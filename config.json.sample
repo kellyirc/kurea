@@ -16,6 +16,7 @@
 	"nick": "Moop",
 	"verbose": false,
 	"auth": "nickserv",
+	"owner": "YourUsername",
 
 	"storage": "mongo",
 	"storageURL": "localhost:28017",
