@@ -39,7 +39,7 @@ class PermissionManager
 	getPermissions: (origin, callback) ->
 		origin.bot.userManager.getUsername origin, (err, username) =>
 			if err? then callback err
-			if not username? then callback new Error("No username was returned")
+			else if not username? then callback new Error("No username was returned")
 
 			else @db.find { username: username.toLowerCase() }, (err, docs) =>
 				if err? then callback err
