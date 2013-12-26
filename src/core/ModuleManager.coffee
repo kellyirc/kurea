@@ -109,12 +109,21 @@ class ModuleManager extends EventEmitter
 				#sigh.
 				routeVariable = routeToMatch
 
-				@canModuleRoute module, serverName, to, origin.isPM, ->
-					try
-						routeVariable.fn origin, routeVariable
-					catch e
-						console.error "Your module is bad and you should feel bad:"
-						console.error e.stack
+				promise = Q(yes)
+
+				if module.routerPerms[routeVariable.route]?
+					promise = Q.ninvoke module, 'hasPermission', origin, module.routerPerms[routeVariable.route]
+
+				promise.then (matched) =>
+					if matched
+						@canModuleRoute module, serverName, to, origin.isPM, ->
+							try
+								routeVariable.fn origin, routeVariable
+							catch e
+								console.error "Your module is bad and you should feel bad:"
+								console.error e.stack
+								
+				.fail (err) => console.log err.stack
 
 
 

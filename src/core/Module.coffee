@@ -7,6 +7,7 @@ fs = require 'fs'
 class Module
 	constructor: (@moduleManager) ->
 		@router = new Router()
+		@routerPerms = {}
 		@events = []
 
 		if fs.existsSync "settings/#{@shortName}.json"
@@ -75,8 +76,13 @@ class Module
 				@events.splice index, 1
 			index--
 
-	addRoute: (path, fn) =>
+	addRoute: (path, perm, fn) =>
+		[fn, perm] = [perm, null] if not fn?
+
 		@router.addRoute path, fn
+
+		if perm?
+			@routerPerms[path] = perm
 
 	hasPermission: (origin, permission, callback) =>
 		# request a match check to the PermissionManager in ModuleManager

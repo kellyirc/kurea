@@ -21,6 +21,7 @@ module.exports = (Module) ->
 				bot.say(channel, "Hi, my name is #{bot.getName()} but you can call me #{bot.getNick()}!")
 				bot.say(channel, "I'm currently in the server #{bot.getServer()} in the channels #{bot.getChannels().join(", ")}!")
 				bot.say(channel, "My user manager is #{bot.userManager.shortName}!")
+				console.log route
 	
 				bot.userManager.getUsername origin, (err, username) =>
 					if err?
@@ -45,6 +46,9 @@ module.exports = (Module) ->
 	
 			@addRoute "permtest", permtest
 			@addRoute "permtest :perm", permtest
+
+			@addRoute "permaddtest", "access.permaddtest", (origin, route) =>
+				@reply origin, "Hello! Thank you for using KellyIRC Programmers Permission System."
 
 			@addRoute "test-set :key :value", (origin, route) =>
 				[key, value] = [route.params.key, route.params.value]
