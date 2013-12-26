@@ -56,8 +56,8 @@ class PermissionManager
 				# 		.then (docs) -> _.flatten (doc?.permissions for doc in docs)
 				# ])
 				Q.all([
-					Q(username)
-					Q.ninvoke(@, 'getGroups', origin.bot, username)
+					Q username
+					Q.ninvoke @, 'getGroups', origin.bot, username
 				])
 
 				.then (data) =>
