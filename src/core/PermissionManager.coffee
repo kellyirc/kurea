@@ -1,5 +1,8 @@
 ModuleDatabase = require('./ModuleDatabase').ModuleDatabase
+_ = require 'underscore'
 Q = require 'q'
+
+Q.longStackSupport = true
 
 class PermissionManager
 	constructor: () ->
@@ -36,25 +39,45 @@ class PermissionManager
 
 		null
 
-	getPermissions: (origin, callback) ->
+	getPermissions: (origin, callback) =>
 		origin.bot.userManager.getUsername origin, (err, username) =>
 			if err? then callback err
 			else if not username? then callback new Error("No username was returned")
 
-			else @db.find { username: username.toLowerCase() }, (err, docs) =>
-				if err? then callback err
-				else
-					callback null, docs[0]?.permissions ? []
+			else
+				Q.all([
+					Q.ninvoke(@db, 'find', { username: username.toLowerCase() })
+						.then (docs) -> _.flatten (doc?.permissions for doc in docs)
+
+					Q.ninvoke(@, 'getGroups', origin).then((groups) => Q.ninvoke @db, 'find', { group: { $in: groups } })
+						.then (docs) -> _.flatten (doc?.permissions for doc in docs)
+				])
+
+				.then (perms) =>
+					[userPerms, groupPerms] = perms
+					console.log "User permissions:", userPerms
+					console.log "Group permissions:", groupPerms
+
+					# get data from @db.find for username and group
+					callback null, _.flatten perms
+
+				.fail (err) =>
+					# failure handler
+					console.log "Problem!!!", err
+					callback err
+
+	getGroups: (origin, callback) =>
+		callback null, ["owner", "testing"]
 
 	addPermission: (targetString, permission, callback) =>
 		# Assuming target is nothing but username ATM...
 		target = @parseTarget targetString
 		console.log target
-		if not target.username?
-			callback new Error("No username specified")
-			return
+		# if not target.username?
+		# 	callback new Error("No username specified")
+		# 	return
 
-		@db.update { username: target.username }, { $push: { permissions: permission } }, { upsert: true }, (err, replacedCount, upsert) =>
+		@db.update target, { $push: { permissions: permission } }, { upsert: true }, (err, replacedCount, upsert) =>
 			if err? then callback err
 			else callback null
 
@@ -72,7 +95,7 @@ class PermissionManager
 		match = regex.exec targetString
 		if match?
 			console.log "Match fags", match
-			[full, target.username, target.group, target.server] = match
+			[target.username, target.group, target.server] = [match[1] ? null, match[2] ? null, match[3] ? null]
 
 		target
 
