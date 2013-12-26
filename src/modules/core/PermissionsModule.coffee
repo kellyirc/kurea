@@ -26,7 +26,7 @@ module.exports = (Module) ->
 					if err? then @reply origin, "Uh oh, problem while adding group! #{err}"
 	
 					else
-						@reply origin, "Added group '#{group}' to #{target}!"
+						@reply origin, "Added #{target} to group '#{group}'!"
 	
 			permtestanFunc = (origin, route) =>
 				permission = route.params.permission
