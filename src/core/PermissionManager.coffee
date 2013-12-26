@@ -44,25 +44,42 @@ class PermissionManager
 	getPermissions: (origin, callback) =>
 		origin.bot.userManager.getUsername origin, (err, username) =>
 			if err? then callback err
-			else if not username? then callback new Error("No username was returned")
+			else if not username? then callback null, []
 
 			else
-				Q.all([
-					Q.ninvoke(@db.permissions, 'find', { username: username.toLowerCase() })
-						.then (docs) -> _.flatten (doc?.permissions for doc in docs)
+				# Q.all([
+				# 	Q.ninvoke(@db.permissions, 'find', { username: username.toLowerCase() })
+				# 		.then (docs) -> _.flatten (doc?.permissions for doc in docs)
 
+				# 	Q.ninvoke(@, 'getGroups', origin.bot, username)
+				# 		.then((groups) => Q.ninvoke @db.permissions, 'find', { group: { $in: groups } })
+				# 		.then (docs) -> _.flatten (doc?.permissions for doc in docs)
+				# ])
+				Q.all([
+					Q(username)
 					Q.ninvoke(@, 'getGroups', origin.bot, username)
-						.then((groups) => Q.ninvoke @db.permissions, 'find', { group: { $in: groups } })
-						.then (docs) -> _.flatten (doc?.permissions for doc in docs)
 				])
 
+				.then (data) =>
+					[username, groups] = data
+
+					userOrNull = (username) => { $or: [ { username: username.toLowerCase() }, { username: null } ] }
+					inGroupOrNull = (groups) => { $or: [ { group: { $in: groups } }, { group: null } ] }
+
+					Q.ninvoke @db.permissions, 'find',
+						$and: [
+							userOrNull username.toLowerCase()
+							inGroupOrNull groups
+							]
+
+				.then (docs) =>
+					_.flatten (doc?.permissions for doc in docs)
+
 				.then (perms) =>
-					[userPerms, groupPerms] = perms
-					console.log "User permissions:", userPerms
-					console.log "Group permissions:", groupPerms
+					console.log "Permissions:", perms
 
 					# get data from @db.permissions.find for username and group
-					callback null, _.flatten perms
+					callback null, perms
 
 				.fail (err) =>
 					# failure handler
