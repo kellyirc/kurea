@@ -20,7 +20,9 @@ module.exports = (Module) ->
 				[target, permission] = [route.params.target.toLowerCase(), route.params.permission]
 	
 				@permMan.addPermission target, permission, (err) =>
-					if err? then @reply origin, "Uh oh, problem while adding permission! #{err}"
+					if err?
+						@reply origin, "Uh oh, problem while adding permission! #{err}"
+						console.error err.stack
 	
 					else
 						@reply origin, "Added permission '#{permission}' to #{target}!"
@@ -29,7 +31,9 @@ module.exports = (Module) ->
 				[target, group] = [route.params.target.toLowerCase(), route.params.group]
 	
 				@permMan.addGroup origin.bot, target, group, (err) =>
-					if err? then @reply origin, "Uh oh, problem while adding group! #{err}"
+					if err?
+						@reply origin, "Uh oh, problem while adding group! #{err}"
+						console.error err.stack
 	
 					else
 						@reply origin, "Added #{target} to group '#{group}'!"
