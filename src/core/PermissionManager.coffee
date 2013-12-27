@@ -6,9 +6,9 @@ Q.longStackSupport = true
 
 class PermissionManager
 	constructor: () ->
-		@db = {}
-		@db.permissions = new ModuleDatabase "internal", "permissions"
-		@db.usergroups = new ModuleDatabase "internal", "usergroups"
+		@db =
+			permissions: new ModuleDatabase "internal", "permissions"
+			usergroups: new ModuleDatabase "internal", "usergroups"
 
 	match: (origin, permissionString, callback) ->
 		@getPermissions origin, (err, permissionSet) =>
