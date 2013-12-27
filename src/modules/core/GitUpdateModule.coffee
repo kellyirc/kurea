@@ -89,7 +89,6 @@ module.exports = (Module) ->
 	
 			.then (filedata) =>
 				hash = _.str.trim( filedata )
-				@lastCommit = hash
 				callback null, hash
 	
 			.fail (err) =>
@@ -167,7 +166,6 @@ module.exports = (Module) ->
 			.then =>
 				console.log "Updated all files to #{headHash}"
 				@reply origin, "Updated all files to latest commit." if origin?
-				# @lastCommit = headHash
 	
 				# console.log "modulesOnly = #{modulesOnly}"
 				if not modulesOnly
