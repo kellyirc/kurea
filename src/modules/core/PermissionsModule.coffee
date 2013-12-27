@@ -3,7 +3,13 @@ module.exports = (Module) ->
 	class PermissionsModule extends Module
 		shortName: "Permissions"
 		helpText:
-			default: "A module for manually adding and removing permissions. Commands available: add"
+			default: "A module for manually adding and removing permissions. Commands available: add, add-group"
+			'permissions add': "Add a permission to the specified target, be it a user, a group or a combination!"
+			'permissions add-group': "Add the target username to a group!"
+
+		usage:
+			'permissions add': "permissions add [target] [permission]"
+			'permissions add-group': "permissions add-group [target] [group]"
 	
 		constructor: (moduleManager) ->
 			super(moduleManager)
