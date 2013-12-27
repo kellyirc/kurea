@@ -37,12 +37,12 @@ class ModuleManager extends EventEmitter
 
 	canModuleRoute: (module, server, channel, isPM, callback) =>
 
-		if isPM
+		if isPM or module.shortName is 'Toggle'
 			callback()
 			return
 
 		@moduleActiveSettings.find { name: module.shortName, server: server, channel: channel }, (err, data) ->
-			callback() if module.shortName is 'Toggle' or (data isnt [] and data.length is 1 and data[0].isEnabled)
+			callback() if (data isnt [] and data.length is 1 and data[0].isEnabled)
 
 	_getModuleActiveData: (search, callback) ->
 		@moduleActiveSettings.find search, (err, docs) ->
@@ -97,33 +97,32 @@ class ModuleManager extends EventEmitter
 
 			else command = commandPart
 
-			routeToMatch = module.router.match command.split('%').join('%25') # Router doesn't like %'s
-			if routeToMatch?
-				origin =
-					bot: bot
-					user: from
-					channel: if to is bot.getNick() then undefined else to
-					isPM: to is bot.getNick()
+			do (moduleName, module) =>
 
-				#I have no idea what this is needed to make matching work...
-				#sigh.
-				routeVariable = routeToMatch
+				routeToMatch = module.router.match command.split('%').join('%25') # Router doesn't like %'s
+				if routeToMatch?
+					origin =
+						bot: bot
+						user: from
+						channel: if to is bot.getNick() then undefined else to
+						isPM: to is bot.getNick()
 
-				promise = Q(yes)
+					promise = Q(yes)
 
-				if module.routerPerms[routeVariable.route]?
-					promise = Q.ninvoke module, 'hasPermission', origin, module.routerPerms[routeVariable.route]
+					if module.routerPerms[routeToMatch.route]?
+						promise = Q.ninvoke module, 'hasPermission', origin, module.routerPerms[routeToMatch.route]
 
-				promise.then (matched) =>
-					if matched
-						@canModuleRoute module, serverName, to, origin.isPM, ->
-							try
-								routeVariable.fn origin, routeVariable
-							catch e
-								console.error "Your module is bad and you should feel bad:"
-								console.error e.stack
-								
-				.fail (err) => console.log err.stack
+					promise.then (matched) =>
+						if matched
+							console.log "Matched! #{moduleName} #{routeToMatch.route}"
+							@canModuleRoute module, serverName, to, origin.isPM, ->
+								try
+									routeToMatch.fn origin, routeToMatch
+								catch e
+									console.error "Your module is bad and you should feel bad:"
+									console.error e.stack
+									
+					.fail (err) => console.log err.stack
 
 
 
