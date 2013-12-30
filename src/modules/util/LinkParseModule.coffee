@@ -17,7 +17,6 @@ module.exports = (Module) ->
 					links?.forEach (link) =>
 						request link, (e,r,body) =>
 							return if e?
-							if r.headers['Content-Type'] isnt 'text/html' then return
 							$ = cheerio.load body
 							title = $('title').html()
 							bot.say channel, "#{sender}'s URL » #{title}" if title?
