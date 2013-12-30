@@ -18,7 +18,7 @@ module.exports = (Module) ->
 						request link, (e,r,body) =>
 							$ = cheerio.load body
 							title = $('title').text()
-							bot.say channel, "#{sender}'s URL » #{title}" if title isnt '' or undefined
+							bot.say channel, "#{sender}'s URL » #{title}" if title?
 	
 	
 	LinkParseModule
