@@ -17,7 +17,7 @@ module.exports = (Module) ->
 					links?.forEach (link) =>
 						request link, (e,r,body) =>
 							$ = cheerio.load body
-							title = $('title').text()
+							title = $('title').html()
 							bot.say channel, "#{sender}'s URL » #{title}" if title?
 	
 	
