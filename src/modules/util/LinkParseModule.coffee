@@ -16,8 +16,7 @@ module.exports = (Module) ->
 					links = message.match urlRegex
 					links?.forEach (link) =>
 						request link, (e,r,body) =>
-							bot.say channel, JSON.stringify(r.headers)
-							#return if r.headers['Content-Type'] isnt 'text/html'
+							return if r.headers['content-type'] isnt 'text/html'
 							$ = cheerio.load body
 							title = $('title').html()
 							bot.say channel, "#{sender}'s URL » #{title}" if title?
