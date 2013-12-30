@@ -14,13 +14,10 @@ module.exports = (Module) ->
 			@on 'message', (bot, sender, channel, message) =>
 				@moduleManager.canModuleRoute @, bot.getServer(), channel, false, =>
 					links = message.match urlRegex
-					console.log links
 					links?.forEach (link) =>
 						request link, (e,r,body) =>
-							console.log 'inner'
 							$ = cheerio.load body
-							title = $('title').html()
-							console.log title
+							title = $('title').text()
 							bot.say channel, "#{sender}'s URL » #{title}" if title?
 	
 	
