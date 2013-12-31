@@ -1,4 +1,8 @@
 module.exports = (Module) ->
+	Q = require 'q'
+	colors = require 'irc-colors'
+	_ = require 'underscore'
+	_.str = require 'underscore.string'
 	
 	class PermissionsModule extends Module
 		shortName: "Permissions"
@@ -37,6 +41,16 @@ module.exports = (Module) ->
 	
 					else
 						@reply origin, "Added #{target} to group '#{group}'!"
+
+			@addRoute "permissions info", (origin, route) =>
+				{bot, user} = origin
+
+				bot.userManager.getUsername origin, (err, username) =>
+					@permMan.getGroups bot, username, (err, groups) =>
+						if groups.length > 0
+							bot.say user, "Your groups are #{_.str.toSentence (colors.bold(group) for group in groups)}."
+							
+						else bot.say user, "You are not in any group."
 	
 			permtestanFunc = (origin, route) =>
 				permission = route.params.permission
