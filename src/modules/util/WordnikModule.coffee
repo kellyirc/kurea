@@ -89,6 +89,8 @@ module.exports = (Module) ->
 							console.log e.message
 							@reply origin, "Unable to find definiton."
 					(err) =>
+						if err.status is 401
+							@reply origin, "Invalid API Key."
 						@reply origin, "No definitions found."
 	
 			@addRoute "example :word", (origin, route) =>
@@ -110,6 +112,8 @@ module.exports = (Module) ->
 							console.log e.message
 							@reply origin, "Unable to find example."
 					(err) =>
+						if err.status is 401
+							@reply origin, "Invalid API Key."
 						@reply origin, "No example found."
 	
 			@addRoute "rhyme :word", (origin, route) =>
@@ -133,6 +137,8 @@ module.exports = (Module) ->
 							console.log e.message
 							@reply origin, "Unable to find ryhmes."
 					(err) =>
+						if err.status is 401
+							@reply origin, "Invalid API Key."
 						@reply origin, "No rhymes found."
 	
 			@addRoute "synonym :word", (origin, route) =>
@@ -156,6 +162,8 @@ module.exports = (Module) ->
 							console.log e.message
 							@reply origin, "Unable to find synonyms."
 					(err) =>
+						if err.status is 401
+							@reply origin, "Invalid API Key."
 						@reply origin, "No synonyms found."
 	
 			@addRoute "antonym :word", (origin, route) =>
@@ -179,6 +187,8 @@ module.exports = (Module) ->
 							console.log e.message
 							@reply origin, "Unable to find antonyms."
 					(err) =>
+						if err.status is 401
+							@reply origin, "Invalid API Key."
 						@reply origin, "No antonyms found."
 	
 			@addRoute "wordoftheday", (origin, route) =>
@@ -200,6 +210,8 @@ module.exports = (Module) ->
 							console.log e.message
 							@reply origin, "Unable to find word of the day."
 					(err) =>
+						if err.status is 401
+							@reply origin, "Invalid API Key."
 						@reply origin, "Error finding word of the day."
 	
 			@addRoute "randomwords", (origin, route) =>
@@ -222,6 +234,8 @@ module.exports = (Module) ->
 							console.log e.message
 							@reply origin, "Unable to get random words"
 					(err) =>
+						if err.status is 401
+							@reply origin, "Invalid API Key."
 						@reply origin, "Error getting random words."
 	
 			@addRoute "randomwords :pos", (origin, route) =>
@@ -248,6 +262,8 @@ module.exports = (Module) ->
 							console.log e.message
 							@reply origin, "Unable to get random words"
 					(err) =>
+						if err.status is 401
+							@reply origin, "Invalid API Key."
 						@reply origin, "Error getting random words."
 	
 	
