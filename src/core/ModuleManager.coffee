@@ -59,7 +59,7 @@ class ModuleManager extends EventEmitter
 
 	disableAllModules: (server, channel) =>
 		for moduleName,module of @modules
-			@disable module,server,channel
+			@disableModule module,server,channel
 
 	enableModule: (module, server, channel) =>
 
