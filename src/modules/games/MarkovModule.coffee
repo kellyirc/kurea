@@ -10,7 +10,7 @@ module.exports = (Module) ->
 		constructor: (moduleManager) ->
 			super(moduleManager)
 
-			@markov = markov()
+			@markov = markov 4
 
 			messages = @moduleManager.apiCall 'Log', (logModule) =>
 
