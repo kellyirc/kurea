@@ -56,7 +56,8 @@ buildModuleList = (moduleManager) ->
 	options =
 		interval: 2000
 		filter: (f, stat) ->
-			not (stat.isDirectory() or path.extname(f) in [".coffee"])
+			not (stat.isDirectory() or path.extname(f) in [".coffee"] or
+				_.endsWith path.basename(f, path.extname(f)), "Module" )
 
 	watch.createMonitor basePath, options, (monitor) ->
 		monitor.on 'created', _.debounce( (f, stat) ->
