@@ -9,11 +9,13 @@ First, clone the repository. In the root of the repository, run `npm install` to
 
 Running the Bot
 ===============
+For now, CoffeeScript is required to run Kurea. To install run `npm install -g coffee-script`.
+
 First, make a copy of `config.json.sample` and call it `config.json`. Edit this to make the bot join your server/channels and give it any other configuration details necessary. Next, in the root of the repository, run `npm start`.
 
 Developing the Bot
 ==================
-Use `grunt dev` to manage linting the source and running unit tests.
+Use `grunt dev` to manage linting the source and running unit tests. If you don't have grunt installed, run `npm install -g grunt-cli`.
 
 Config options
 ==============
