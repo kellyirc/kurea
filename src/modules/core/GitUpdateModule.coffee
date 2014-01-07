@@ -170,8 +170,8 @@ module.exports = (Module) ->
 				# console.log "modulesOnly = #{modulesOnly}"
 				if not modulesOnly
 					console.log "Update contains files that are not modules; exiting"
-					@reply origin, "Because some of the updated files are not module files, I will restart." if origin?
-					process.exit 0
+					@reply origin, "Because some of the updated files are not module files, I will restart in about 5 seconds." if origin?
+					setTimeout (-> process.exit 0), 5000
 	
 			.fail (err) =>
 				console.log "Error:", err
