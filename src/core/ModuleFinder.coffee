@@ -10,6 +10,41 @@ modules = {}
 
 basePath = __dirname+'/../modules'
 
+isInSubfolder = (folder, file) ->
+	[folder, file] = [(path.resolve folder), (path.resolve file)]
+	(file.indexOf folder) is 0
+
+getIrcModuleOwner = (file) ->
+	fullfile = require.resolve file
+	fileModule = require.cache[fullfile]
+	while fileModule?
+		return fileModule.parent if fileModule.parent.filename of moduleFiles
+		fileModule = fileModule.parent
+
+	return null
+
+removeNodeModule = (file) ->
+	fullfile = require.resolve file
+	fileModule = require.cache[fullfile]
+
+	console.log "Removing node.js module #{fileModule.filename}"
+
+	for childModule in fileModule.children
+		if isInSubfolder (path.dirname file), childModule.filename
+			removeNodeModule childModule.filename
+
+	# Remove children from file's module obj
+	# for childModule in fileModule.children
+	# 	childModule.parent = null
+	# fileModule.children = []
+
+	# Remove file's module obj from parent's children array
+	i = fileModule.parent.children.indexOf fileModule
+	fileModule.parent.children[i..i] = [] if ~i
+
+	# Remove this file from cache
+	delete require.cache[fullfile]
+
 reloadFileModules = (file, moduleManager) ->
 	fileModules = {}
 	try
@@ -42,38 +77,68 @@ removeFile = (file) ->
 
 	console.log "--- Removing [#{(m.shortName for name, m of moduleFiles[file]).join(', ')}]"
 
-	delete require.cache[require.resolve file]
+	removeNodeModule file
+
 	for moduleName, module of moduleFiles[file]
 		delete modules[moduleName]
 		module.destroy()
 	delete moduleFiles[file]
 
 buildModuleList = (moduleManager) ->
+	endsWithModule = (file) -> (_.str.endsWith (path.basename(file, path.extname(file))), 'Module')
+
 	file.walkSync basePath, (start, dirs, files) ->
 		for f in (files.map (f) -> start+path.sep+f)
-			loadFile f, moduleManager
+			loadFile f, moduleManager if (endsWithModule f)
 
 	options =
 		interval: 2000
 		filter: (f, stat) ->
-			not (stat.isDirectory() or path.extname(f) in [".coffee"] or
-				_.endsWith path.basename(f, path.extname(f)), "Module" )
+			keep = (
+				stat.isDirectory() or
+				(
+					(path.extname(f) in [".coffee"])
+				)
+			)
+
+			not keep
 
 	watch.createMonitor basePath, options, (monitor) ->
 		monitor.on 'created', _.debounce( (f, stat) ->
 			# console.log f, "created"
-			loadFile f, moduleManager
+			if (endsWithModule f)
+				loadFile f, moduleManager
+
+			# Otherwise, if a non-module file was added, it makes no sense to do anything
+				# If no module files were changed, whatever file was added is not related to any module at all, so do nothing
+				# If a module file was changed to require the new non-module file, 'changed' handler reloads the module
 		, 100)
 
 		monitor.on 'changed', _.debounce( (f, currstat, prevstat) ->
 			# console.log f, "changed"
-			removeFile f
-			loadFile f, moduleManager
+
+			if (endsWithModule f)
+				removeFile f
+				loadFile f, moduleManager
+
+			else
+				# Non-module file was changed; find the module that require'd it, and reload THAT one
+				# Children will be taken care of in the process
+				m = getIrcModuleOwner f
+				if m?
+					# Reload dat module!!
+					removeFile m.filename
+					loadFile m.filename, moduleManager
+
+				# Else well, it's not related to any file existing already, so just do nothing
 		, 100)
 
 		monitor.on 'removed', _.debounce( (f, stat) ->
 			# console.log f, "removed"
-			removeFile f
+			if (endsWithModule f)
+				removeFile f
+
+			# removeFile takes care of the rest in the process
 		, 100)
 		
 	modules
