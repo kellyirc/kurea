@@ -27,7 +27,7 @@ removeNodeModule = (file) ->
 	fullfile = require.resolve file
 	fileModule = require.cache[fullfile]
 
-	console.log "Removing node.js module #{fileModule.filename}"
+	# console.log "Removing node.js module #{fileModule.filename}"
 
 	for childModule in fileModule.children
 		if isInSubfolder (path.dirname file), childModule.filename
@@ -130,7 +130,7 @@ buildModuleList = (moduleManager) ->
 
 			if (endsWithModule f)
 				removeFile f, ->
-					console.log "Removed all from #{f}"
+					# console.log "Removed all from #{f}"
 					loadFile f, moduleManager
 
 			else
@@ -140,7 +140,7 @@ buildModuleList = (moduleManager) ->
 				if m?
 					# Reload dat module!!
 					removeFile m.filename, ->
-						console.log "Removed all from #{m.filename}"
+						# console.log "Removed all from #{m.filename}"
 						loadFile m.filename, moduleManager
 
 				# Else well, it's not related to any file existing already, so just do nothing
