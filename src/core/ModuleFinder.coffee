@@ -72,17 +72,28 @@ loadFile = (file, moduleManager) ->
 
 	console.log "--- Loaded [#{(m.shortName for name, m of moduleFiles[file]).join(', ')}]"
 
-removeFile = (file) ->
+removeFile = (file, callback) ->
 	file = path.resolve(file)
 
 	console.log "--- Removing [#{(m.shortName for name, m of moduleFiles[file]).join(', ')}]"
 
 	removeNodeModule file
 
+	allDone = ->
+		delete moduleFiles[file]
+		callback?()
+
+	done = _.after Object.keys(moduleFiles[file]).length, allDone
+
 	for moduleName, module of moduleFiles[file]
+		async = no
+
 		delete modules[moduleName]
-		module.destroy()
-	delete moduleFiles[file]
+		module.destroy ->
+			async = yes
+			return done
+
+		done() if not async
 
 buildModuleList = (moduleManager) ->
 	endsWithModule = (file) -> (_.str.endsWith (path.basename(file, path.extname(file))), 'Module')
@@ -118,8 +129,9 @@ buildModuleList = (moduleManager) ->
 			# console.log f, "changed"
 
 			if (endsWithModule f)
-				removeFile f
-				loadFile f, moduleManager
+				removeFile f, ->
+					console.log "Removed all from #{f}"
+					loadFile f, moduleManager
 
 			else
 				# Non-module file was changed; find the module that require'd it, and reload THAT one
@@ -127,8 +139,9 @@ buildModuleList = (moduleManager) ->
 				m = getIrcModuleOwner f
 				if m?
 					# Reload dat module!!
-					removeFile m.filename
-					loadFile m.filename, moduleManager
+					removeFile m.filename, ->
+						console.log "Removed all from #{m.filename}"
+						loadFile m.filename, moduleManager
 
 				# Else well, it's not related to any file existing already, so just do nothing
 		, 100)
