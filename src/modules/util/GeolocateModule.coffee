@@ -17,6 +17,12 @@ module.exports = (Module) ->
 			if not (@getApiKey 'ipinfodb')?
 				console.log "No IpInfoDB API key specified in the config"
 
+			@months = [
+				"January", "February", "March", "April",
+				"May", "June", "July", "August",
+				"September", "October", "November", "December"
+			]
+
 			@addRoute "geolocate :address", (origin, route) =>
 				@reply origin, "Initiating lookup..."
 
@@ -28,9 +34,15 @@ module.exports = (Module) ->
 
 					r[prop] = _.str.titleize r[prop].toLowerCase() for prop in ['cityName', 'regionName', 'countryName']
 
+					offset = @timezoneToOffset r.timeZone
+					console.log "Time zone offset for #{r.timeZone} is #{offset}min"
+					now = new Date()
+					now.setTime (now.getTime() + offset*60*1000 - now.getTimezoneOffset())
+
+					timeStr = "#{@months[now.getMonth()]} #{now.getDate()} #{now.getFullYear()}, #{now.getHours()}:#{now.getMinutes()}"
 					console.log r
 					@reply origin, "The IP address #{r.ipAddress} points to #{r.latitude}, #{r.longitude} 
-									in #{r.cityName}, #{r.regionName}, #{r.countryName} (#{r.countryCode})"
+									in #{r.cityName}, #{r.regionName}, #{r.countryName} (#{r.countryCode}); time is #{timeStr}."
 
 		requestLookup: (address, callback) ->
 			Q.fcall =>
@@ -57,3 +69,16 @@ module.exports = (Module) ->
 				JSON.parse body
 
 			.nodeify callback
+
+		timezoneToOffset: (timezone) ->
+			tzRegex = /^([+-])(\d{2}):(\d{2})$/
+
+			if (match = tzRegex.exec timezone)
+				console.log match
+				[full, sign, hour, minute] = match
+
+				return (if sign is '-' then -1 else 1) * Number(hour) * 60 + Number(minute)
+
+			console.error "#{timezone} can't be parsed yo"
+
+			return 0
