@@ -7,6 +7,9 @@ class UserInformationManager
 
 	setData: (server, module, user, key, data, callback) ->
 
+		console.log "Calling setData from module #{module} with user #{user} and key #{key}"
+		console.log "Data is", data
+
 		updateObj = 
 			user: user
 			server: server
@@ -14,9 +17,9 @@ class UserInformationManager
 		updateObj[module] = {}
 		updateObj[module][key] = data
 
-		@userInfo.update { user: user, server: server }, updateObj, { upsert: true }
-
-		callback?()
+		@userInfo.update { user: user, server: server }, updateObj, { upsert: true }, ->
+			console.log "Inserted data"
+			callback?()
 
 	getData: (server, module, user, key, callback) ->
 

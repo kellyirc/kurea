@@ -11,8 +11,9 @@ module.exports = (Module) ->
 			super(moduleManager)
 
 			@addRoute "gender", (origin, route) =>
+				console.log "Getting gender for #{origin.user}"
 				@getUserData origin, "gender", (data) =>
-					console.log data
+					@reply origin, "Your gender is #{data}"
 
 			@addRoute "gender :gender", (origin, route) =>
 
@@ -23,6 +24,6 @@ module.exports = (Module) ->
 
 					@getUserData origin, "gender", (data) =>
 						console.log "inside get callback"
-						console.log data
+						@reply origin, "Your gender is now #{data}"
 		
 	GenderModule
