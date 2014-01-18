@@ -45,8 +45,9 @@ class Module
 			@userInformationManager.getData origin.bot.config.server, @shortName, user, key, callback
 
 	originToAuthName: (origin, callback) ->
-		origin.bot.userManager.getUsername origin, (e, username) ->
-			callback username
+		origin.bot.userManager.getUsername origin, (e, username) =>
+			callback username if username?
+			@reply origin, "You must be logged in to #{origin.bot.config.auth} to use this command!" if not username
 
 	destroy: ->
 		@events.forEach (element) =>
