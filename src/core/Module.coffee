@@ -1,10 +1,20 @@
 Router = require "routes"
 ModuleDatabase = require('./ModuleDatabase').ModuleDatabase
 EventEmitter = require('events').EventEmitter
+UserInformationManager = require('./UserInformationManager').UserInformationManager
 Q = require 'q'
 fs = require 'fs'
 
 class Module
+
+	shortName: "Unnamed"
+	helpText:
+		default: "There is no help text for this module."
+
+	commandPrefix: "!"
+
+	userInformationManager: new UserInformationManager()
+
 	constructor: (@moduleManager) ->
 		@router = new Router()
 		@routerPerms = {}
@@ -25,6 +35,18 @@ class Module
 			save: () =>
 				fs.mkdirSync "settings" if not fs.existsSync "settings"
 				fs.writeFileSync "settings/#{@shortName}.json", JSON.stringify _settings
+
+	setUserData: (origin, key, data, callback) ->
+		@originToAuthName origin, (user) =>
+			@userInformationManager.setData origin.bot.config.server, @shortName, user, key, data, callback
+
+	getUserData: (origin, key, callback) ->
+		@originToAuthName origin, (user) =>
+			@userInformationManager.getData origin.bot.config.server, @shortName, user, key, callback
+
+	originToAuthName: (origin, callback) ->
+		origin.bot.userManager.getUsername origin, (e, username) ->
+			callback username
 
 	destroy: ->
 		@events.forEach (element) =>
@@ -101,15 +123,5 @@ class Module
 
 	registerApi: () ->
 		@moduleManager.registerApi @shortName, @getApi()
-
-	shortName: "Unnamed"
-	helpText:
-		default: "There is no help text for this module."
-
-	commandPrefix: "!"
-
-	#TODO make this a promise
-	#isModuleActive: (bot, channel) ->
-
 
 exports.Module = Module

@@ -6,7 +6,7 @@ class NickServUserManager extends UserManager
 	getUsername: (origin, callback) ->
 
 		origin.bot.whois origin.user, (info) ->
-			callback(null, info.account)
+			callback null, info.account
 
 exports.name = NickServUserManager::shortName
 exports.AuthClass = NickServUserManager
