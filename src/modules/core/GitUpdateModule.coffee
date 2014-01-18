@@ -105,7 +105,7 @@ module.exports = (Module) ->
 					auth: "#{accessToken}:x-oauth-basic"
 					path: "/repos/#{@owner}/#{@repo}/compare/#{hash}...#{@head}"
 	
-				console.log "Checking for update..."
+				#console.log "Checking for update..."
 				@reply origin, "Checking for updates..." if origin?
 	
 				req = https.request _.extend(compareOptions, @defaultGitHubParams), (res) =>
@@ -117,10 +117,10 @@ module.exports = (Module) ->
 						data = JSON.parse Buffer.concat(chunks).toString()
 	
 						if data.commits.length > 0
-							console.log "Update available!"
+							#console.log "Update available!"
 							@update data, origin
 						else
-							console.log "No need to update..."
+							#console.log "No need to update..."
 							@reply origin, "No new commits available; no update is performed." if origin?
 	
 				req.on 'error', (e) -> console.error e.stack
