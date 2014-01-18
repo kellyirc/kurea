@@ -41,8 +41,7 @@ module.exports = (Module) ->
 
 					timeStr = "#{@months[now.getMonth()]} #{now.getDate()} #{now.getFullYear()}, #{now.getHours()}:#{now.getMinutes()}"
 					console.log r
-					@reply origin, "The IP address #{r.ipAddress} points to #{r.latitude}, #{r.longitude} 
-									in #{r.cityName}, #{r.regionName}, #{r.countryName} (#{r.countryCode}); time is #{timeStr}."
+					@reply origin, "The IP address #{r.ipAddress} points to #{r.latitude}, #{r.longitude} in #{r.cityName}, #{r.regionName}, #{r.countryName} (#{r.countryCode}); time is #{timeStr}."
 
 		requestLookup: (address, callback) ->
 			Q.fcall =>

@@ -7,7 +7,7 @@ class UserInformationManager
 
 	setData: (server, module, user, key, data, callback) ->
 
-		updateObj = 
+		updateObj =
 			user: user
 			server: server
 
