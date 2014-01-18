@@ -10,20 +10,25 @@ module.exports = (Module) ->
 		constructor: (moduleManager) ->
 			super(moduleManager)
 
+			@getApi().isMale = (origin, callback) =>
+				@getUserData origin, "gender", (data) =>
+					callback /\bmale/.test(data.toLowerCase())
+
+			@getApi().isFemale = (origin, callback) =>
+				@getUserData origin, "gender", (data) =>
+					callback /\bfemale/.test(data.toLowerCase())
+
+			@registerApi()
+
 			@addRoute "gender", (origin, route) =>
-				console.log "Getting gender for #{origin.user}"
 				@getUserData origin, "gender", (data) =>
 					@reply origin, "Your gender is #{data}"
 
 			@addRoute "gender :gender", (origin, route) =>
 
-				console.log route
-
 				@setUserData origin, "gender", route.params.gender, () =>
-					console.log "inside set callback"
 
 					@getUserData origin, "gender", (data) =>
-						console.log "inside get callback"
-						@reply origin, "Your gender is now #{data}"
+						@reply origin, "Your gender is now #{data}."
 		
 	GenderModule
