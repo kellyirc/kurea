@@ -45,10 +45,10 @@ module.exports = (Module) ->
 			else
 				console.log "Auto-update disabled"
 	
-			@addRoute "update", (origin, route) =>
+			@addRoute "update", "core.update.command", (origin, route) =>
 				@checkUpdate accessToken, origin
 	
-			@addRoute "auto-update :min", (origin, route) =>
+			@addRoute "auto-update :min", "core.update.interval", (origin, route) =>
 				timeMin = route.params.min
 	
 				if timeMin is "never"

@@ -42,7 +42,7 @@ module.exports = (Module) ->
 				if newnick is bot.getNick()
 					bot.setConfig 'nick', newnick
 	
-			@addRoute 'set-api-key :name :key', (origin, route) =>
+			@addRoute 'set-api-key :name :key', "core.config.apikey", (origin, route) =>
 				[name, key] = [route.params.name, route.params.key]
 				apiKeys = @moduleManager.botManager.config.apiKeys
 				apiKeys[name] = key

@@ -9,7 +9,7 @@ module.exports = (Module) ->
 		constructor: (moduleManager) ->
 			super(moduleManager)
 	
-			@addRoute "join *", (origin, route) =>
+			@addRoute "join *", "core.manage.channel.join", (origin, route) =>
 				[bot, user, channel, chans] = [origin.bot, origin.user, origin.channel, route.splats[0].split(/[\s,]+/)]
 				serverName = bot.conn.opt.server
 	

@@ -10,7 +10,7 @@ module.exports = (Module) ->
 		constructor: (moduleManager) ->
 			super(moduleManager)
 	
-			@addRoute "nick :nick", (origin, route) =>
+			@addRoute "nick :nick", "core.manage.change.nick", (origin, route) =>
 				origin.bot.changeNick route.params.nick, (err, oldnick, newnick, channels, msg) =>
 					if err?
 						@reply origin, "I can't call myself that! (#{err.command})"

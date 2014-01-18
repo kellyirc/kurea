@@ -10,7 +10,7 @@ module.exports = (Module) ->
 		constructor: (moduleManager) ->
 			super(moduleManager)
 	
-			@addRoute "echo :target *", (origin, route) =>
+			@addRoute "echo :target *", "core.send.message", (origin, route) =>
 				origin.bot.say route.params.target, route.splats[0]
 	
 	

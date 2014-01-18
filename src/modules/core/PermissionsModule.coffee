@@ -20,7 +20,7 @@ module.exports = (Module) ->
 	
 			@permMan = @getBotManager().permissionManager
 	
-			@addRoute "permissions add :target :permission", (origin, route) =>
+			@addRoute "permissions add :target :permission", "core.permission.modify.single", (origin, route) =>
 				[target, permission] = [route.params.target.toLowerCase(), route.params.permission]
 	
 				@permMan.addPermission target, permission, (err) =>
@@ -31,7 +31,7 @@ module.exports = (Module) ->
 					else
 						@reply origin, "Added permission '#{permission}' to #{target}!"
 
-			@addRoute "permissions add-group :target :group", (origin, route) =>
+			@addRoute "permissions add-group :target :group", "core.permission.modify.group", (origin, route) =>
 				[target, group] = [route.params.target.toLowerCase(), route.params.group]
 	
 				@permMan.addGroup origin.bot, target, group, (err) =>

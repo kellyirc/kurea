@@ -10,7 +10,7 @@ module.exports = (Module) ->
 		constructor: (moduleManager) ->
 			super(moduleManager)
 	
-			@addRoute "part *", (origin, route) =>
+			@addRoute "part *", "core.manage.channel.part", (origin, route) =>
 				[bot, user, channel, chans] = [origin.bot, origin.user, origin.channel, route.splats[0].split(/[\s,]+/)]
 	
 				# TODO: allow part messages

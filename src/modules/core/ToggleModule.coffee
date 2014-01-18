@@ -11,19 +11,19 @@ module.exports = (Module) ->
 		constructor: (moduleManager) ->
 			super(moduleManager)
 	
-			@addRoute "toggle all-on", (origin, route) =>
+			@addRoute "toggle all-on", "core.manage.toggle.mass", (origin, route) =>
 				[bot, user, channel] = [origin.bot, origin.user, origin.channel]
 				serverName = bot.conn.opt.server
 				moduleManager.enableAllModules serverName, channel
 				@reply origin, "All modules have been enabled for #{colors.bold channel}."
 	
-			@addRoute "toggle all-off", (origin, route) =>
+			@addRoute "toggle all-off", "core.manage.toggle.mass", (origin, route) =>
 				[bot, user, channel] = [origin.bot, origin.user, origin.channel]
 				serverName = bot.conn.opt.server
 				moduleManager.disableAllModules serverName, channel
 				@reply origin, "All modules have been disabled for #{colors.bold channel}."
 	
-			@addRoute "toggle :module", (origin, route) =>
+			@addRoute "toggle :module", "core.manage.toggle.single", (origin, route) =>
 				[bot, user, channel, moduleName] = [origin.bot, origin.user, origin.channel, route.params.module]
 				serverName = bot.conn.opt.server
 	
