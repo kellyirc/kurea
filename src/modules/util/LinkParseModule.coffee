@@ -19,7 +19,7 @@ module.exports = (Module) ->
 							return if not r
 							return if r.headers['content-type'].indexOf('text/html') is -1
 							$ = cheerio.load body
-							title = $('title').html()
+							title = $('title').html()?.replace(/\r?\n|\r/g, '').trim()
 							bot.say channel, "#{sender}'s URL » #{title}" if title?
 	
 	
