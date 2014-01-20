@@ -13,6 +13,10 @@ For now, CoffeeScript is required to run Kurea. To install run `npm install -g c
 
 First, make a copy of `config.json.sample` and call it `config.json`. Edit this to make the bot join your server/channels and give it any other configuration details necessary. Next, in the root of the repository, run `npm start`.
 
+Running the Bot on a Server
+===========================
+It is recommended that you use [forever](https://npmjs.org/package/forever) to run the bot on a server. The bot periodically updates itself from this repository and if the core is updated, the bot will shutdown. Additionally, there are some problems in node-irc that will crash the bot. Forever helps ensure the bot remains running.
+
 Developing the Bot
 ==================
 Use `grunt dev` to manage linting the source and running unit tests. If you don't have grunt installed, run `npm install -g grunt-cli`.
