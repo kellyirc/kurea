@@ -10,7 +10,19 @@
     "type": "git",
     "url": "git://github.com/kellyirc/kurea.git"
   },
-  "author": "",
+  "contributors": [
+    {
+      "name": "Kyle Kemp",
+      "email": "kyle@seiyria.com",
+      "url": "http://seiyria.com"
+    },
+    {
+      "name": "Rahat Ahmed"
+    },
+    {
+      "name": "Raymond Hammarling"
+    }
+  ],
   "license": "MIT",
   "readmeFilename": "README.md",
   "dependencies": {
