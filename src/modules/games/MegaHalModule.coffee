@@ -38,7 +38,7 @@ module.exports = (Module) ->
 		generateStatementFrom: (message, @minLength = 6) ->
 			reply = (@megahal.getReplyFromSentence message).split ' '
 			while reply.length < @minLength
-				reply.concat @megahal.getReply().split ' '
+				reply.concat @megahal.getReply('').split ' '
 
 			reply.join ' '
 
