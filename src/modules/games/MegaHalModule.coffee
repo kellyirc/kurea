@@ -10,7 +10,7 @@ module.exports = (Module) ->
 		constructor: (moduleManager) ->
 			super(moduleManager)
 
-			@megahal = new jsMegaHal 3
+			@megahal = new jsMegaHal 2
 
 			messages = @moduleManager.apiCall 'Log', (logModule) =>
 				logModule.forEach (err, msg) =>
@@ -22,7 +22,7 @@ module.exports = (Module) ->
 
 				@moduleManager.canModuleRoute @, bot.getServer(), channel, false, =>
 					if Math.random() > 0.96 or message.toLowerCase().indexOf(bot.getNick().toLowerCase()) isnt -1
-						bot.say channel, @megahal.getReplyFromSentence message
+						bot.say channel, @generateStatementFrom message
 
 		learnFrom: (message) ->
 
@@ -34,5 +34,13 @@ module.exports = (Module) ->
 			#TODO ignore more bad input?
 
 			@megahal.addMass message
+
+		generateStatementFrom: (message, @minLength = 6) ->
+			reply = @megahal.getReplyFromSentence message
+			if reply.length < @minLength
+				reply += ' ' + @megahal.getReply()
+
+			reply
+
 
 	MegaHalModule
