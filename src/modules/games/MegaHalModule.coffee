@@ -37,7 +37,7 @@ module.exports = (Module) ->
 
 		generateStatementFrom: (message, @minLength = 6) ->
 			reply = @megahal.getReplyFromSentence message
-			if reply.length < @minLength
+			while reply.length < @minLength
 				reply += ' ' + @megahal.getReply()
 
 			reply
