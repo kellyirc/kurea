@@ -56,8 +56,13 @@ class ModuleDatabase
 
 	findForEach: (terms, callback) =>
 		if databaseEngine is 'mongo'
-			@db.find terms, (e, docs) ->
-				docs.each callback
+			#@db.find terms, (e, docs) ->
+			#	docs.each callback
+			stream = @db.find(terms).stream()
+			stream.on 'data', (doc) ->
+				callback null, doc
+			stream.on 'error', (e) ->
+				console.error 'error in findForEach streaming'
 		else
 			@db.find terms, (e, docs) ->
 				docs.forEach (doc) ->
