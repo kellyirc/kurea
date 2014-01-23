@@ -10,10 +10,9 @@ module.exports = (Module) ->
 		constructor: (moduleManager) ->
 			super(moduleManager)
 
-			@megahal = new jsMegaHal()
+			@megahal = new jsMegaHal 3
 
 			messages = @moduleManager.apiCall 'Log', (logModule) =>
-
 				logModule.forEach (err, msg) =>
 					@learnFrom msg.message
 
@@ -22,13 +21,8 @@ module.exports = (Module) ->
 				@learnFrom message
 
 				@moduleManager.canModuleRoute @, bot.getServer(), channel, false, =>
-					if Math.random() > 0.96 or message.indexOf(bot.getNick()) isnt -1
-						try
-							bot.say channel, @megahal.getReplyFromSentence message
-						catch err
-						#there were no adequate phrases in the database
-						#I don't know why this throws an error, and I don't know why there's
-						#no way to check for this in node-markov
+					if Math.random() > 0.96 or message.toLowerCase().indexOf(bot.getNick().toLowerCase()) isnt -1
+						bot.say channel, @megahal.getReplyFromSentence message
 
 		learnFrom: (message) ->
 
@@ -39,6 +33,6 @@ module.exports = (Module) ->
 
 			#TODO ignore more bad input?
 
-			@megahal.add message
+			@megahal.addMass message
 
 	MegaHalModule
