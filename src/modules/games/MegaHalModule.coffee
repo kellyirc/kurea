@@ -42,6 +42,9 @@ module.exports = (Module) ->
 
 			@megahal.addMass message
 
+		generateNormalReplyFrom: (message) ->
+			@megahal.getReplyFromSentence message
+
 		generateStatementFrom: (message, @minLength = 6) ->
 			reply = (@megahal.getReplyFromSentence message).split ' '
 			while reply.length < @minLength
