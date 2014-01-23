@@ -36,11 +36,11 @@ module.exports = (Module) ->
 			@megahal.addMass message
 
 		generateStatementFrom: (message, @minLength = 6) ->
-			reply = @megahal.getReplyFromSentence message
+			reply = (@megahal.getReplyFromSentence message).split ' '
 			while reply.length < @minLength
-				reply += ' ' + @megahal.getReply()
+				reply.concat @megahal.getReply().split ' '
 
-			reply
+			reply.join ' '
 
 
 	MegaHalModule
