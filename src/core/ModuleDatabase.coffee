@@ -1,5 +1,6 @@
 
 fs = require 'fs'
+Q = require 'q'
 
 if fs.existsSync 'config.json'
 	config = require '../../config.json'
@@ -16,14 +17,20 @@ class ModuleDatabase
 		if not @label?.length then throw new Error "Database must have a name."
 		if not @root?.length then throw new Error "Module must have a shortName of length 1 or greater."
 
+		_isReady = Q.defer()
+		@databaseReady = _isReady.promise
+
 		if databaseEngine is 'mongo'
 			if not ModuleDatabase::databaseConnection
 				Database.connect "mongodb://#{databaseURL}/kurea", {server:{auto_reconnect:true}}, (e, db) =>
+					_isReady.fail e if e?
 					throw e if e?
 
 					ModuleDatabase::databaseConnection = db
 			
 					@db = ModuleDatabase::databaseConnection.collection "#{@root}_#{@label}"
+
+					_isReady.resolve @db
 			else
 				@db = ModuleDatabase::databaseConnection.collection "#{@root}_#{@label}"
 
@@ -31,6 +38,7 @@ class ModuleDatabase
 		else
 			path = "data/#{@root}/#{@label}.kdb"
 			@db = new Database { autoload: true, filename: path }
+			_isReady.resolve @db
 
 	insert: (data, callback) =>
 		@db.insert data, callback
@@ -56,13 +64,8 @@ class ModuleDatabase
 
 	findForEach: (terms, callback) =>
 		if databaseEngine is 'mongo'
-			#@db.find terms, (e, docs) ->
-			#	docs.each callback
-			stream = @db.find(terms).stream()
-			stream.on 'data', (doc) ->
-				callback null, doc
-			stream.on 'error', (e) ->
-				console.error 'error in findForEach streaming'
+			Q.when @databaseReady, (db) ->
+				db.find(terms).stream().on 'data', (data) -> callback null, data
 		else
 			@db.find terms, (e, docs) ->
 				docs.forEach (doc) ->
