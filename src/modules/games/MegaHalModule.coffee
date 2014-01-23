@@ -6,6 +6,10 @@ module.exports = (Module) ->
 		shortName: "MegaHal"
 		helpText:
 			default: "Facilitates learning speech through your speech patterns!"
+			'word-count': "Tell you how many words I know!"
+
+		usage:
+			'word-count': 'word-count'
 
 		constructor: (moduleManager) ->
 			super(moduleManager)
@@ -15,6 +19,9 @@ module.exports = (Module) ->
 			messages = @moduleManager.apiCall 'Log', (logModule) =>
 				logModule.forEach (err, msg) =>
 					@learnFrom msg.message
+
+			@addRoute "megahal word-count", (origin, route) =>
+				origin.bot.say origin.channel, "I currently know #{Object.keys(@megahal.words).length} words spread across #{Object.keys(@megahal.quads).length} combinations!"
 
 			@on 'message', (bot, sender, channel, message) =>
 
