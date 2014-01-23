@@ -10,7 +10,7 @@ module.exports = (Module) ->
 		constructor: (moduleManager) ->
 			super(moduleManager)
 
-			@megahal = new jsMegaHal 2
+			@megahal = new jsMegaHal 3
 
 			messages = @moduleManager.apiCall 'Log', (logModule) =>
 				logModule.forEach (err, msg) =>
