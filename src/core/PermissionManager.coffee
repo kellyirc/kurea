@@ -45,8 +45,7 @@ class PermissionManager
 		origin.bot.userManager.getUsername origin, (err, username) =>
 			if err? then callback err
 			else if not username? then callback null, []
-
-			else if username.toLowerCase() is origin.bot.config.owner then callback null, ['*']
+			else if username.toLowerCase() is origin.bot.config.owner.toLowerCase() then callback null, ['*']
 
 			else
 				# Q.all([
@@ -130,7 +129,6 @@ class PermissionManager
 
 		match = regex.exec targetString
 		if match?
-			console.log "Match fags", match
 			[target.username, target.group, target.server] = [match[1] ? null, match[2] ? null, match[3] ? null]
 
 		target

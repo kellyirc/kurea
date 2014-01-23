@@ -90,7 +90,6 @@ class ModuleManager extends EventEmitter
 
 		for moduleName, module of @modules
 			if not nickUsage
-				# console.log "Has prefix '#{module.commandPrefix}'?", (_.str.startsWith commandPart, module.commandPrefix)
 				continue if not _.str.startsWith commandPart, module.commandPrefix
 
 				command = commandPart.substring module.commandPrefix.length
@@ -114,7 +113,6 @@ class ModuleManager extends EventEmitter
 
 					promise.then (matched) =>
 						if matched
-							console.log "Matched! #{moduleName} #{routeToMatch.route}"
 							@canModuleRoute module, serverName, to, origin.isPM, ->
 								try
 									routeToMatch.fn origin, routeToMatch
