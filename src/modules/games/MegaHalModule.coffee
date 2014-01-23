@@ -1,16 +1,16 @@
-markov = require 'markov'
+jsMegaHal = require 'jsmegahal'
 color = require 'irc-colors'
 
 module.exports = (Module) ->
-	class MarkovModule extends Module
-		shortName: "Markov"
+	class MegaHalModule extends Module
+		shortName: "MegaHal"
 		helpText:
 			default: "Facilitates learning speech through your speech patterns!"
 
 		constructor: (moduleManager) ->
 			super(moduleManager)
 
-			@markov = markov 4
+			@megahal = new jsMegaHal()
 
 			messages = @moduleManager.apiCall 'Log', (logModule) =>
 
@@ -24,7 +24,7 @@ module.exports = (Module) ->
 				@moduleManager.canModuleRoute @, bot.getServer(), channel, false, =>
 					if Math.random() > 0.96 or message.indexOf(bot.getNick()) isnt -1
 						try
-							bot.say channel, (@markov.respond message).join ' '
+							bot.say channel, @megahal.getReplyFromSentence message
 						catch err
 						#there were no adequate phrases in the database
 						#I don't know why this throws an error, and I don't know why there's
@@ -39,6 +39,6 @@ module.exports = (Module) ->
 
 			#TODO ignore more bad input?
 
-			@markov.seed message
+			@megahal.add message
 
-	MarkovModule
+	MegaHalModule
