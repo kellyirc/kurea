@@ -52,7 +52,6 @@ class Module
 	destroy: ->
 		@events.forEach (element) =>
 			@moduleManager.removeListener element.event, element.listener
-		delete @
 
 	disable: (server, channel) =>
 		@moduleManager.disableModule @, server, channel
