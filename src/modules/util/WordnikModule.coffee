@@ -1,3 +1,4 @@
+###
 module.exports = (Module) ->
 	color = require 'irc-colors'
 	Swagger = require "swagger-client"
@@ -268,3 +269,4 @@ module.exports = (Module) ->
 	
 	
 	WordnikModule
+###
