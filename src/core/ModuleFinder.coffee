@@ -5,6 +5,8 @@ _.str = require 'underscore.string'
 file = require 'file'
 watch = require 'watch'
 
+config = require '../../config.json'
+
 moduleFiles = {}
 modules = {}
 
@@ -65,6 +67,10 @@ reloadFileModules = (file, moduleManager) ->
 
 loadFile = (file, moduleManager) ->
 	file = path.resolve(file)
+
+	name = file.split("\\")[file.split("\\").length-1].split(".")[0]
+
+	return if name in config.ignoredModules
 
 	moduleFiles[file] = reloadFileModules file, moduleManager
 	for moduleName, module of moduleFiles[file]
