@@ -1,4 +1,3 @@
-
 module.exports = (Module) ->
 	color = require 'irc-colors'
 	Swagger = require "swagger-client"
@@ -52,6 +51,7 @@ module.exports = (Module) ->
 			antonym: "antonym [word]"
 			wordoftheday: "wordoftheday"
 			randomwords: "randomwords {part-of-speech}"
+	WordnikModule
 ###
 			
 		constructor: (moduleManager) ->
@@ -269,4 +269,4 @@ module.exports = (Module) ->
 						@reply origin, "Error getting random words."
 	
 ###
-	WordnikModule
+
