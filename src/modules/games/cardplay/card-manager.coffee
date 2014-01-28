@@ -40,8 +40,29 @@ walkFolder = (folder, callback) ->
 					else if stats.isFile()
 						callback null, fullPath
 
+loadScript = (file, callback) ->
+	file = path.resolve file
+	source = getJsSource file
+
+	runScript source, file, -> callback()
+
+runScript = (code, file, callback) ->
+	vm = require 'vm'
+
+	prereqs = []
+	readyCallback = ->
+
+	sandbox =
+		ready: (callback) -> readyCallback = callback
+
+	vm.runInNewContext code, sandbox, file
+
+	readyCallback -> { on: -> }
+
 exports.load = (folder, callback) ->
 	walkFolder folder, (err, file) ->
 		if err? then console.error err.stack
 
-		console.log "Got file #{file}" if _.str.endsWith file, '.coffee'
+		console.log "Got file #{file} with extension #{path.extname file}"
+		if (path.extname file) in ['.js', '.coffee', '.lit-coffee', '.coffee.md']
+			loadScript file
