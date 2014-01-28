@@ -5,6 +5,13 @@ module.exports = (Module) ->
 
 	class BroModule extends Module
 		shortName: 'Bro'
+
+		helpText:
+			default: "Look up common use-cases at the bropages @ http://bropages.org/"
+
+		usage:
+			default: "bro [command]"
+
 		broUrl: 'http://bropages.org'
 
 		constructor: (moduleManager) ->
