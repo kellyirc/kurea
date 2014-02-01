@@ -24,13 +24,26 @@ module.exports = (Module) ->
 						@reply origin, "Sorry bro, something happened - #{err.message}"
 						return
 
-					for entry in data
-						lines = entry.msg.split '\n'
-						for line in lines
+					e.lines = e.msg.split '\n' for e in data
+
+					displayEntry = (entry) =>
+						for line in entry.lines
 							c = (if (line.indexOf '#') is 0 then colors.grey else colors.pink)
 							@reply origin, c line
 
 						@reply origin, (colors.green "(#{entry.up} upvoted)") + " " + (colors.red "(#{entry.down} downvoted)")
+
+					if origin.isPM
+						displayEntry entry for entry in data
+
+					else
+						smallEntries = (entry for entry in data when entry.lines.length <= 3)
+
+						if smallEntries.length > 0
+							displayEntry smallEntries[0] # display first entry
+							@reply origin, "Use in PM to get all entries."
+						else
+							@reply origin, "No short enough entries found; use in PM to get all entries."
 
 		get: (cmd, callback) ->
 			Q.nfcall(request, "#{@broUrl}/#{cmd}.json")
