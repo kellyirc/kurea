@@ -31,7 +31,7 @@ module.exports = (Module) ->
 							c = (if (line.indexOf '#') is 0 then colors.grey else colors.pink)
 							@reply origin, c line
 
-						@reply origin, (colors.green "(#{entry.up} upvoted)") + " " + (colors.red "(#{entry.down} downvoted)")
+						@reply origin, (colors.green "#{entry.up} \u2713") + " " + (colors.red "#{entry.down} \u2717")
 
 					if origin.isPM
 						displayEntry entry for entry in data
