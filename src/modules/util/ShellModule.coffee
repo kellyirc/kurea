@@ -17,9 +17,9 @@ module.exports = (Module) ->
 				_cmd = route.splats[0].split ' '
 
 				[cmd, args] = [(_cmd.slice 0,1)[0], ((_cmd.slice 1) ? []) ]
-				@runCommand cmd, args, 
-					(message) => @reply origin, message, 
-					(error) => @reply origin, "Hey, that command is causing problems, please don't do it again!", 
+				@runCommand cmd, args,
+					(message) => @reply origin, message,
+					(error) => @reply origin, "Hey, that command is causing problems, please don't do it again!",
 					() =>
 
 		runCommand: (command, args, callback, errorCallback, endCallback) ->
