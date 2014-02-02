@@ -108,7 +108,7 @@ module.exports = (Module) ->
 				try
 					console.error err if err?
 					for doc in docs
-						bot.say nick, "Hey #{nick}! #{doc.from} wanted me to tell you, '#{doc.msg}' on #{doc.time}"
+						bot.say nick, "Hey #{nick}! #{doc.from} wanted me to tell you, at #{doc.time}: #{doc.msg}"
 						@db.remove {_id: doc._id}, {}
 				catch e
 					console.error "Unable to check memos."
