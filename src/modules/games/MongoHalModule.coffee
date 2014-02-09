@@ -11,6 +11,9 @@ if fs.existsSync 'config.json'
 # this requires jsmongohal to be set up beforehand
 # see https://github.com/seiyria/jsmongohal for details
 
+# TODO
+# Warning when eval() throws an exception to actually run the script first
+
 module.exports = (Module) ->
 	class MongoHalModule extends Module
 		shortName: "MongoHal"
