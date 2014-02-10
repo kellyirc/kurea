@@ -13,7 +13,7 @@ module.exports = (Module) ->
 			@addRoute "nick :nick", "core.manage.change.nick", (origin, route) =>
 				origin.bot.changeNick route.params.nick, (err, oldnick, newnick, channels, msg) =>
 					if err?
-						console.error err.stack
+						console.error err.stack ? err
 						@reply origin, "I can't call myself that! (#{err.command})"
 					else
 						@reply origin, "Call me #{newnick}"
