@@ -28,6 +28,8 @@ module.exports = (Module) ->
 			@on 'message', (bot, sender, channel, message) =>
 				morses = (match[1] while (match = morsePattern.exec message)?)
 
+				return if morses.length is 0
+
 				origin =
 					user: sender
 					bot: bot
