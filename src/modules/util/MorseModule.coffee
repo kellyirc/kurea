@@ -18,22 +18,22 @@ module.exports = (Module) ->
 
 				@reply origin, "#{origin.user}: #{morse.encode text}"
 
-			# @addRoute "morse from :morseText", (origin, route) =>
-			# 	{morseText} = route.params
+			@addRoute "morse from :morseText", (origin, route) =>
+				{morseText} = route.params
 
-			# 	console.log "Hurr"
+				console.log "Hurr"
 
-			# 	@reply origin, "#{origin.user}: #{morse.decode morseText}"
+				@reply origin, "#{origin.user}: #{morse.decode morseText}"
 
-			@on 'message', (bot, sender, channel, message) =>
-				morses = (match[1] while (match = morsePattern.exec message)?)
+			# @on 'message', (bot, sender, channel, message) =>
+			# 	morses = (match[1] while (match = morsePattern.exec message)?)
 
-				return if morses.length is 0
+			# 	return if morses.length is 0
 
-				origin =
-					user: sender
-					bot: bot
-					channel: channel
-					isPM: not channel?
+			# 	origin =
+			# 		user: sender
+			# 		bot: bot
+			# 		channel: channel
+			# 		isPM: not channel?
 
-				@reply origin, "#{origin.user}: #{morses.map((m) -> morse.decode m).join ', '}"
+			# 	@reply origin, "#{origin.user}: #{morses.map((m) -> morse.decode m).join ', '}"
