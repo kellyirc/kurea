@@ -4,26 +4,28 @@ module.exports = (Module) ->
 	class MorseModule extends Module
 		shortName: "Morse"
 		helpText:
-			default: "Translate to and from Morse code! I'll also translate any Morse I find in messages!"
+			default: "Translate to and from Morse code! I'll auto-detect whether to decode or encode!"
 		usage:
-			default: "morse [from|to] [message]"
+			default: "morse [message]"
 
 		constructor: ->
 			super
 
 			morsePattern = /([\.\-]+(?:\s+[\.\-]+)*)/g
 
-			@addRoute "morse to :text", (origin, route) =>
+			@addRoute "morse :text", (origin, route) =>
 				{text} = route.params
 
-				@reply origin, "#{origin.user}: #{morse.encode text}"
+				isMorse = morsePattern.test text
 
-			@addRoute "morse from :morseText", (origin, route) =>
-				{morseText} = route.params
+				@reply origin, "#{origin.user}: #{if isMorse then morse.decode text else morse.encode text}"
 
-				console.log "Hurr"
+			# @addRoute "morse from :morseText", (origin, route) =>
+			# 	{morseText} = route.params
 
-				@reply origin, "#{origin.user}: #{morse.decode morseText}"
+			# 	console.log "Hurr"
+
+			# 	@reply origin, "#{origin.user}: #{morse.decode morseText}"
 
 			# @on 'message', (bot, sender, channel, message) =>
 			# 	morses = (match[1] while (match = morsePattern.exec message)?)
