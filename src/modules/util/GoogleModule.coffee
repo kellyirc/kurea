@@ -5,8 +5,10 @@ module.exports = (Module) ->
 		shortName: "Google"
 		helpText:
 			default: "Gets search results from a Google query."
+			next: "Gets the next result of the previous query."
 		usage:
 			default: "google [query]"
+			next: "next"
 
 		constructor: (moduleManager)->
 			super moduleManager
