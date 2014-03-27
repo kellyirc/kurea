@@ -67,8 +67,7 @@ reloadFileModules = (file, moduleManager) ->
 
 loadFile = (file, moduleManager) ->
 	file = path.resolve(file)
-
-	if (path.basename file,'.coffee') in config.ignoredModules
+	if config.ignoredModules? and (path.basename file,'.coffee') in config.ignoredModules
 		console.log "--- IGNORING #{path.basename file,'.coffee'}"
 		return
 
