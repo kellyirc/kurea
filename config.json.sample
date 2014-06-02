@@ -1,42 +1,47 @@
 {
-	"userName": "Kurea",
-	"realName": "Kurea IRC Bot",
-	"autoRejoin": false,
-	"autoConnect": true,
-	"secure": false,
-	"selfSigned": false,
-	"certExpired": false,
-	"floodProtection": true,
-	"floodProtectionDelay": "500",
-	"sasl": false,
-	"stripColors": false,
-	"channelPrefixes": "&#",
-	"messageSplit": "512",
+    "userName": "Kurea",
+    "realName": "Kurea IRC Bot",
+    "autoRejoin": false,
+    "autoConnect": true,
+    "secure": false,
+    "selfSigned": false,
+    "certExpired": false,
+    "floodProtection": true,
+    "floodProtectionDelay": "500",
+    "sasl": false,
+    "stripColors": false,
+    "channelPrefixes": "&#",
+    "messageSplit": "512",
 
-	"nick": "Moop",
-	"verbose": false,
-	"auth": "nickserv",
-	"owner": "YourUsername",
+    "nick": "Moop",
+    "verbose": false,
+    "auth": "nickserv",
+    "owner": "YourUsername",
 
-	"storage": "mongo",
-	"storageURL": "localhost:28017",
+    "storage": "mongo",
+    "storageURL": "localhost:28017",
 
-	"bots": {
-		"Moop-Esper": {
-			"server": "irc.esper.net",
-			"port": "6667",
-			"channels": ["#kellyirc", "#kurea"],
-			"password": "insert_password_here"
-		},
-		"Moop-FreeNode": {
-			"server": "irc.freenode.net",
-			"port": "6667",
-			"channels": ["#kurea"]
-		}
-	},
-	
-	"apiKeys": {
-		"wordnik": "GET YOUR OWN",
-		"wolfram": "HAHA YOU WISH"
-	}
+    "ignoredModules": [
+        "MongoHalModule",
+        "MegaHalModule"
+    ],
+
+    "bots": {
+        "Moop-Esper": {
+            "server": "irc.esper.net",
+            "port": "6667",
+            "channels": ["#kellyirc", "#kurea"],
+            "password": "insert_password_here"
+        },
+        "Moop-FreeNode": {
+            "server": "irc.freenode.net",
+            "port": "6667",
+            "channels": ["#kurea"]
+        }
+    },
+
+    "apiKeys": {
+        "wordnik": "GET YOUR OWN",
+        "wolfram": "HAHA YOU WISH"
+    }
 }
