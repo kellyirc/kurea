@@ -23,7 +23,7 @@ class ModuleDatabase
 		if databaseEngine is 'mongo'
 			if not ModuleDatabase::databaseConnection
 				Database.connect "mongodb://#{databaseURL}/kurea", {server:{auto_reconnect:true}}, (e, db) =>
-					_isReady.fail e if e?
+					#_isReady.error e if e?
 					throw e if e?
 
 					ModuleDatabase::databaseConnection = db
