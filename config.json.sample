@@ -19,7 +19,7 @@
     "owner": "YourUsername",
 
     "storage": "mongo",
-    "storageURL": "localhost:28017",
+    "storageURL": "localhost:27017",
 
     "ignoredModules": [
         "MongoHalModule",
