@@ -1,6 +1,6 @@
 module.exports = (Module) ->
 	colors = require 'irc-colors'
-	_ = {} # Don't need to require underscore, just make an empty object so using underscore.string is consistent
+	_ = require 'underscore'
 	_.str = require 'underscore.string'
 	
 	class ListModule extends Module
@@ -22,7 +22,7 @@ module.exports = (Module) ->
 					data.forEach (module) ->
 						moduleList.push if module.isEnabled then module.name else colors.red module.name
 	
-					@reply origin, "Current modules are: #{_.str.toSentence moduleList}"
+					@reply origin, "Current modules are: #{_.str.toSentence _.sortBy moduleList, _.identity}"
 	
 				#list = (module.shortName for name, module of bot.getModules()).join(", ")
 				#@reply origin, "Current modules are: #{list}"
