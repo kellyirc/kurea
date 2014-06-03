@@ -17,7 +17,7 @@ module.exports = (Module) ->
 				serverName = bot.conn.opt.server
 
 				fullExistingModuleList = []
-				fullExistingModuleList.push _.str.strLeft moduleName,"Module" for moduleName of moduleManager.modules
+				fullExistingModuleList.push module.shortName for moduleName,module of moduleManager.modules
 
 				if !_.contains origin.channel, "#"
 					return @reply origin, "While some modules may not work correctly in PM, here is the list:
@@ -27,7 +27,7 @@ module.exports = (Module) ->
 					moduleList = []
 	
 					data.forEach (module) ->
-						moduleList.push if module.isEnabled and _.contains fullExistingModuleList,module.name then module.name else colors.red module.name
+						moduleList.push if module.isEnabled then module.name else colors.red module.name if _.contains fullExistingModuleList,module.name
 	
 					@reply origin, "Current modules are: #{_.str.toSentence _.sortBy moduleList, _.identity}"
 	
