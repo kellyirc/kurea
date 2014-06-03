@@ -10,8 +10,12 @@ class Module
 	shortName: "Unnamed"
 	helpText:
 		default: "There is no help text for this module."
+	usage:
+		default: "There is no usage text for this module."
 
 	commandPrefix: "!"
+
+	suppressFailMessages: false
 
 	userInformationManager: new UserInformationManager()
 
@@ -47,7 +51,7 @@ class Module
 	originToAuthName: (origin, callback) ->
 		origin.bot.userManager.getUsername origin, (e, username) =>
 			callback username if username?
-			@reply origin, "You must be logged in to #{origin.bot.config.auth} to use this command!" if not username
+			@reply origin, "You must be logged in to #{origin.bot.config.auth} to use this command!" if not username and not @suppressFailMessages
 
 	destroy: ->
 		@events.forEach (element) =>
