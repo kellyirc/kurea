@@ -23,6 +23,7 @@ module.exports = (Module) ->
 			addCoins = (origin, coins, callback) =>
 				getCoinTotal origin, (coinTotal) =>
 					coinTotal = 0 if (isNaN coinTotal) or not coinTotal
+					return callback(false) if coinTotal+coins < 0
 					setCoinTotal origin, coinTotal+coins, callback
 
 			removeCoins = (origin, coins, callback) =>
