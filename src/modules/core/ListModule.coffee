@@ -12,9 +12,17 @@ module.exports = (Module) ->
 		constructor: (moduleManager) ->
 			super(moduleManager)
 	
-			@addRoute "list", (origin, route) =>
-				[bot, user, channel] = [origin.bot, origin.user, origin.channel]
+			@addRoute "list", (origin) =>
+				[bot, channel] = [origin.bot, origin.channel]
 				serverName = bot.conn.opt.server
+
+				if !_.contains origin.channel, "#"
+					arr = []
+					arr.push _.str.strLeft moduleName,"Module" for moduleName of moduleManager.modules
+
+					@reply origin, "While some modules may not work correctly in PM, here is the list:
+						#{_.str.toSentence _.sortBy arr, _.identity}"
+					return
 	
 				moduleManager._getModuleActiveData {server: serverName, channel: channel}, (data) =>
 					moduleList = []
