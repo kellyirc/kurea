@@ -25,9 +25,9 @@ module.exports = (Module) ->
 
 				moduleManager._getModuleActiveData {server: serverName, channel: channel}, (data) =>
 					moduleList = []
-	
-					data.forEach (module) ->
-						(moduleList.push if module.isEnabled then module.name else colors.red module.name) if _.contains fullExistingModuleList,module.name
+
+					fullExistingModuleList.forEach (module) ->
+						moduleList.push if _.findWhere data, {name: module, isEnabled: false} then colors.red module else module
 	
 					@reply origin, "Current modules are: #{_.str.toSentence _.sortBy moduleList, _.identity}"
 	
