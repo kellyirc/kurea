@@ -1,46 +1,58 @@
 module.exports = (Module) ->
 
-  class CoinModule extends Module
-    shortName: "Coin"
-    helpText:
-      default: "Get coins for talking!"
-    usage:
-      default: "coins"
+	class CoinModule extends Module
+		shortName: "Coin"
+		helpText:
+			default: "Get coins for talking!"
+		usage:
+			default: "coins"
 
-    constructor: (moduleManager) ->
-      super(moduleManager)
+		suppressFailMessages: true
 
-      getCoinTotal = (origin, callback) =>
-        @getUserData origin, "coins", (data) =>
-          callback?(data)
+		constructor: (moduleManager) ->
+			super(moduleManager)
 
-      setCoinTotal = (origin, coins, callback) =>
-        @setUserData origin, "coins", coins, () =>
-          callback?()
+			getCoinTotal = (origin, callback) =>
+				@getUserData origin, "coins", (data) =>
+					callback?(data)
 
-      addCoins = (origin, coins, callback) =>
-        getCoinTotal origin, (coinTotal) =>
-          coinTotal = 0 if (isNaN coinTotal) or not coinTotal
-          setCoinTotal origin, coinTotal+coins, callback
+			setCoinTotal = (origin, coins, callback) =>
+				@setUserData origin, "coins", coins, () =>
+					callback?()
 
-      removeCoins = (origin, coins, callback) =>
-        addCoins origin, -coins, callback
+			addCoins = (origin, coins, callback) =>
+				getCoinTotal origin, (coinTotal) =>
+					coinTotal = 0 if (isNaN coinTotal) or not coinTotal
+					setCoinTotal origin, coinTotal+coins, callback
 
-      @getApi().getCoinTotal = getCoinTotal
+			removeCoins = (origin, coins, callback) =>
+				addCoins origin, -coins, callback
 
-      @getApi().addCoins = addCoins
+			@getApi().getCoinTotal = getCoinTotal
 
-      @getApi().removeCoins = removeCoins
+			@getApi().addCoins = addCoins
 
-      @getApi().setCoinTotal = setCoinTotal
+			@getApi().removeCoins = removeCoins
 
-      @registerApi()
+			@getApi().setCoinTotal = setCoinTotal
 
-      @addRoute "coins", (origin) =>
-        @getUserData origin, "coins", (data) =>
-          @reply origin, "You have #{data ? 0} coins."
+			@registerApi()
 
-      @addRoute "*", (origin) =>
-        addCoins origin, 1
+			@addRoute "coins", (origin) =>
+				@getUserData origin, "coins", (data) =>
+					@reply origin, "You have #{data ? 0} coins."
 
-  CoinModule
+			@on 'message', (bot, sender, channel) =>
+
+				@moduleManager.apiCall 'Roll', (diceModule) =>
+
+					return if diceModule.roll(1,100) is 1
+
+					origin =
+						user: sender
+						bot: bot
+						channel: channel
+
+					addCoins origin, diceModule.roll 1,7
+
+	CoinModule
