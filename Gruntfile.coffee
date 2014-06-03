@@ -29,7 +29,7 @@ module.exports = (grunt) ->
                 no_unnecessary_fat_arrows: #we use them everywhere and they're not harmful
                     level: 'ignore'
                 max_line_length: #I trust you
-                    level: 'ignore'
+                      level: 'ignore'
 
         mochaTest:
             dist:

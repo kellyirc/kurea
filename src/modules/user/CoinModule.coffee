@@ -47,7 +47,7 @@ module.exports = (Module) ->
 
 				@moduleManager.apiCall 'Roll', (diceModule) =>
 
-					return if diceModule.roll(1,100) is 1
+					return if diceModule.roll(1,100) isnt 1
 
 					origin =
 						user: sender
