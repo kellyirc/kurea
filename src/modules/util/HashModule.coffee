@@ -15,10 +15,10 @@ module.exports = (Module) ->
 		constructor: (moduleManager) ->
 			super moduleManager
 
-			@algorithms = crypto.getHashes().map (algorithm) -> algorithm.toLowerCase();
+			@algorithms = crypto.getHashes().map (algorithm) -> algorithm.toLowerCase()
 
 			@addRoute "hash-list", (origin) =>
-				@reply origin, "Available hash functions: #{@algorithms.join ','}"
+				@reply origin, "Available hash functions: #{@algorithms.join ', '}"
 
 			@addRoute "hash :algo :text", (origin, route) =>
 				[algo, text] = [route.params.algo, route.params.text]
