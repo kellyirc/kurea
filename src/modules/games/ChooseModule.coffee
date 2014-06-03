@@ -13,9 +13,7 @@ module.exports = (Module) ->
 	
 			@addRoute "choose :choices", (origin, route) =>
 				[bot, user, channel, choices] = [origin.bot, origin.user, origin.channel, route.params.choices]
-				console.log choices
 				choices = choices.split /\bor\b/
-				console.log choices
 				choice = choices[~~(Math.random()*choices.length)].trim()
 				@reply origin, "#{user}, for your certain predicament, I choose #{color.bold(choice)}."
 	
