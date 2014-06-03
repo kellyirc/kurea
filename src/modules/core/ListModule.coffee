@@ -27,7 +27,7 @@ module.exports = (Module) ->
 					moduleList = []
 
 					fullExistingModuleList.forEach (module) ->
-						moduleList.push if (_.findWhere data, {name: module, isEnabled: false}) or not _.contains data, module then colors.red module else module
+						moduleList.push if (_.findWhere data, {name: module, isEnabled: false}) or (not _.findWhere data, {name: module}) then colors.red module else module
 	
 					@reply origin, "Current modules are: #{_.str.toSentence _.sortBy moduleList, _.identity}"
 	
