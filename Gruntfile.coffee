@@ -6,7 +6,7 @@ module.exports = (grunt) ->
     grunt.task.loadNpmTasks 'grunt-clear'
 
     grunt.initConfig
-        pkg: 
+        pkg:
             grunt.file.readJSON('package.json')
 
         watch:
@@ -25,6 +25,8 @@ module.exports = (grunt) ->
                 no_tabs: #using tabs!
                     level: 'ignore'
                 indentation: #using tabs screws this right up
+                    level: 'ignore'
+                no_unnecessary_fat_arrows: #we use them everywhere and they're not harmful
                     level: 'ignore'
                 max_line_length: #I trust you
                     level: 'ignore'
