@@ -54,6 +54,7 @@
     "mongodb": "~1.3.23",
     "jsmegahal": "~1.2.2",
     "morse": "~0.1.0",
-    "google": "^0.3.2"
+    "google": "^0.3.2",
+    "mstranslator": "^0.1.6"
   }
 }
