@@ -146,6 +146,13 @@ module.exports = (Module) ->
 				gitPull.stdout.on 'data', (chunk) -> console.log "#{chunk}"
 				gitPull.stderr.on 'data', (chunk) -> console.error "#{chunk}"
 				gitPull.on 'close', (code, signal) -> deferred.resolve code, signal
+
+				gitSubmodules = child_process.exec "git submodule foreach git pull", (err, stdout, stderr) ->
+				if err? then deferred.reject err
+
+				gitSubmodules.stdout.on 'data', (chunk) -> console.log "#{chunk}"
+				gitSubmodules.stderr.on 'data', (chunk) -> console.error "#{chunk}"
+				gitSubmodules.on 'close', (code, signal) -> deferred.resolve code, signal
 	
 				deferred.promise
 	
