@@ -1,6 +1,5 @@
 module.exports = (Module) ->
 	color = require 'irc-colors'
-	q = require 'q'
 
 	class GambleModule extends Module
 		shortName: "Gamble"
