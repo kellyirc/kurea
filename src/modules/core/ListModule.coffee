@@ -27,7 +27,7 @@ module.exports = (Module) ->
 					moduleList = []
 	
 					data.forEach (module) ->
-						moduleList.push if module.isEnabled then module.name else colors.red module.name if _.contains fullExistingModuleList,module.name
+						(moduleList.push if module.isEnabled then colors.stripColors module.name else colors.red module.name) if _.contains fullExistingModuleList,module.name
 	
 					@reply origin, "Current modules are: #{_.str.toSentence _.sortBy moduleList, _.identity}"
 	
