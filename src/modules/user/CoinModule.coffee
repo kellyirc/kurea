@@ -12,6 +12,10 @@ module.exports = (Module) ->
 		constructor: (moduleManager) ->
 			super(moduleManager)
 
+			canSpend = (origin, spend, callback) =>
+				@getUserData origin, "coins", (data) =>
+					callback?(data >= spend)
+
 			getCoinTotal = (origin, callback) =>
 				@getUserData origin, "coins", (data) =>
 					callback?(data)
@@ -36,6 +40,8 @@ module.exports = (Module) ->
 			@getApi().removeCoins = removeCoins
 
 			@getApi().setCoinTotal = setCoinTotal
+
+			@getApi().canSpend = canSpend
 
 			@registerApi()
 
