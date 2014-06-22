@@ -8,6 +8,9 @@ ModuleManager = require('./ModuleManager').ModuleManager
 PermissionManager = require('./PermissionManager').PermissionManager
 
 class BotManager
+
+	@botHash = {}
+
 	constructor: (@config) ->
 		@configPath = path.resolve "config.json"
 		if typeof @config is "string"
@@ -15,6 +18,7 @@ class BotManager
 			@config = require path.resolve @config
 
 		@bots = []
+
 		@permissionManager = new PermissionManager()
 		@userManagerClasses = @loadUserManagers __dirname + '/../auths'
 
@@ -28,7 +32,10 @@ class BotManager
 				botConfig[key] = value if not botConfig[key]?
 			botConfig.name = botName
 
-			@bots.push new Bot @, botConfig
+			bot = new Bot @, botConfig
+			@bots.push bot
+			BotManager.botHash[botConfig.server] = bot
+
 		@moduleManager = new ModuleManager @
 
 	loadUserManagers: (path) ->
@@ -55,4 +62,5 @@ class BotManager
 				delete botConfig[key] if not (key in overrides)
 		fs.writeFile @configPath, JSON.stringify(config, null, '\t'), (err) ->
 			console.error "Unable to write to config:", err if err?
+
 exports.BotManager = BotManager
