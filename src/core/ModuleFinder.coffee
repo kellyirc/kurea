@@ -31,6 +31,8 @@ removeNodeModule = (file) ->
 
 	# console.log "Removing node.js module #{fileModule.filename}"
 
+	return if not fileModule
+
 	for childModule in fileModule.children
 		if isInSubfolder (path.dirname file), childModule.filename
 			removeNodeModule childModule.filename
@@ -158,7 +160,7 @@ buildModuleList = (moduleManager) ->
 
 			# removeFile takes care of the rest in the process
 		, 100)
-		
+
 	modules
 
 exports.buildModuleList = buildModuleList
