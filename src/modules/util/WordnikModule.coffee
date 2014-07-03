@@ -73,11 +73,13 @@ module.exports = (Module) ->
 					limit: 1,
 					(data) =>
 						try
-							response = JSON.parse(data.content.data.toString()) # wow gross
+							console.log data.data.toString()
+							response = JSON.parse(data.data.toString()) # wow gross
 							if response.length is 0
 								@reply origin, "No definitions found."
 								return
 	
+							console.log 'got dat def'
 							def = response[0].text.split('   ')
 							if def.length >= 2
 								def = "#{color.green(def[0])}  #{color.olive(def[1..].join('   '))}"
@@ -102,7 +104,7 @@ module.exports = (Module) ->
 					word: route.params.word
 					(data) =>
 						try
-							response = JSON.parse(data.content.data.toString()) # wow gross
+							response = JSON.parse(data.data.toString()) # wow gross
 							if not response.text?
 								@reply origin, "No example found."
 								return
@@ -127,7 +129,7 @@ module.exports = (Module) ->
 					limitPerRelationshipType: 30
 					(data) =>
 						try
-							response = JSON.parse(data.content.data.toString()) # wow gross
+							response = JSON.parse(data.data.toString()) # wow gross
 							if response.length < 1?
 								@reply origin, "No rhymes found."
 								return
@@ -152,7 +154,7 @@ module.exports = (Module) ->
 					limitPerRelationshipType: 30
 					(data) =>
 						try
-							response = JSON.parse(data.content.data.toString()) # wow gross
+							response = JSON.parse(data.data.toString()) # wow gross
 							if response.length < 1?
 								@reply origin, "No synonyms found."
 								return
@@ -177,7 +179,7 @@ module.exports = (Module) ->
 					limitPerRelationshipType: 30
 					(data) =>
 						try
-							response = JSON.parse(data.content.data.toString()) # wow gross
+							response = JSON.parse(data.data.toString()) # wow gross
 							if response.length < 1?
 								@reply origin, "No antonyms found."
 								return
@@ -200,7 +202,7 @@ module.exports = (Module) ->
 					date: new Date().toISOString()[0...10]
 					(data) =>
 						try
-							response = JSON.parse(data.content.data.toString()) # wow gross
+							response = JSON.parse(data.data.toString()) # wow gross
 							if not response.word?
 								@reply origin, "No word of the day?"
 								return
@@ -224,7 +226,7 @@ module.exports = (Module) ->
 					limit: 10
 					(data) =>
 						try
-							response = JSON.parse(data.content.data.toString()) # wow gross
+							response = JSON.parse(data.data.toString()) # wow gross
 							if response.size is 0
 								@reply origin, "No random words?"
 								return
@@ -252,7 +254,7 @@ module.exports = (Module) ->
 					limit: 10
 					(data) =>
 						try
-							response = JSON.parse(data.content.data.toString()) # wow gross
+							response = JSON.parse(data.data.toString()) # wow gross
 							if response.size is 0
 								@reply origin, "No random words?"
 								return
