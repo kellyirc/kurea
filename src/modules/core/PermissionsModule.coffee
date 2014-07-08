@@ -7,13 +7,17 @@ module.exports = (Module) ->
 	class PermissionsModule extends Module
 		shortName: "Permissions"
 		helpText:
-			default: "A module for manually adding and removing permissions. Commands available: add, add-group"
+			default: "A module for manually adding and removing permissions. Commands available: add, add-group, info, check"
 			'permissions add': "Add a permission to the specified target, be it a user, a group or a combination!"
 			'permissions add-group': "Add the target username to a group!"
+			'permissions info': "Lists the groups you are in."
+			'permissions check': "Checks if you or the target have the given permission."
 
 		usage:
 			'permissions add': "permissions add [target] [permission]"
 			'permissions add-group': "permissions add-group [target] [group]"
+			'permissions info': "permissions info"
+			'permissions check': "permissions check [permission] {target}"
 	
 		constructor: (moduleManager) ->
 			super(moduleManager)
@@ -48,11 +52,11 @@ module.exports = (Module) ->
 				bot.userManager.getUsername origin, (err, username) =>
 					@permMan.getGroups bot, username, (err, groups) =>
 						if groups.length > 0
-							bot.say user, "Your groups are #{_.str.toSentence (colors.bold(group) for group in groups)}."
+							@reply origin, "Your groups are #{_.str.toSentence (colors.bold(group) for group in groups)}."
 							
-						else bot.say user, "You are not in any group."
+						else @reply origin, "You are not in any group."
 	
-			permtestanFunc = (origin, route) =>
+			checkPermission = (origin, route) =>
 				permission = route.params.permission
 				user = route.params.user ? origin.user
 	
@@ -63,8 +67,8 @@ module.exports = (Module) ->
 	
 					@reply origin, "Does #{user} match the permission? #{if matched then "Yes!" else "No!"}"
 	
-			@addRoute "permtestan :user :permission", permtestanFunc
-			@addRoute "permtestan :permission", permtestanFunc
+			@addRoute "permissions check :permission :user", checkPermission
+			@addRoute "permissions check :permission", checkPermission
 	
 			@addRoute "dumpPerm", (origin, route) => @permMan.dump()
 	
