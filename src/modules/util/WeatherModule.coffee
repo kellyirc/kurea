@@ -27,7 +27,7 @@ module.exports = (Module) ->
 
 						conditionString = if json.weather.size is 0 then 'None' else (json.weather.map (w)-> return w.description).join ', '
 
-						@reply origin, "Weather in #{color.bold (if json.name then json.name else city)} (#{json.coord.lon}, #{json.coord.lat}) -
+						@reply origin, "Weather in #{color.bold (if json.name then json.name else city)} (#{json.coord.lat}, #{json.coord.lon}) -
 							#{color.bold 'Low Temp'}: #{tF json.main.temp_min, dS},
 							#{color.bold 'Temp'}: #{tF json.main.temp, dS},
 							#{color.bold 'High Temp'}: #{tF json.main.temp_max, dS},
