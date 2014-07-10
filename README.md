@@ -17,6 +17,10 @@ Running the Bot on a Server
 ===========================
 It is recommended that you use [forever](https://npmjs.org/package/forever) to run the bot on a server. The bot periodically updates itself from this repository and if the core is updated, the bot will shutdown. Additionally, there are some problems in node-irc that will crash the bot. Forever helps ensure the bot remains running. You can run the bot with `forever start -c coffee Main.coffee`
 
+Using MongoDB
+=============
+If you want to use MongoDB instead of nedb as your database engine, install MongoDB and set `config.storage = "mongo"`.
+
 Developing the Bot
 ==================
 Use `grunt dev` to manage linting the source and running unit tests. If you don't have grunt installed, run `npm install -g grunt-cli`.
