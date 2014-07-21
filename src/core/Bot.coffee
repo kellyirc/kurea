@@ -78,6 +78,7 @@ class Bot
 	getChannels: -> chan for chan of @conn.chans # Clone the object
 
 	getUsers: (chan) ->
+		return [] if not chan
 		chan = chan.toLowerCase()
 		users = {}
 		users = @conn.chans[chan].users if @conn.chans[chan]?
