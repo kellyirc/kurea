@@ -41,26 +41,24 @@ exports.removeNodeModule = (file) ->
 exports.findModules = ->
 	modules = []
 
-	for m in fs.readdirSync(baseModulesPath) when kureaModuleFilter m
+	for m in fs.readdirSync(modulesPath) when kureaModuleFilter m
 		modules.push m
 
 	modules
 
 exports.loadFile = (file, moduleManager) ->
 	fileModules = {}
-	try
-		{Module} = require './Module'
-		classes = require(file)(Module)
 
-		if not classes? then return
+	{Module} = require './Module'
+	classes = require(file)(Module)
 
-		classes = [].concat classes # So whatever is returned, is made into an array
+	if not classes? then return
 
-		fileModules[clazz.name] = new clazz(moduleManager) for clazz in classes
+	classes = [].concat classes # So whatever is returned, is made into an array
 
-	catch e
-		console.log "There was a problem while loading #{file}"
-		console.error e.stack
+	fileModules[clazz.name] = new clazz(moduleManager) for clazz in classes
+
+	# console.log "Loaded [#{(clazz.name for clazz in classes).join ', '}] from #{file}"
 
 	fileModules
 
@@ -73,7 +71,12 @@ exports.loadCoreModules = (moduleManager) ->
 
 	exports.modules['__core'] = coreModules
 
+	console.log 'Loaded core modules'
+
 exports.loadModule = (mod, moduleManager) ->
+	exports.modules[mod] = exports.loadFile (require.resolve mod), moduleManager
+
+	console.log "Loaded external module '#{mod}' from #{require.resolve mod}"
 
 exports.unloadModule = (mod) ->
 
@@ -85,9 +88,9 @@ exports.reloadModule = (mod) ->
 exports.buildModuleList = (moduleManager) ->
 	exports.loadCoreModules moduleManager
 
-	# moduleNames = exports.findModules()
+	moduleNames = exports.findModules()
 
-	# for m in moduleNames
-	# 	exports.loadModule m
+	for m in moduleNames
+		exports.loadModule m, moduleManager
 
 	exports.modules
