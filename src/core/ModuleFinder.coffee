@@ -12,6 +12,9 @@ baseModulesPath = __dirname+'/../../node_modules'
 
 kureaModuleFilter = minimatch.filter 'kurea-*', matchBase: yes
 
+# The object that contains all loaded modules
+exports.modules = {}
+
 exports.removeNodeModule = (file) ->
 	fullfile = require.resolve file
 	fileModule = require.cache[fullfile]
@@ -34,10 +37,10 @@ exports.removeNodeModule = (file) ->
 	# Remove this file from cache
 	delete require.cache[fullfile]
 
-exports.findModules = (nodeModulesPath) ->
+exports.findModules = ->
 	modules = {}
 
-	for module in fs.readdirSync(basePath) when kureaModuleFilter module
+	for module in fs.readdirSync(baseModulesPath) when kureaModuleFilter module
 		modules[module] = require.resolve module
 
 	modules
