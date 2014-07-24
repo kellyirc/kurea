@@ -42,4 +42,13 @@ exports.findModules = (nodeModulesPath) ->
 
 	modules
 
+exports.loadModule = (mod) ->
+
+exports.unloadModule = (mod) ->
+
+exports.reloadModule = (mod) ->
+	# unload, then load, simple as that
+	exports.unloadModule mod
+	exports.loadModule mod
+
 exports.buildModuleList = (moduleManager) ->
