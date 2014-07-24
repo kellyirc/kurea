@@ -1,14 +1,15 @@
 fs = require 'fs'
 path = require 'path'
-# _ = require 'underscore'
+_ = require 'underscore'
 # _.str = require 'underscore.string'
-# file = require 'file'
+file = require 'file'
 # watch = require 'watch'
 minimatch = require 'minimatch'
 
 config = require '../../config.json'
 
-baseModulesPath = __dirname+'/../../node_modules'
+coreModulesPath = "#{__dirname}/../modules"
+modulesPath = "#{__dirname}/../../node_modules"
 
 kureaModuleFilter = minimatch.filter 'kurea-*', matchBase: yes
 
@@ -38,14 +39,41 @@ exports.removeNodeModule = (file) ->
 	delete require.cache[fullfile]
 
 exports.findModules = ->
-	modules = {}
+	modules = []
 
-	for module in fs.readdirSync(baseModulesPath) when kureaModuleFilter module
-		modules[module] = require.resolve module
+	for m in fs.readdirSync(baseModulesPath) when kureaModuleFilter m
+		modules.push m
 
 	modules
 
-exports.loadModule = (mod) ->
+exports.loadFile = (file, moduleManager) ->
+	fileModules = {}
+	try
+		{Module} = require './Module'
+		classes = require(file)(Module)
+
+		if not classes? then return
+
+		classes = [].concat classes # So whatever is returned, is made into an array
+
+		fileModules[clazz.name] = new clazz(moduleManager) for clazz in classes
+
+	catch e
+		console.log "There was a problem while loading #{file}"
+		console.error e.stack
+
+	fileModules
+
+exports.loadCoreModules = (moduleManager) ->
+	coreModules = {}
+
+	file.walkSync coreModulesPath, (start, dirs, files) ->
+		for f in (files.map (f) -> start+path.sep+f)
+			_.extend coreModules, (exports.loadFile f, moduleManager)
+
+	exports.modules['__core'] = coreModules
+
+exports.loadModule = (mod, moduleManager) ->
 
 exports.unloadModule = (mod) ->
 
@@ -55,3 +83,11 @@ exports.reloadModule = (mod) ->
 	exports.loadModule mod
 
 exports.buildModuleList = (moduleManager) ->
+	exports.loadCoreModules moduleManager
+
+	# moduleNames = exports.findModules()
+
+	# for m in moduleNames
+	# 	exports.loadModule m
+
+	exports.modules

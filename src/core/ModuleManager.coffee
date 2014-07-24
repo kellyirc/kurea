@@ -17,21 +17,21 @@ class ModuleManager extends EventEmitter
 		@modules = require('./ModuleFinder').buildModuleList @
 
 	findModuleByNameAndAliases: (name) =>
-
 		name = name.toLowerCase()
 
 		possibleModule = null
 
-		for moduleName,module of @modules
+		for nodeModuleName, kureaModules of @modules
+			for moduleName, module of kureaModules
 
-			break if possibleModule isnt null
+				break if possibleModule isnt null
 
-			compareNames = [module.shortName.toLowerCase()]
+				compareNames = [module.shortName.toLowerCase()]
 
-			for alias of module.usage when alias isnt 'default'
-				compareNames.push alias.toLowerCase()
+				for alias of module.usage when alias isnt 'default'
+					compareNames.push alias.toLowerCase()
 
-			possibleModule = module if -1 isnt compareNames.indexOf name
+				possibleModule = module if -1 isnt compareNames.indexOf name
 
 		possibleModule
 
@@ -54,12 +54,14 @@ class ModuleManager extends EventEmitter
 		@_getModuleActiveData { name: module.shortName, server: server, channel: channel }, callback
 
 	enableAllModules: (server, channel) =>
-		for moduleName,module of @modules
-			@enableModule module,server,channel
+		for nodeModuleName, kureaModules of @modules
+			for moduleName, module of kureaModules
+				@enableModule module,server,channel
 
 	disableAllModules: (server, channel) =>
-		for moduleName,module of @modules
-			@disableModule module,server,channel
+		for nodeModuleName, kureaModules of @modules
+			for moduleName, module of kureaModules
+				@disableModule module,server,channel
 
 	enableModule: (module, server, channel) =>
 
@@ -88,39 +90,40 @@ class ModuleManager extends EventEmitter
 		serverName = bot.conn.opt.server
 		isChannel = 0 is to.indexOf "#"
 
-		for moduleName, module of @modules
-			if not nickUsage
-				continue if not _.str.startsWith commandPart, module.commandPrefix
+		for nodeModuleName, kureaModules of @modules
+			for moduleName, module of kureaModules
+				if not nickUsage
+					continue if not _.str.startsWith commandPart, module.commandPrefix
 
-				command = commandPart.substring module.commandPrefix.length
+					command = commandPart.substring module.commandPrefix.length
 
-			else command = commandPart
+				else command = commandPart
 
-			do (moduleName, module) =>
+				do (moduleName, module) =>
 
-				routeToMatch = module.router.match command.split('%').join('%25') # Router doesn't like %'s
-				if routeToMatch?
-					origin =
-						bot: bot
-						user: from
-						channel: if to is bot.getNick() then undefined else to
-						isPM: to is bot.getNick()
+					routeToMatch = module.router.match command.split('%').join('%25') # Router doesn't like %'s
+					if routeToMatch?
+						origin =
+							bot: bot
+							user: from
+							channel: if to is bot.getNick() then undefined else to
+							isPM: to is bot.getNick()
 
-					promise = Q(yes)
+						promise = Q(yes)
 
-					if module.routerPerms[routeToMatch.route]?
-						promise = Q.ninvoke module, 'hasPermission', origin, module.routerPerms[routeToMatch.route]
+						if module.routerPerms[routeToMatch.route]?
+							promise = Q.ninvoke module, 'hasPermission', origin, module.routerPerms[routeToMatch.route]
 
-					promise.then (matched) =>
-						if matched
-							@canModuleRoute module, serverName, to, origin.isPM, ->
-								try
-									routeToMatch.fn origin, routeToMatch
-								catch e
-									console.error "Your module is bad and you should feel bad:"
-									console.error e.stack
-									
-					.fail (err) => console.log err.stack
+						promise.then (matched) =>
+							if matched
+								@canModuleRoute module, serverName, to, origin.isPM, ->
+									try
+										routeToMatch.fn origin, routeToMatch
+									catch e
+										console.error "Your module is bad and you should feel bad:"
+										console.error e.stack
+										
+						.fail (err) => console.log err.stack
 
 
 
