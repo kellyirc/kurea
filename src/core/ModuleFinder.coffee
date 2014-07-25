@@ -76,14 +76,36 @@ exports.loadCoreModules = (moduleManager) ->
 exports.loadModule = (mod, moduleManager) ->
 	exports.modules[mod] = exports.loadFile (require.resolve mod), moduleManager
 
-	console.log "Loaded external module '#{mod}' from #{require.resolve mod}"
+	console.log "Loaded external module '#{mod}' (#{require.resolve mod})"
 
-exports.unloadModule = (mod) ->
+exports.unloadModule = (mod, callback) ->
+	exports.removeNodeModule mod
+
+	allDone = ->
+		delete exports.modules[mod]
+
+		console.log "Unloaded external module '#{mod}' (#{require.resolve mod})"
+
+		callback?()
+
+	# invoke destroy func on every module before unloading !!
+	done = _.after Object.keys(exports.modules[mod]).length, allDone
+
+	for moduleName, m of exports.modules[mod]
+		async = no
+
+		enableAsync = ->
+			async = yes
+			return done
+
+		m.destroy enableAsync
+
+		done() if not async
 
 exports.reloadModule = (mod) ->
 	# unload, then load, simple as that
-	exports.unloadModule mod
-	exports.loadModule mod
+	exports.unloadModule mod, ->
+		exports.loadModule mod
 
 exports.buildModuleList = (moduleManager) ->
 	exports.loadCoreModules moduleManager
