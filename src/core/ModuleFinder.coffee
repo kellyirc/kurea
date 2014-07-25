@@ -102,10 +102,13 @@ exports.unloadModule = (mod, callback) ->
 
 		done() if not async
 
-exports.reloadModule = (mod) ->
+exports.reloadModule = (mod, callback) ->
 	# unload, then load, simple as that
-	exports.unloadModule mod, ->
+	exports.unloadModule mod, (err) ->
+		return callback? err if err?
+
 		exports.loadModule mod
+		callback?()
 
 exports.buildModuleList = (moduleManager) ->
 	exports.loadCoreModules moduleManager
