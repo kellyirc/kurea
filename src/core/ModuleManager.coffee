@@ -35,6 +35,15 @@ class ModuleManager extends EventEmitter
 
 		possibleModule
 
+	loadModule: (module) ->
+		require('./ModuleFinder').loadModule module
+
+	unloadModule: (module) ->
+		require('./ModuleFinder').unloadModule module
+
+	reloadModule: (module) ->
+		require('./ModuleFinder').reloadModule module
+
 	canModuleRoute: (module, server, channel, isPM, callback) =>
 
 		if isPM or module.shortName is 'Toggle'
