@@ -11,7 +11,7 @@ config = require '../../config.json'
 coreModulesPath = "#{__dirname}/../modules"
 modulesPath = "#{__dirname}/../../node_modules"
 
-kureaModuleFilter = minimatch.filter 'kurea-*', matchBase: yes
+exports.kureaModuleFilter = minimatch.filter 'kurea-*', matchBase: yes
 
 # The object that contains all loaded modules
 exports.modules = {}
@@ -41,7 +41,7 @@ exports.removeNodeModule = (file) ->
 exports.findModules = ->
 	modules = []
 
-	for m in fs.readdirSync(modulesPath) when kureaModuleFilter m
+	for m in fs.readdirSync(modulesPath) when exports.kureaModuleFilter m
 		modules.push m
 
 	modules
