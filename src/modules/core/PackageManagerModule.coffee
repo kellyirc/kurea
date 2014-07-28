@@ -55,11 +55,6 @@ module.exports = (Module) ->
 
 			.then => @getKureaModules()
 
-			# .then (modules) ->
-			# 	console.log 'Got modules:'
-			# 	console.log modules
-			# 	modules
-
 			.then (modules) =>
 				for mod, modData of modules
 					name: mod
@@ -68,24 +63,28 @@ module.exports = (Module) ->
 					installWhere: path.resolve modData.realPath, '..', '..'
 
 			.then (modules) =>
-				Q.all (@checkUpdateSingle m for m in modules)
+				Q.all [
+					Q modules
+					Q.all (@checkUpdateSingle m for m in modules)
+				]
 
-			.then (result) ->
-				_.reduce result, ((memo, cur) -> memo[cur[0]] = cur[1]; memo), {}
+			.then ([modulesList, result]) ->
+				modules = {}
+
+				for mod, i in modulesList
+					mod.needsUpdate = result[i]
+					modules[mod.name] = mod
+
+				modules
 
 			.nodeify callback
 
 		checkUpdateSingle: (module, callback) ->
-			(
+			Q.fcall =>
 				switch module.source.type
 					when 'git' then @checkUpdateGit module
 
-					else Q no
-			)
-			.then (needsUpdate) ->
-				module = _.clone module
-				module.needsUpdate = needsUpdate
-				[module.name, module]
+					else no
 
 			.nodeify callback
 
