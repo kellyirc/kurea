@@ -1,5 +1,6 @@
 module.exports = (Module) ->
 	url = require 'url'
+	path = require 'path'
 	childProcess = require 'child_process'
 	util = require 'util'
 
@@ -63,7 +64,8 @@ module.exports = (Module) ->
 				for mod, modData of modules
 					name: mod
 					data: modData
-					source: @determineUpdateSource modData.from, modData.resolved
+					source: @determineUpdateSource modData._from, modData._resolved
+					installWhere: path.resolve modData.realPath, '..', '..'
 
 			.then (modules) =>
 				Q.all (@checkUpdateSingle m for m in modules)
@@ -113,7 +115,7 @@ module.exports = (Module) ->
 
 			.then ([data, liteData]) ->
 				# _.pick liteData.dependencies, modules
-				liteData.dependencies
+				data.dependencies
 
 			.nodeify callback
 
