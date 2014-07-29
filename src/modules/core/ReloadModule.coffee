@@ -22,6 +22,9 @@ module.exports = (Module) ->
 				ignored: (path) -> not (path is '.' or _.str.startsWith path, 'node_modules')
 				usePolling: yes
 
+				interval: 2000
+				binaryInterval: 2000
+
 			@changeQueue = {}
 
 			triggerFileProcess = _.debounce =>
