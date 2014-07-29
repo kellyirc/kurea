@@ -31,22 +31,87 @@ module.exports = (Module) ->
 
 				@checkUpdates()
 
-				.then (needsUpdate) =>
-					console.log needsUpdate
+				.then (modules) =>
+					data for name, data of modules when data.needsUpdate
 
-					for name, data of needsUpdate when data.needsUpdate
-						@reply origin, "Module #{name} needs to be updated!"
+				.then (modules) =>
+					@reply origin, "Modules [#{(m.name for m in modules)}] needs to be updated!"
 
-				.fail (err) =>
+					modules
+
+				.then (modules) => @updateManyModules modules
+
+				.done =>
+					@reply origin, "Done updating modules."
+
+				, (err) =>
 					console.error err.stack
-					@reply origin, "Error: #{err}"
+					@reply origin, "Uh oh, problem! #{err}"
 
 			npm.load (err, npm) =>
 				if err?
 					console.error 'Failed to load npm configs, package manager won\'t work'
 					console.error err.stack
-					return
 
+				else
+					console.log 'Loaded npm config info'
+
+		###
+		Promise-fied functions
+		###
+		exec: Q.nfbind childProcess.exec
+
+		npmInstall: (args...) -> Q.ninvoke npm.commands, 'install', args...
+
+		###
+		Utility functions
+		###
+		getKureaModules: ->
+			modules = _.filter (_.keys @moduleManager.modules),
+				(s) -> not _.str.startsWith s, '__'
+
+			Q.ninvoke(npm.commands, 'ls', [], yes)
+
+			.then ([data, liteData]) ->
+				_.pick data.dependencies, modules
+
+		determineUpdateSource: (from, resolved) ->
+			if from?
+				parsedFrom = npa from
+
+				return switch parsedFrom.type
+					when 'git'
+						parsedUrl = url.parse parsedFrom.spec
+						parsedUrl.hash = ''
+
+						type: 'git'
+						repoUrl: url.format parsedUrl
+						commitHash: url.parse(resolved).hash.substr(1)
+
+					when 'version', 'range', 'tag'
+						type: 'npm'
+
+					else
+						type: 'unknown'
+
+			else
+				return type: 'unknown'
+
+		gitLsRemote: (gitUrl, refs) ->
+			@exec("git ls-remote #{gitUrl} #{refs.join ' '}")
+
+			.then ([stdout, stderr]) ->
+				pattern = /^([a-z0-9]+?)\s+(.+?)$/img
+				while (match = pattern.exec stdout)?
+					name: match[2]
+					hash: match[1]
+
+			.then (names) ->
+				_.indexBy names, 'name'
+
+		###
+		Checking for updates
+		###
 		checkUpdates: (callback) =>
 			Q.fcall ->
 				throw new Error 'npm not yet loaded' if not npm.config.loaded
@@ -77,18 +142,14 @@ module.exports = (Module) ->
 
 				modules
 
-			.nodeify callback
-
-		checkUpdateSingle: (module, callback) ->
+		checkUpdateSingle: (module) ->
 			Q.fcall =>
 				switch module.source.type
 					when 'git' then @checkUpdateGit module
 
 					else no
 
-			.nodeify callback
-
-		checkUpdateGit: (module, callback) ->
+		checkUpdateGit: (module) ->
 			console.log "Checking #{module.source.repoUrl}"
 
 			@gitLsRemote(module.source.repoUrl, ['HEAD'])
@@ -102,56 +163,21 @@ module.exports = (Module) ->
 
 				current isnt latest
 
-			.nodeify callback
+		###
+		Updating
+		###
+		updateManyModules: (modules) ->
+			p = Q.all(@updateModule m for m in modules)
 
-		exec: Q.nfbind childProcess.exec
+		updateModule: (module) ->
+			Q.fcall => Q.ninvoke @moduleManager, 'unloadModule', module.name
 
-		getKureaModules: (callback) ->
-			modules = _.filter (_.keys @moduleManager.modules),
-				(s) -> not _.str.startsWith s, '__'
+			# .then -> console.log "Installing #{module.name}...."
 
-			Q.ninvoke(npm.commands, 'ls', [], yes)
+			.then => @npmInstall(module.installWhere, [module.data._from])
 
-			.then ([data, liteData]) ->
-				# _.pick liteData.dependencies, modules
-				data.dependencies
+			# .then -> console.log "Done installing #{module.name}!!!"
 
-			.nodeify callback
-
-		determineUpdateSource: (from, resolved) ->
-			if from?
-				parsedFrom = npa from
-
-				return switch parsedFrom.type
-					when 'git'
-						parsedUrl = url.parse parsedFrom.spec
-						parsedUrl.hash = ''
-
-						type: 'git'
-						repoUrl: url.format parsedUrl
-						commitHash: url.parse(resolved).hash.substr(1)
-
-					when 'version', 'range', 'tag'
-						type: 'npm'
-
-					else
-						type: 'unknown'
-
-			else
-				return type: 'unknown'
-
-		gitLsRemote: (gitUrl, refs, callback) ->
-			@exec("git ls-remote #{gitUrl} #{refs.join ' '}")
-
-			.then ([stdout, stderr]) ->
-				pattern = /^([a-z0-9]+?)\s+(.+?)$/img
-				while (match = pattern.exec stdout)?
-					name: match[2]
-					hash: match[1]
-
-			.then (names) ->
-				_.indexBy names, 'name'
-
-			.nodeify callback
+			.then => @moduleManager.loadModule(module.name, @moduleManager)
 	
 	PackageManagerModule
