@@ -117,7 +117,7 @@ module.exports = (Module) ->
 		###
 		Checking for updates
 		###
-		checkUpdates: (callback) =>
+		checkUpdates: =>
 			Q.fcall ->
 				throw new Error 'npm not yet loaded' if not npm.config.loaded
 
