@@ -90,6 +90,9 @@ module.exports = (Module) ->
 
 					when 'version', 'range', 'tag'
 						type: 'npm'
+						name: parsedFrom.name
+						specType: parsedFrom.type
+						spec: parsedFrom.spec
 
 					else
 						type: 'unknown'
