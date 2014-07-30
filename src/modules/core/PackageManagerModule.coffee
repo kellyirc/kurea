@@ -32,7 +32,9 @@ module.exports = (Module) ->
 				@checkUpdates()
 
 				.then (modules) =>
-					data for name, data of modules when data.needsUpdate
+					# console.log modules
+					# data for name, data of modules when data.needsUpdate
+					modules.filter (data) -> data.needsUpdate
 
 				.then (modules) =>
 					@reply origin, "Modules [#{(m.name for m in modules)}] needs to be updated!"
@@ -73,7 +75,7 @@ module.exports = (Module) ->
 			Q.ninvoke(npm.commands, 'ls', [], yes)
 
 			.then ([data, liteData]) ->
-				_.pick data.dependencies, modules
+				data.dependencies[dep] for dep in modules
 
 		determineUpdateSource: (from, resolved) ->
 			if from?
@@ -124,8 +126,8 @@ module.exports = (Module) ->
 			.then => @getKureaModules()
 
 			.then (modules) =>
-				for mod, modData of modules
-					name: mod
+				for modData in modules
+					name: modData.name
 					data: modData
 					source: @determineUpdateSource modData._from, modData._resolved
 					installWhere: path.resolve modData.realPath, '..', '..'
@@ -136,12 +138,9 @@ module.exports = (Module) ->
 					Q.all (@checkUpdateSingle m for m in modules)
 				]
 
-			.then ([modulesList, result]) ->
-				modules = {}
-
-				for mod, i in modulesList
+			.then ([modules, result]) ->
+				for mod, i in modules
 					mod.needsUpdate = result[i]
-					modules[mod.name] = mod
 
 				modules
 
