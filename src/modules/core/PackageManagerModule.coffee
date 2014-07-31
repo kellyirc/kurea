@@ -26,15 +26,22 @@ module.exports = (Module) ->
 		constructor: (moduleManager) ->
 			super
 
+			@addRoute 'check-update-2', (origin, route) =>
+				@checkUpdates()
+
+				.done (modules) =>
+					console.log modules
+					# console.log util.inspect modules, depth: null
+					@reply origin, "Done."
+
+				, (err) =>
+					console.error err.stack
+					@reply origin, "Uh oh, problem! #{err}"
+
 			@addRoute 'check-update', (origin, route) =>
 				@reply origin, 'Checking for updates...'
 
 				@checkUpdates()
-
-				.then (modules) =>
-					# console.log modules
-					# data for name, data of modules when data.needsUpdate
-					modules.filter (data) -> data.needsUpdate
 
 				.then (modules) =>
 					@reply origin, "Modules [#{(m.name for m in modules)}] needs to be updated!"
@@ -50,7 +57,7 @@ module.exports = (Module) ->
 					console.error err.stack
 					@reply origin, "Uh oh, problem! #{err}"
 
-			npm.load (err, npm) =>
+			npm.load { depth: Infinity }, (err, npm) =>
 				if err?
 					console.error 'Failed to load npm configs, package manager won\'t work'
 					console.error err.stack
@@ -75,7 +82,9 @@ module.exports = (Module) ->
 			Q.ninvoke(npm.commands, 'ls', [], yes)
 
 			.then ([data, liteData]) ->
-				data.dependencies[dep] for dep in modules
+				dep for k, dep of data.dependencies
+
+			.then (modules) => @transformModuleObject modData for modData in modules
 
 		determineUpdateSource: (from, resolved) ->
 			if from?
@@ -114,6 +123,16 @@ module.exports = (Module) ->
 			.then (names) ->
 				_.indexBy names, 'name'
 
+		transformModuleObject: (modData) ->
+			name: modData.name
+			# data: modData
+			from: modData._from
+			resolved: modData._resolved
+
+			source: @determineUpdateSource modData._from, modData._resolved
+			installWhere: path.resolve modData.realPath, '..', '..'
+			dependencies: (@transformModuleObject dep for name, dep of modData.dependencies)
+
 		###
 		Checking for updates
 		###
@@ -125,24 +144,19 @@ module.exports = (Module) ->
 
 			.then => @getKureaModules()
 
-			.then (modules) =>
-				for modData in modules
-					name: modData.name
-					data: modData
-					source: @determineUpdateSource modData._from, modData._resolved
-					installWhere: path.resolve modData.realPath, '..', '..'
+			.then (modules) => @checkUpdateRecursive modules
 
-			.then (modules) =>
-				Q.all [
-					Q modules
-					Q.all (@checkUpdateSingle m for m in modules)
-				]
+		checkUpdateRecursive: (modules) ->
+			Q.all (@checkUpdateSingle m for m in modules)
 
-			.then ([modules, result]) ->
-				for mod, i in modules
-					mod.needsUpdate = result[i]
+			.then (needsUpdate) =>
+				Q.all(
+					for m,i in modules
+						if needsUpdate[i] then m
+						else @checkUpdateRecursive m.dependencies
+				)
 
-				modules
+			.then (modules) -> _.flatten modules
 
 		checkUpdateSingle: (module) ->
 			Q.fcall =>
@@ -169,16 +183,12 @@ module.exports = (Module) ->
 		Updating
 		###
 		updateManyModules: (modules) ->
-			p = Q.all(@updateModule m for m in modules)
+			Q.all(@updateModule m for m in modules)
 
 		updateModule: (module) ->
 			Q.fcall => Q.ninvoke @moduleManager, 'unloadModule', module.name
 
-			# .then -> console.log "Installing #{module.name}...."
-
-			.then => @npmInstall(module.installWhere, [module.data._from])
-
-			# .then -> console.log "Done installing #{module.name}!!!"
+			.then => @npmInstall(module.installWhere, [module.from])
 
 			.then => @moduleManager.loadModule(module.name, @moduleManager)
 	
