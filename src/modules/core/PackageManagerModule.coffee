@@ -82,7 +82,8 @@ module.exports = (Module) ->
 			Q.ninvoke(npm.commands, 'ls', [], yes)
 
 			.then ([data, liteData]) ->
-				dep for k, dep of data.dependencies
+				data.dependencies[dep] for dep in modules
+				# dep for k, dep of data.dependencies
 
 			.then (modules) => @transformModuleObject modData for modData in modules
 
