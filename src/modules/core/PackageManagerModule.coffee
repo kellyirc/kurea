@@ -159,11 +159,10 @@ module.exports = (Module) ->
 			.then (modules) -> _.flatten modules
 
 		checkUpdateSingle: (module) ->
-			Q.fcall =>
-				switch module.source.type
-					when 'git' then @checkUpdateGit module
+			switch module.source.type
+				when 'git' then @checkUpdateGit module
 
-					else no
+				else no
 
 		checkUpdateGit: (module) ->
 			console.log "Checking #{module.source.repoUrl}"
