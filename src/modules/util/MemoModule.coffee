@@ -54,7 +54,6 @@ module.exports = (Module) ->
 					from: origin.user,
 					(err, docs) =>
 						try
-							console.log "listing memos"
 							console.error err if err?
 							docs = @db.sort docs, time: 1
 							if docs.length is 0
@@ -63,8 +62,8 @@ module.exports = (Module) ->
 								for doc, index in docs
 									@reply origin, "#{index+1}: To #{doc.to}, '#{doc.msg}' on #{doc.time}"
 						catch e
-							console.log "Unable to list memos."
-							console.log e.stack
+							console.error "Unable to list memos."
+							console.error e.stack
 
 			@addRoute 'memo-cancel :index(\\d+|last)', (origin, route) =>
 				index = route.params.index
@@ -73,7 +72,6 @@ module.exports = (Module) ->
 					from: origin.user,
 					(err, docs) =>
 						try
-							console.log "found some"
 							console.error err if err?
 							docs = @db.sort docs, time: 1
 							index = if index is "last" then docs.length-1 else +index - 1
@@ -86,20 +84,20 @@ module.exports = (Module) ->
 								@db.remove {_id: doc._id}, {}, (err, numRemoved) =>
 									try
 										if err?
-											console.log err
+											console.error err
 											@reply origin, "Unable to cancel memo."
 										if numRemoved is 1
 											@reply origin, "Canceled memo to #{doc.to}, '#{doc.msg}' on #{doc.time}."
 										else
 											@reply origin, "I dunno, apparently that memo doesn't exist??"
 									catch e
-										console.log "Error cancelling memos."
-										console.log e.stack
+										console.error "Error cancelling memos."
+										console.error e.stack
 									
 									
 						catch e
-							console.log "Unable to list memos."
-							console.log e.stack
+							console.error "Unable to list memos."
+							console.error e.stack
 						
 
 
