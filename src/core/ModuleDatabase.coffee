@@ -57,8 +57,9 @@ class ModuleDatabase
 
 	find: (terms, callback) =>
 		if databaseEngine is 'mongo'
-			@db.find terms, (e, docs) ->
-				docs.toArray callback
+      Q.when @databaseReady, (db) ->
+        db.find terms, (e, docs) ->
+          docs.toArray callback
 		else
 			@db.find terms, callback
 
