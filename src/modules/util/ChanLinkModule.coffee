@@ -85,9 +85,9 @@ module.exports = (Module) ->
 
         return if not id or not (id of @links)
 
-        _.each @links[id], (hash) =>
-          [server, chan] = hash.split "|"
-          return if chan is channel
+        _.each @links[id], (subHash) =>
+          [server, chan] = subHash.split "|"
+          return if subHash is hash
 
           bot.botManager.botHash[server]?.say chan, "<#{sender}> #{message}"
 
