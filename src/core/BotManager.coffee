@@ -9,6 +9,8 @@ PermissionManager = require('./PermissionManager').PermissionManager
 
 class BotManager
 
+  @botHash = {}
+
   constructor: (@config) ->
     @configPath = path.resolve "config.json"
     if typeof @config is "string"
@@ -32,7 +34,7 @@ class BotManager
 
       bot = new Bot @, botConfig
       @bots.push bot
-      @botHash[botConfig.server] = bot
+      BotManager.botHash[botConfig.server] = @botHash[botConfig.server] = bot
 
     @moduleManager = new ModuleManager @
 
