@@ -10,13 +10,13 @@ module.exports = (Module) ->
 			default: "A module for manually adding and removing permissions. Commands available: add, add-group, info, check"
 			'permissions add': "Add a permission to the specified target, be it a user, a group or a combination!"
 			'permissions add-group': "Add the target username to a group!"
-			'permissions info': "Lists the groups you are in."
+			'permissions info': "Lists the groups you or the target are in."
 			'permissions check': "Checks if you or the target have the given permission."
 
 		usage:
 			'permissions add': "permissions add [target] [permission]"
 			'permissions add-group': "permissions add-group [target] [group]"
-			'permissions info': "permissions info"
+			'permissions info': "permissions info {target}"
 			'permissions check': "permissions check [permission] {target}"
 	
 		constructor: (moduleManager) ->
