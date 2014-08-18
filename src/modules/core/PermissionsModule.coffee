@@ -46,15 +46,19 @@ module.exports = (Module) ->
 					else
 						@reply origin, "Added #{target} to group '#{group}'!"
 
-			@addRoute "permissions info", (origin, route) =>
-				{bot, user} = origin
 
+			getGroups = (origin, route) =>
+				origin.user = route.params.user || origin.user
+				bot = origin.bot
 				bot.userManager.getUsername origin, (err, username) =>
 					@permMan.getGroups bot, username, (err, groups) =>
 						if groups.length > 0
-							@reply origin, "Your groups are #{_.str.toSentence (colors.bold(group) for group in groups)}."
+							@reply origin, "#{origin.user}'s groups are #{_.str.toSentence (colors.bold(group) for group in groups)}."
 							
-						else @reply origin, "You are not in any group."
+						else @reply origin, "#{origin.user} is not in any group."
+
+			@addRoute "permissions info", getGroups
+			@addRoute "permissions info :user", getGroups
 	
 			checkPermission = (origin, route) =>
 				permission = route.params.permission
@@ -67,8 +71,8 @@ module.exports = (Module) ->
 	
 					@reply origin, "Does #{user} match the permission? #{if matched then "Yes!" else "No!"}"
 	
-			@addRoute "permissions check :permission :user", checkPermission
 			@addRoute "permissions check :permission", checkPermission
+			@addRoute "permissions check :permission :user", checkPermission
 	
 			@addRoute "dumpPerm", (origin, route) => @permMan.dump()
 	
