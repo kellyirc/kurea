@@ -56,6 +56,7 @@
     "morse": "~0.1.0",
     "google": "^0.3.2",
     "mstranslator": "^0.1.6",
-    "openweathermap": "0.0.3"
+    "openweathermap": "0.0.3",
+    "ent": "~2.0.0"
   }
 }

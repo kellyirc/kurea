@@ -1,6 +1,7 @@
 module.exports = (Module) ->
 	request = require 'request'
 	cheerio = require 'cheerio'
+	ent = require 'ent'
 	
 	class LinkParseModule extends Module
 		shortName: "LinkParse"
@@ -20,6 +21,7 @@ module.exports = (Module) ->
 							return if r.headers['content-type']?.indexOf('text/html') is -1
 							$ = cheerio.load body
 							title = $('title').html()?.replace(/\r?\n|\r/g, '').trim()
+							title = ent.decode title
 							bot.say channel, "#{sender}'s URL » #{title}" if title?
 	
 	
