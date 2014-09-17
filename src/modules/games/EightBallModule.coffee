@@ -72,10 +72,7 @@ module.exports = (Module) ->
 		constructor: (moduleManager) ->
 			super(moduleManager)
 	
-			@addRoute "8ball :left", (origin, route) =>
-				[bot, user, channel, left] = [origin.bot, origin.user, origin.channel, route.params.left]
-				
-				
+			@addRoute "8ball *", (origin, route) =>
 				choice = Math.floor(Math.random() * @responses.length)
 				@reply origin, @responses[choice]
 	
