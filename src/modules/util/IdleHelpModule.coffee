@@ -20,3 +20,5 @@ module.exports = (Module) ->
       @addRoute "idle-wiki :page?", (origin, route) =>
         page = route.params.page or ''
         @reply origin, "https://github.com/seiyria/IdleLands/wiki/#{_.str.slugify page}"
+
+  IdleHelpModule
