@@ -18,11 +18,11 @@ module.exports = (Module) ->
 
 			@registerApi()
 
-			@addRoute "friendcode :value", (origin, route) =>
+			@addRoute "friendcode *", (origin, route) =>
 
-				friendCodeRegex = new RegExp("\\b([0-9]{4}-){#{@numberGroups - 1}}([0-9]{4}){1}\\b")
+				friendCodeRegex = new RegExp("\\b([0-9]{4}[-\\s]){#{@numberGroups - 1}}([0-9]{4}){1}\\b")
 
-				value = @reformatFriendCode(route.params.value)
+				value = @reformatFriendCode(route.splats[0])
 
 				if value.match(friendCodeRegex)
 					@setUserData origin, "friendCode", value, () =>
@@ -41,11 +41,15 @@ module.exports = (Module) ->
 
 
 			friendCodeRegex = new RegExp("\\b([0-9]{4}){#{@numberGroups}}\\b")
+			friendCodeRegexWithSpaces = new RegExp("\\b([0-9]{4}\\s){#{@numberGroups - 1}}([0-9]{4}){1}\\b")
+
 
 			formattedCode = unformattedCode
 			if unformattedCode.match(friendCodeRegex)
 				dashesToInsert = @numberGroups - 1
 				(formattedCode = StringSplice(formattedCode, (4 * (x + 1) + x), 0, "-")) for x in [0..(dashesToInsert-1)]
+			else if unformattedCode.match(friendCodeRegexWithSpaces)
+				formattedCode = formattedCode.replace(/\s/g, '-')
 			return formattedCode
 
 		
