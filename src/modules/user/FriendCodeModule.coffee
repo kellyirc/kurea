@@ -20,7 +20,7 @@ module.exports = (Module) ->
 
 			@addRoute "friendcode :value", (origin, route) =>
 
-				friendCodeRegex = new RegExp("\\b([0-9]{4}-){#{@numberGroups - 1}}([0-9]{4}){1}\\b")		
+				friendCodeRegex = new RegExp("\\b([0-9]{4}-){#{@numberGroups - 1}}([0-9]{4}){1}\\b")
 
 				value = @reformatFriendCode(route.params.value)
 
