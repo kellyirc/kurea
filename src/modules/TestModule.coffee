@@ -91,6 +91,11 @@ module.exports = (Module) ->
 	
 				.fail (err) ->
 					console.log "THIS IS AN ERROR:", err
-	
+
+			@addRoute 'load :module', (origin, route) =>
+				(require '../core/ModuleFinder').loadModule route.params.module, moduleManager
+
+			@addRoute 'unload :module', (origin, route) =>
+				(require '../core/ModuleFinder').unloadModule route.params.module
 	
 	TestModule

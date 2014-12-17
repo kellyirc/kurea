@@ -22,13 +22,14 @@ module.exports = (Module) ->
 			@addRoute "help :name", (origin, route) =>
 				[bot, user, channel, name] = [origin.bot, origin.user, origin.channel, route.params.name.toLowerCase()]
 	
-				for moduleName, module of bot.getModules()
-					for alias of module.helpText when alias isnt "default"
-						if name is alias.toLowerCase()
-							@reply origin, @getHelpText module, alias
-							return
-					if name is module.shortName.toLowerCase()
-						@reply origin, @getHelpText module, 'default'
+				for nodeModuleName, kureaModules of bot.getModules()
+					for moduleName, module of kureaModules
+						for alias of module.helpText when alias isnt "default"
+							if name is alias.toLowerCase()
+								@reply origin, @getHelpText module, alias
+								return
+						if name is module.shortName.toLowerCase()
+							@reply origin, @getHelpText module, 'default'
 	
 	
 	

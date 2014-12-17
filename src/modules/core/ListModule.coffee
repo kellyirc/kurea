@@ -17,7 +17,9 @@ module.exports = (Module) ->
 				serverName = bot.conn.opt.server
 
 				fullExistingModuleList = []
-				fullExistingModuleList.push module.shortName for moduleName,module of moduleManager.modules
+				for nodeModuleName, kureaModules of moduleManager.modules
+					for moduleName, module of kureaModules
+						fullExistingModuleList.push module.shortName
 
 				if !_.contains origin.channel, "#"
 					return @reply origin, "While some modules may not work correctly in PM, here is the list:

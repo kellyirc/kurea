@@ -33,7 +33,7 @@ module.exports = (Module) ->
 			@databaseReady = _isReady.promise
 
 			MongoClient.connect "mongodb://#{databaseURL}/jsmegahal", {server:{auto_reconnect:true}}, (e, @db) =>
-				_isReady.fail e if e?
+				_isReady.reject e if e?
 				throw e if e?
 
 				_isReady.resolve @db

@@ -57,6 +57,9 @@
     "google": "^0.3.2",
     "mstranslator": "^0.1.6",
     "openweathermap": "0.0.3",
+    "minimatch": "^0.4.0",
+    "chokidar": "^0.8.2",
+    "semver": "^4.1.0",
     "ent": "~2.0.0"
   }
 }
