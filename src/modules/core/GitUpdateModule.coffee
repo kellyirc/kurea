@@ -132,7 +132,6 @@ module.exports = (Module) ->
 			console.log "Updating to #{headHash}"
 	
 			filenames = (file.filename for file in data.files)
-			modulesOnly = _.all filenames, (v) => _.str.startsWith(v, "src/modules/")
 	
 			Q.fcall =>
 				console.log "Running 'git pull'..."
@@ -171,14 +170,10 @@ module.exports = (Module) ->
 					deferred.promise
 	
 			.then =>
-				console.log "Updated all files to #{headHash}"
-				@reply origin, "Updated all files to latest commit." if origin?
+				console.log "Updated all files to #{headHash}; now exiting"
+				@reply origin, "Updated all files to latest commit; restarting in about 5 seconds" if origin?
 	
-				# console.log "modulesOnly = #{modulesOnly}"
-				if not modulesOnly
-					console.log "Update contains files that are not modules; exiting"
-					@reply origin, "Because some of the updated files are not module files, I will restart in about 5 seconds." if origin?
-					setTimeout (-> process.exit 0), 5000
+				setTimeout (-> process.exit 0), 5000
 	
 			.fail (err) =>
 				console.log "Error:", err
