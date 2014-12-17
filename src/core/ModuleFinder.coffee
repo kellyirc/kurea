@@ -16,13 +16,13 @@ exports.kureaModuleFilter = minimatch.filter 'kurea-*', matchBase: yes
 # The object that contains all loaded modules
 exports.modules = {}
 
-exports.removeNodeModule = (file) ->
+exports.removeNodeModule = (file, removeFromParent = no) ->
 	fullfile = require.resolve file
 	fileModule = require.cache[fullfile]
 
-	# console.log "Removing node.js module #{fileModule.filename}"
-
 	return if not fileModule?
+
+	console.log "Removing node.js module #{fileModule.filename}"
 
 	for childModule in fileModule.children when childModule?
 		exports.removeNodeModule childModule.filename
@@ -31,9 +31,10 @@ exports.removeNodeModule = (file) ->
 
 	fileModule.children = []
 
-	# Remove file's module obj from parent's children array
-	i = fileModule.parent.children.indexOf fileModule
-	fileModule.parent.children[i..i] = [] if ~i
+	if removeFromParent
+		# Remove file's module obj from parent's children array
+		i = fileModule.parent.children.indexOf fileModule
+		fileModule.parent.children[i..i] = [] if ~i
 
 	# Remove this file from cache
 	delete require.cache[fullfile]
@@ -46,11 +47,27 @@ exports.findModules = ->
 
 	modules
 
+outputTree = (module, prefix = '') ->
+	if _.isString module
+		module = require.cache[require.resolve module]
+
+	[
+		module.filename
+		(
+			for c in module.children
+				outputTree c, '└──'
+		)...
+	]
+	.map (line) -> prefix + line
+	.join '\n'
+
 exports.loadFile = (file, moduleManager) ->
 	fileModules = {}
 
 	{Module} = require './Module'
 	classes = require(file)(Module)
+
+	console.log outputTree file
 
 	if not classes? then return
 
@@ -87,7 +104,11 @@ exports.loadModule = (mod, moduleManager) ->
 	console.log "Loaded external module '#{mod}' (#{require.resolve mod})"
 
 exports.unloadModule = (mod, callback) ->
-	exports.removeNodeModule mod
+	try
+		exports.removeNodeModule mod, yes
+
+	catch e
+		console.error e.stack
 
 	allDone = ->
 		delete exports.modules[mod]
