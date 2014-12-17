@@ -20,9 +20,15 @@ module.exports = (Module) ->
 		shortName: 'PackageManager'
 		helpText:
 			default: 'Manage packages!'
+			'update': 'Update given package if needed, or all if no package given'
 			'check-update': 'Check for updates manually'
+			'install': 'Install a package (uses npm, supports all specs npm supports)'
+			'uninstall': 'Uninstall a package'
 		usage:
+			'update': 'update {nodejs-module-name}'
 			'check-update': 'check-update'
+			'install': 'install [package]'
+			'uninstall': 'uninstall [nodejs-module-name]'
 		  
 		constructor: (moduleManager) ->
 			super
@@ -39,6 +45,26 @@ module.exports = (Module) ->
 					modules
 
 				.then (modules) => @updateManyModules modules
+
+				.done =>
+					@reply origin, "Done updating modules."
+
+				, (err) =>
+					console.error err.stack
+					@reply origin, "Uh oh, problem! #{err}"
+
+			@addRoute 'package update :pkg', 'packages.manage.check-update', (origin, route) =>
+				{pkg} = route.params
+
+				@checkUpdates pkg
+
+				.then ([module]) =>
+					if module?
+						@reply origin, "Module #{module.name} needs to be updated!"
+
+						@updateManyModules [module]
+
+					else @reply origin, "No need to update #{pkg}."
 
 				.done =>
 					@reply origin, "Done updating modules."
@@ -124,15 +150,16 @@ module.exports = (Module) ->
 		###
 		Utility functions
 		###
-		getKureaModules: ->
+		getKureaModules: (pkg) ->
 			modules = _.filter (_.keys @moduleManager.modules),
 				(s) -> not _.str.startsWith s, '__'
 
 			Q.ninvoke(npm.commands, 'ls', [], yes)
 
 			.then ([data, liteData]) ->
-				data.dependencies[dep] for dep in modules
-				# dep for k, dep of data.dependencies
+				if pkg? then [data.dependencies[pkg]]
+
+				else data.dependencies[dep] for dep in modules
 
 			.then (modules) => @transformModuleObject modData for modData in modules
 
@@ -187,13 +214,13 @@ module.exports = (Module) ->
 		###
 		Checking for updates
 		###
-		checkUpdates: =>
+		checkUpdates: (pkg) =>
 			Q.fcall ->
 				throw new Error 'npm not yet loaded' if not npm.config.loaded
 
 				console.log 'Npm is loaded'
 
-			.then => @getKureaModules()
+			.then => @getKureaModules pkg
 
 			.then (modules) => @checkUpdateRecursive modules
 
