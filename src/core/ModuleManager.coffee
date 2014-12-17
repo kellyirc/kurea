@@ -35,14 +35,14 @@ class ModuleManager extends EventEmitter
 
 		possibleModule
 
-	loadModule: (args...) ->
-		require('./ModuleFinder').loadModule args..., @
+	loadModule: (mod) ->
+		require('./ModuleFinder').loadModule mod, @
 
-	unloadModule: (args..., callback) ->
-		require('./ModuleFinder').unloadModule args..., callback
+	unloadModule: (mod, callback) ->
+		require('./ModuleFinder').unloadModule mod, callback
 
-	reloadModule: (args..., callback) ->
-		require('./ModuleFinder').reloadModule args..., callback
+	reloadModule: (mod, callback) ->
+		require('./ModuleFinder').reloadModule mod, @, callback
 
 	canModuleRoute: (module, server, channel, isPM, callback) =>
 
