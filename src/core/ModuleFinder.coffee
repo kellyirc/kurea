@@ -67,6 +67,10 @@ exports.loadCoreModules = (moduleManager) ->
 
 	file.walkSync coreModulesPath, (start, dirs, files) ->
 		for f in (files.map (f) -> start+path.sep+f)
+			if config.ignoredModules? and (path.basename f, '.coffee') in config.ignoredModules
+				console.log "--- IGNORING [CORE] #{path.basename f, '.coffee'}"
+				continue
+
 			_.extend coreModules, (exports.loadFile f, moduleManager)
 
 	exports.modules['__core'] = coreModules
@@ -74,6 +78,10 @@ exports.loadCoreModules = (moduleManager) ->
 	console.log 'Loaded core modules'
 
 exports.loadModule = (mod, moduleManager) ->
+	if config.ignoredModules? and mod in config.ignoredModules
+		console.log "--- IGNORING [EXTERNAL] #{mod}"
+		return
+
 	exports.modules[mod] = exports.loadFile (require.resolve mod), moduleManager
 
 	console.log "Loaded external module '#{mod}' (#{require.resolve mod})"
