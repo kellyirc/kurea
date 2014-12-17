@@ -53,7 +53,7 @@ module.exports = (Module) ->
 					console.error err.stack
 					@reply origin, "Uh oh, problem! #{err}"
 
-			@addRoute 'package update :pkg', 'packages.manage.check-update', (origin, route) =>
+			@addRoute 'package update :pkg', 'packages.manage.update', (origin, route) =>
 				{pkg} = route.params
 
 				@checkUpdates pkg
@@ -161,7 +161,9 @@ module.exports = (Module) ->
 
 				else data.dependencies[dep] for dep in modules
 
-			.then (modules) => @transformModuleObject modData for modData in modules
+			.then (modDatas) =>
+				console.log modules, modDatas.length
+				@transformModuleObject modData for modData in modDatas
 
 		determineUpdateSource: (from, resolved) ->
 			if from?
