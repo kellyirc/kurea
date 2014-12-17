@@ -27,19 +27,7 @@ module.exports = (Module) ->
 		constructor: (moduleManager) ->
 			super
 
-			@addRoute 'check-update-2', (origin, route) =>
-				@checkUpdates()
-
-				.done (modules) =>
-					console.log modules
-					# console.log util.inspect modules, depth: null
-					@reply origin, "Done."
-
-				, (err) =>
-					console.error err.stack
-					@reply origin, "Uh oh, problem! #{err}"
-
-			@addRoute 'package update', (origin, route) =>
+			@addRoute 'package update', 'packages.manage.update', (origin, route) =>
 				@reply origin, 'Checking for updates...'
 
 				@checkUpdates()
@@ -59,7 +47,7 @@ module.exports = (Module) ->
 					console.error err.stack
 					@reply origin, "Uh oh, problem! #{err}"
 
-			@addRoute 'package check-update', (origin, route) =>
+			@addRoute 'package check-update', 'packages.manage.check-update', (origin, route) =>
 				@reply origin, 'Checking for updates...'
 
 				@checkUpdates()
@@ -71,6 +59,44 @@ module.exports = (Module) ->
 				, (err) =>
 					console.error err.stack
 					@reply origin, "Uh oh, problem! #{err}"
+
+			@addRoute 'package install *', 'packages.manage.install', (origin, route) =>
+				[pkg] = route.splats
+
+				@reply origin, "Installing '#{pkg}'..."
+
+				@npmInstall [pkg]
+
+				.then ([installed, pkgData, stdout]) =>
+					[modData] = _.toArray(pkgData)
+					{name: pkgName, spec: version} = npa modData.what
+
+					@moduleManager.loadModule pkgName
+					[pkgName, version]
+				
+				.done ([pkgName, version]) =>
+					console.log "Installed #{pkgName}, v#{version}"
+					@reply origin, "Successfully installed '#{pkgName}' v#{version}!"
+
+				, (err) =>
+					console.error err.stack
+					@reply origin, "Uh oh, error installing '#{pkg}'! #{err}"
+
+			@addRoute 'package uninstall *', 'packages.manage.uninstall', (origin, route) =>
+				[pkg] = route.splats
+
+				@reply origin, "Uninstalling '#{pkg}'..."
+
+				Q.ninvoke @moduleManager, 'unloadModule', pkg
+
+				.then => @npmUninstall [pkg]
+
+				.done =>
+					@reply origin, "Successfully uninstalled '#{pkg}'!"
+
+				, (err) =>
+					console.error err.stack
+					@reply origin, "Uh oh, error uninstalling '#{pkg}'! #{err}"
 
 			npm.load { depth: Infinity }, (err, npm) =>
 				if err?
@@ -88,6 +114,9 @@ module.exports = (Module) ->
 		npmInstall: (args...) ->
 			console.log "npm install #{args.map((a) -> '"' + a + '"').join ' '}"
 			Q.ninvoke npm.commands, 'install', args...
+
+		npmUninstall: (args...) ->
+			Q.ninvoke npm.commands, 'uninstall', args...
 
 		npmRegistryGet: (args...) ->
 			Q.ninvoke npm.registry, 'get', args...
