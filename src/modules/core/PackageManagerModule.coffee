@@ -239,6 +239,9 @@ module.exports = (Module) ->
 			.then (modules) -> _.flatten modules
 
 		checkUpdateSingle: (module) ->
+			console.log module
+			console.log "Checking #{module.name}; #{module.source.type}"
+
 			switch module.source.type
 				when 'git' then @checkUpdateGit module
 				when 'npm' then @checkUpdateNpm module
