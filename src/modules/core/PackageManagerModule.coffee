@@ -39,7 +39,7 @@ module.exports = (Module) ->
 					console.error err.stack
 					@reply origin, "Uh oh, problem! #{err}"
 
-			@addRoute 'check-update', (origin, route) =>
+			@addRoute 'package update', (origin, route) =>
 				@reply origin, 'Checking for updates...'
 
 				@checkUpdates()
@@ -59,28 +59,18 @@ module.exports = (Module) ->
 					console.error err.stack
 					@reply origin, "Uh oh, problem! #{err}"
 
-			@addRoute 'check-update-npm :module', (origin, route) =>
-				{module} = route.params
+			@addRoute 'package check-update', (origin, route) =>
+				@reply origin, 'Checking for updates...'
 
-				Q.ninvoke(npm.commands, 'ls', [], yes)
+				@checkUpdates()
 
-				.then ([data, liteData]) -> data.dependencies[module]
+				.done (modules) =>
+					console.log modules
+					@reply origin, "Modules [#{(m.name for m in modules)}] needs to be updated!"
 
-				.then (modData) =>
-					# console.log modData
-					@transformModuleObject modData
-
-				.then (moduleObj) =>
-					# console.log moduleObj
-					@checkUpdateSingle moduleObj
-
-				.then (needsUpdate) =>
-					# console.log "#{module} #{needsUpdate}"
-					@reply origin, "Need to update #{module}? #{if needsUpdate then 'yes' else 'no'}"
-
-				.fail (err) =>
+				, (err) =>
 					console.error err.stack
-					@reply origin, "Whoops! #{err}"
+					@reply origin, "Uh oh, problem! #{err}"
 
 			npm.load { depth: Infinity }, (err, npm) =>
 				if err?
