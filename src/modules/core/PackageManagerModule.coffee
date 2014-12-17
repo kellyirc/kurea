@@ -8,6 +8,7 @@ module.exports = (Module) ->
 	_.str = require 'underscore.string'
 	npm = require 'npm'
 	npa = require 'npm-package-arg'
+	semver = require 'semver'
 	Q = require 'q'
 
 	ModuleFinder = require('../../core/ModuleFinder')
@@ -44,6 +45,7 @@ module.exports = (Module) ->
 				@checkUpdates()
 
 				.then (modules) =>
+					console.log modules
 					@reply origin, "Modules [#{(m.name for m in modules)}] needs to be updated!"
 
 					modules
@@ -56,6 +58,29 @@ module.exports = (Module) ->
 				, (err) =>
 					console.error err.stack
 					@reply origin, "Uh oh, problem! #{err}"
+
+			@addRoute 'check-update-npm :module', (origin, route) =>
+				{module} = route.params
+
+				Q.ninvoke(npm.commands, 'ls', [], yes)
+
+				.then ([data, liteData]) -> data.dependencies[module]
+
+				.then (modData) =>
+					# console.log modData
+					@transformModuleObject modData
+
+				.then (moduleObj) =>
+					# console.log moduleObj
+					@checkUpdateSingle moduleObj
+
+				.then (needsUpdate) =>
+					# console.log "#{module} #{needsUpdate}"
+					@reply origin, "Need to update #{module}? #{if needsUpdate then 'yes' else 'no'}"
+
+				.fail (err) =>
+					console.error err.stack
+					@reply origin, "Whoops! #{err}"
 
 			npm.load { depth: Infinity }, (err, npm) =>
 				if err?
@@ -70,7 +95,12 @@ module.exports = (Module) ->
 		###
 		exec: Q.nfbind childProcess.exec
 
-		npmInstall: (args...) -> Q.ninvoke npm.commands, 'install', args...
+		npmInstall: (args...) ->
+			console.log "npm install #{args.map((a) -> '"' + a + '"').join ' '}"
+			Q.ninvoke npm.commands, 'install', args...
+
+		npmRegistryGet: (args...) ->
+			Q.ninvoke npm.registry, 'get', args...
 
 		###
 		Utility functions
@@ -129,6 +159,7 @@ module.exports = (Module) ->
 			# data: modData
 			from: modData._from
 			resolved: modData._resolved
+			version: modData.version
 
 			source: @determineUpdateSource modData._from, modData._resolved
 			installWhere: path.resolve modData.realPath, '..', '..'
@@ -162,6 +193,7 @@ module.exports = (Module) ->
 		checkUpdateSingle: (module) ->
 			switch module.source.type
 				when 'git' then @checkUpdateGit module
+				when 'npm' then @checkUpdateNpm module
 
 				else no
 
@@ -178,6 +210,29 @@ module.exports = (Module) ->
 				console.log "--- #{latest}"
 
 				current isnt latest
+
+		checkUpdateNpm: (module) ->
+			@npmRegistryGet "https://registry.npmjs.com/#{module.source.name}", {}
+
+			.then ([data]) => @npmFindLatestSatisfying module, data
+
+			.then (latestVer) =>
+				currentVer = module.version
+				console.log "Is #{currentVer} less than #{latestVer}? #{semver.lt currentVer, latestVer}"
+
+				semver.lt currentVer, latestVer
+
+		npmFindLatestSatisfying: (module, regData) ->
+			console.log module
+
+			switch module.source.specType
+				when 'version' then module.source.spec
+
+				when 'range'
+					semver.maxSatisfying (_.keys regData.versions), module.source.spec
+
+				when 'tag'
+					regData['dist-tags'][module.source.spec]
 
 		###
 		Updating
