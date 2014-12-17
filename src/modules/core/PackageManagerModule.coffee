@@ -1,5 +1,6 @@
 module.exports = (Module) ->
 	url = require 'url'
+	fs = require 'fs'
 	path = require 'path'
 	childProcess = require 'child_process'
 	util = require 'util'
@@ -137,39 +138,57 @@ module.exports = (Module) ->
 		###
 		exec: Q.nfbind childProcess.exec
 
-		npmInstall: (args...) ->
-			console.log "npm install #{args.map((a) -> '"' + a + '"').join ' '}"
-			Q.ninvoke npm.commands, 'install', args...
-
-		npmUninstall: (args...) ->
-			Q.ninvoke npm.commands, 'uninstall', args...
-
-		npmRegistryGet: (args...) ->
-			Q.ninvoke npm.registry, 'get', args...
+		npmInstall: (args...) -> Q.ninvoke npm.commands, 'install', args...
+		npmUninstall: (args...) -> Q.ninvoke npm.commands, 'uninstall', args...
+		npmRegistryGet: (args...) -> Q.ninvoke npm.registry, 'get', args...
 
 		###
 		Utility functions
 		###
+		findNodeModule: (nodeModules...) ->
+			path.resolve __dirname, '../../..', (nodeModules.map (nm) -> "node_modules/#{nm}")...
+
+		findPackageJson: (nodeModules...) ->
+			path.resolve (@findNodeModule nodeModules...), 'package.json'
+
+		packageJson: (nodeModules...) ->
+			JSON.parse fs.readFileSync (@findPackageJson nodeModules...), encoding: 'utf-8'
+
+		readPackageJson: (nodeModules...) ->
+			packageJson = @packageJson nodeModules...
+
+			packageJson._realPath = @findNodeModule nodeModules...
+			packageJson._dependencies = deps = {}
+			for dep,spec of packageJson.dependencies
+				deps[dep] = @readPackageJson nodeModules..., dep
+
+			packageJson
+
 		getKureaModules: (pkg) ->
-			modules = _.filter (_.keys @moduleManager.modules),
-				(s) -> not _.str.startsWith s, '__'
+			modules =
+				_.filter (_.keys @moduleManager.modules),
+					(s) -> not _.str.startsWith s, '__'
 
-			Q.ninvoke(npm.commands, 'ls', [], yes)
+			packageJsonFiles = {}
 
-			.then ([data, liteData]) ->
-				if pkg? then [data.dependencies[pkg]]
+			for m in modules when (not pkg? or m is pkg)
+				packageJsonFiles[m] = @readPackageJson m
 
-				else data.dependencies[dep] for dep in modules
+			Q (@transformModuleObject modData for name,modData of packageJsonFiles)
 
-			.then (modDatas) =>
-				console.log modules, modDatas.length
-				@transformModuleObject modData for modData in modDatas
+		transformModuleObject: (modData) ->
+			name: modData.name
+			from: modData._from
+			resolved: modData._resolved
+			version: modData.version
+
+			source: @determineUpdateSource modData._from, modData._resolved
+			installWhere: path.resolve modData._realPath, '..', '..'
+			dependencies: (@transformModuleObject dep for name, dep of modData._dependencies)
 
 		determineUpdateSource: (from, resolved) ->
 			if from?
 				parsedFrom = npa from
-
-				console.log util.inspect parsedFrom, depth: null
 
 				return switch parsedFrom.type
 					when 'git'
@@ -204,17 +223,6 @@ module.exports = (Module) ->
 			.then (names) ->
 				_.indexBy names, 'name'
 
-		transformModuleObject: (modData) ->
-			name: modData.name
-			# data: modData
-			from: modData._from
-			resolved: modData._resolved
-			version: modData.version
-
-			source: @determineUpdateSource modData._from, modData._resolved
-			installWhere: path.resolve modData.realPath, '..', '..'
-			dependencies: (@transformModuleObject dep for name, dep of modData.dependencies)
-
 		###
 		Checking for updates
 		###
@@ -241,8 +249,7 @@ module.exports = (Module) ->
 			.then (modules) -> _.flatten modules
 
 		checkUpdateSingle: (module) ->
-			console.log module
-			console.log "Checking #{module.name}; #{module.source.type}"
+			console.log "** Checking #{module.name}; #{module.source.type}"
 
 			switch module.source.type
 				when 'git' then @checkUpdateGit module
@@ -251,16 +258,12 @@ module.exports = (Module) ->
 				else no
 
 		checkUpdateGit: (module) ->
-			console.log "Checking #{module.source.repoUrl}"
-
 			@gitLsRemote(module.source.repoUrl, ['HEAD'])
 
 			.then (reply) ->
 				[current, latest] = [module.source.commitHash, reply.HEAD.hash]
 
-				console.log "#{module.source.repoUrl}:"
-				console.log "--- #{current}"
-				console.log "--- #{latest}"
+				console.log "#{module.source.repoUrl}: #{current[0...7]} vs #{latest[0...7]}"
 
 				current isnt latest
 
@@ -276,8 +279,6 @@ module.exports = (Module) ->
 				semver.lt currentVer, latestVer
 
 		npmFindLatestSatisfying: (module, regData) ->
-			console.log module
-
 			switch module.source.specType
 				when 'version' then module.source.spec
 
