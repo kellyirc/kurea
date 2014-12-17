@@ -169,6 +169,8 @@ module.exports = (Module) ->
 			if from?
 				parsedFrom = npa from
 
+				console.log util.inspect parsedFrom, depth: null
+
 				return switch parsedFrom.type
 					when 'git'
 						parsedUrl = url.parse parsedFrom.spec
