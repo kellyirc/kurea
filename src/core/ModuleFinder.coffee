@@ -67,7 +67,7 @@ exports.loadFile = (file, moduleManager) ->
 	{Module} = require './Module'
 	classes = require(file)(Module)
 
-	console.log outputTree file
+	# console.log outputTree file
 
 	if not classes? then return
 
