@@ -22,10 +22,10 @@ exports.removeNodeModule = (file) ->
 
 	# console.log "Removing node.js module #{fileModule.filename}"
 
-	return if not fileModule
+	return if not fileModule?
 
-	for childModule in fileModule.children
-		removeNodeModule childModule.filename
+	for childModule in fileModule.children when childModule?
+		exports.removeNodeModule childModule.filename
 
 		childModule.parent = null
 
