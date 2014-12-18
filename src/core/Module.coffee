@@ -105,7 +105,7 @@ class Module
 	addRoute: (path, perm, fn) =>
 		[fn, perm] = [perm, null] if not fn?
 
-		@router.addRoute path, fn
+		@router.addRoute path, fn.bind @
 
 		if perm?
 			@routerPerms[path] = perm
