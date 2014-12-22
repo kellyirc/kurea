@@ -21,7 +21,11 @@ module.exports = (Module) ->
 			@addRoute "roll :left(\\d+)d:right(\\d+)", (origin, route) =>
 				[bot, user, channel, left, right] = [origin.bot, origin.user, origin.channel, route.params.left, route.params.right]
 	
-				value = @roll parseInt(left), parseInt(right)
+				leftVal = parseInt(left)
+				rightVal = parseInt(right)
+				if leftVal > 1000 or rightVal > 1000
+					@reply origin, "#{user}, your input is too high."
+				value = @roll leftVal, rightVal
 				@reply origin, "#{user}, your #{left}d#{right} rolled #{color.bold(value)}."
 	
 	
