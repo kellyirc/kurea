@@ -25,6 +25,7 @@ module.exports = (Module) ->
 				rightVal = parseInt(right)
 				if leftVal > 1000 or rightVal > 1000
 					@reply origin, "#{user}, your input is too high."
+					return
 				value = @roll leftVal, rightVal
 				@reply origin, "#{user}, your #{left}d#{right} rolled #{color.bold(value)}."
 	
