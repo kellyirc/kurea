@@ -37,6 +37,25 @@ module.exports = (Module) ->
 						@reply origin, module.disable serverName, channel
 					else
 						@reply origin, module.enable serverName, channel
-	
+
+			@addRoute "enable :module", "core.manage.toggle.single", (origin, route) =>
+				[bot, user, channel, moduleName] = [origin.bot, origin.user, origin.channel, route.params.module]
+				serverName = bot.conn.opt.server
+			
+				#idiot-proofing this
+				return if moduleName is 'toggle'
+			
+				module = moduleManager.findModuleByNameAndAliases moduleName
+				@reply origin, module.enable serverName, channel
+
+			@addRoute "disable :module", "core.manage.toggle.single", (origin, route) =>
+				[bot, user, channel, moduleName] = [origin.bot, origin.user, origin.channel, route.params.module]
+				serverName = bot.conn.opt.server
+			
+				#idiot-proofing this
+				return if moduleName is 'toggle'
+			
+				module = moduleManager.findModuleByNameAndAliases moduleName
+				@reply origin, module.disable serverName, channel
 	
 	ToggleModule
