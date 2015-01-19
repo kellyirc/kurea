@@ -20,7 +20,7 @@ module.exports = (Module) ->
 	class PackageManagerModule extends Module
 		shortName: 'PackageManager'
 		helpText:
-			default: 'Manage packages!'
+			default: 'Manage packages! Available subcommands: update, check-update, install, uninstall'
 			'update': 'Update given package if needed, or all if no package given'
 			'check-update': 'Check for updates manually'
 			'install': 'Install a package (uses npm, supports all specs npm supports)'
