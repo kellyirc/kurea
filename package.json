@@ -42,7 +42,6 @@
     "routes": "~1.1.0",
     "rimraf": "*",
     "file": "~0.2.1",
-    "mathjs": "~0.16.0",
     "q": "~0.9.7",
     "underscore.string": "~2.3.3",
     "watch": "~0.8.0",
