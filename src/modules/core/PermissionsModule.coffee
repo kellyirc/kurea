@@ -1,8 +1,7 @@
 module.exports = (Module) ->
 	Q = require 'q'
 	colors = require 'irc-colors'
-	_ = require 'underscore'
-	_.str = require 'underscore.string'
+	_ = require 'lodash'
 	
 	class PermissionsModule extends Module
 		shortName: "Permissions"
@@ -53,7 +52,7 @@ module.exports = (Module) ->
 				bot.userManager.getUsername origin, (err, username) =>
 					@permMan.getGroups bot, username, (err, groups) =>
 						if groups.length > 0
-							@reply origin, "#{origin.user}'s groups are #{_.str.toSentence (colors.bold(group) for group in groups)}."
+							@reply origin, "#{origin.user}'s groups are #{(colors.bold(group) for group in groups).join ', '}."
 							
 						else @reply origin, "#{origin.user} is not in any group."
 

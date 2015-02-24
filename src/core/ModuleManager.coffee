@@ -1,6 +1,5 @@
 EventEmitter = require('events').EventEmitter
-_ = require 'underscore'
-_.str = require 'underscore.string'
+_ = require 'lodash'
 Database = require 'nedb'
 color = require 'irc-colors'
 Q = require 'q'
@@ -92,7 +91,7 @@ class ModuleManager extends EventEmitter
 
 		commandPart = message
 		nickUsage = false
-		if (_.str.startsWith commandPart, "#{bot.getNick()}, ") or (_.str.startsWith commandPart, "#{bot.getNick()}: ")
+		if (_.startsWith commandPart, "#{bot.getNick()}, ") or (_.startsWith commandPart, "#{bot.getNick()}: ")
 			nickUsage = true
 			commandPart = commandPart.substring(bot.getNick().length + 2)
 		
@@ -102,7 +101,7 @@ class ModuleManager extends EventEmitter
 		for nodeModuleName, kureaModules of @modules
 			for moduleName, module of kureaModules
 				if not nickUsage
-					continue if not _.str.startsWith commandPart, module.commandPrefix
+					continue if not _.startsWith commandPart, module.commandPrefix
 
 					command = commandPart.substring module.commandPrefix.length
 

@@ -57,7 +57,7 @@ class Bot
 		
 		@dateStarted = new Date()
 
-		@userManager = new @botManager.userManagerClasses[config.auth]()
+		@userManager = new @botManager.userManagerClasses[@config.auth]()
 		@conn = new irc.Client @config.server, @config.nick, @config
 
 		@conn.on 'error', (msg) =>

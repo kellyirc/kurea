@@ -1,7 +1,7 @@
 module.exports = (Module) ->
 
 	crypto = require "crypto"
-	_ = require "underscore"
+	_ = require "lodash"
 
 	class HashModule extends Module
 		shortName: "Hash"

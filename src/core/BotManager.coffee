@@ -1,4 +1,4 @@
-_ = require 'underscore'
+_ = require 'lodash'
 path = require 'path'
 file = require 'file'
 fs = require 'fs'

@@ -1,7 +1,6 @@
 module.exports = (Module) ->
 	chokidar = require 'chokidar'
-	_ = require 'underscore'
-	_.str = require 'underscore.string'
+	_ = require 'lodash'
 
 	class ReloadModule extends Module
 		shortName: 'Reload'
@@ -19,7 +18,7 @@ module.exports = (Module) ->
 			@watcher = chokidar.watch '.',
 				persistent: yes
 				ignoreInitial: yes
-				ignored: (path) -> not (path is '.' or _.str.startsWith path, 'node_modules')
+				ignored: (path) -> not (path is '.' or _.startsWith path, 'node_modules')
 				usePolling: yes
 
 				interval: 2000

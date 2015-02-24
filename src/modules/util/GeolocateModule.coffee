@@ -32,7 +32,7 @@ module.exports = (Module) ->
 						console.error err.stack
 						return
 
-					r[prop] = _.str.titleize r[prop].toLowerCase() for prop in ['cityName', 'regionName', 'countryName']
+					r[prop] = _.startCase r[prop].toLowerCase() for prop in ['cityName', 'regionName', 'countryName']
 
 					offset = @timezoneToOffset r.timeZone
 					console.log "Time zone offset for #{r.timeZone} is #{offset}min"

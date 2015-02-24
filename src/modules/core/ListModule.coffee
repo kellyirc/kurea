@@ -1,7 +1,6 @@
 module.exports = (Module) ->
 	colors = require 'irc-colors'
-	_ = require 'underscore'
-	_.str = require 'underscore.string'
+	_ = require 'lodash'
 	
 	class ListModule extends Module
 		shortName: "List"
@@ -23,7 +22,7 @@ module.exports = (Module) ->
 
 				if !_.contains origin.channel, "#"
 					return @reply origin, "While some modules may not work correctly in PM, here is the list:
-						#{_.str.toSentence _.sortBy fullExistingModuleList, _.identity}"
+						#{(_.sortBy fullExistingModuleList, _.identity).join ', '}"
 
 				moduleManager._getModuleActiveData {server: serverName, channel: channel}, (data) =>
 					moduleList = []
@@ -31,6 +30,6 @@ module.exports = (Module) ->
 					fullExistingModuleList.forEach (module) ->
 						moduleList.push if (_.findWhere data, {name: module, isEnabled: false}) or (not _.findWhere data, {name: module}) then colors.red module else module
 	
-					@reply origin, "Current modules are: #{_.str.toSentence _.sortBy moduleList, _.identity}"
+					@reply origin, "Current modules are: #{(_.sortBy moduleList, _.identity).join ', '}"
 	
 	ListModule

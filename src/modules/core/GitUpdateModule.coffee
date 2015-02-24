@@ -2,7 +2,7 @@ module.exports = (Module) ->
 	Q = require 'q'
 	fs = require 'fs'
 	https = require 'https'
-	_ = require 'underscore'
+	_ = require 'lodash'
 	path = require 'path'
 	child_process = require 'child_process'
 	
@@ -88,7 +88,7 @@ module.exports = (Module) ->
 					encoding: "utf-8"
 	
 			.then (filedata) =>
-				hash = _.str.trim( filedata )
+				hash = _.trim( filedata )
 				callback null, hash
 	
 			.fail (err) =>

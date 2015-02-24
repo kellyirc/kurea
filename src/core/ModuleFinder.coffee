@@ -1,7 +1,7 @@
 fs = require 'fs'
 path = require 'path'
-_ = require 'underscore'
-# _.str = require 'underscore.string'
+_ = require 'lodash'
+
 file = require 'file'
 # watch = require 'watch'
 minimatch = require 'minimatch'

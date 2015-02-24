@@ -1,5 +1,5 @@
 ModuleDatabase = require('./ModuleDatabase').ModuleDatabase
-_ = require 'underscore'
+_ = require 'lodash'
 Q = require 'q'
 
 Q.longStackSupport = true

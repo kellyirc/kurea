@@ -5,8 +5,7 @@ module.exports = (Module) ->
 	childProcess = require 'child_process'
 	util = require 'util'
 
-	_ = require 'underscore'
-	_.str = require 'underscore.string'
+	_ = require 'lodash'
 	npm = require 'npm'
 	npa = require 'npm-package-arg'
 	semver = require 'semver'
@@ -167,7 +166,7 @@ module.exports = (Module) ->
 		getKureaModules: (pkg) ->
 			modules =
 				_.filter (_.keys @moduleManager.modules),
-					(s) -> not _.str.startsWith s, '__'
+					(s) -> not _.startsWith s, '__'
 
 			packageJsonFiles = {}
 
