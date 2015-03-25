@@ -44,8 +44,5 @@ module.exports = (Module) ->
 							@changeQueue[mod] = true
 							triggerFileProcess()
 
-			@watcher.on 'all', (event, filename) ->
-				console.log {event, filename}
-
 			@watcher.on 'error', (err) ->
 				console.error 'Error in module watcher:', err.stack
