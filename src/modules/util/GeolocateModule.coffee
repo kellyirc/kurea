@@ -10,6 +10,8 @@ module.exports = (Module) ->
 		shortName: "Geolocate"
 		helpText:
 			default: "Lock onto the position of the target address or nick, for your nuclear laser cannon needs!"
+		usage:
+			default: "geolocate [ip]"
 
 		constructor: (moduleManager) ->
 			super moduleManager
