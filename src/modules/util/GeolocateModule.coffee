@@ -16,6 +16,7 @@ module.exports = (Module) ->
 
 			if not (@getApiKey 'ipinfodb')?
 				console.log "No IpInfoDB API key specified in the config"
+				@hasApiKey = no
 
 			@months = [
 				"January", "February", "March", "April",
@@ -24,6 +25,10 @@ module.exports = (Module) ->
 			]
 
 			@addRoute "geolocate :address", (origin, route) =>
+				unless @hasApiKey
+					@reply origin, "No API key available!"
+					return
+					
 				@reply origin, "Initiating lookup..."
 
 				@requestLookup route.params.address, (err, r) =>
