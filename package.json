@@ -46,7 +46,7 @@
     "lodash": "^3.3.0",
     "minimatch": "^0.4.0",
     "mocha": "*",
-    "mongodb": "~1.3.23",
+    "mongodb": "~2.0.34",
     "morse": "~0.1.0",
     "mstranslator": "^0.1.6",
     "nedb": "*",
