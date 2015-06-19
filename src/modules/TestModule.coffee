@@ -97,5 +97,7 @@ module.exports = (Module) ->
 
 			@addRoute 'unload :module', (origin, route) =>
 				(require '../core/ModuleFinder').unloadModule route.params.module
+
+			@web.get '/hi', (req, res) -> res.send 'this is a test'
 	
 	TestModule

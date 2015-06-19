@@ -4,6 +4,7 @@ EventEmitter = require('events').EventEmitter
 UserInformationManager = require('./UserInformationManager').UserInformationManager
 Q = require 'q'
 fs = require 'fs'
+_ = require 'lodash'
 
 class Module
 
@@ -39,6 +40,12 @@ class Module
 			save: () =>
 				fs.mkdirSync "settings" if not fs.existsSync "settings"
 				fs.writeFileSync "settings/#{@shortName}.json", JSON.stringify _settings
+
+		@web =
+			raw: => @moduleManager.webServer.app
+
+		_.each ['get', 'post', 'put', 'delete', 'patch', 'all'], (mode) =>
+			@web[mode] = (path, callback) => @moduleManager.webServer.app[mode] "/#{@shortName.toLowerCase()}#{path}", callback
 
 	setUserData: (origin, key, data, callback) ->
 		@originToAuthName origin, (user) =>

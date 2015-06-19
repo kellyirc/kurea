@@ -3,6 +3,7 @@ _ = require 'lodash'
 Database = require 'nedb'
 color = require 'irc-colors'
 Q = require 'q'
+WebServer = require './WebServer'
 
 BotEvents = require('./Bot').events
 
@@ -13,6 +14,7 @@ class ModuleManager extends EventEmitter
 
 	constructor: (@botManager) ->
 		@botListeners = []
+		@webServer = new WebServer()
 		@modules = require('./ModuleFinder').buildModuleList @
 
 	findModuleByNameAndAliases: (name) =>
