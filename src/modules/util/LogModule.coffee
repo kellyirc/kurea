@@ -13,6 +13,9 @@ module.exports = (Module) ->
 			@getApi().forEach = (callback) =>
 				@db.findForEach {}, callback
 
+			@getApi().mapReduce = (map, reduce, query, callback) =>
+				@db.mapReduce map, reduce, query, callback
+
 			@registerApi()
 
 			@on 'message', (bot, sender, channel, message) =>
