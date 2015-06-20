@@ -65,6 +65,18 @@ What type of database to use. Use nedb for a local db. Use mongo if you want to 
 	"storage": "mongo",
 	"storageURL": "localhost:28017",
 ```
+The port to open up Express on. Express will not be started if this key is falsey.
+```
+"webPort": 8080,
+```
+The port to display when outputting the URL to a channel. Uses `webPort` if not set, and will not show if set to `80`.
+```
+"realPort": 80,
+```
+The root URL for generating the channel output.
+```
+"webURL": "http://localhost",
+```
 This object contains options for every instance of the bot that will be connected to a server. The key is the name of the bot, which is only used internally.
 ```
 	"bots": {

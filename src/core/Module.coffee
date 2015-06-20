@@ -46,7 +46,9 @@ class Module
 
 		@web =
 			raw: => @moduleManager.webServer.app
-			url: => "#{config.webURL}#{if config.webPort isnt 80 then ":#{config.webPort}" else ''}/#{@shortName.toLowerCase()}"
+			url: =>
+				realport = config.realPort ? config.webPort
+				"#{config.webURL}#{if realport isnt 80 then ":#{realport}" else ''}/#{@shortName.toLowerCase()}"
 			static: (path, dirname) => @moduleManager.webServer.app.use "/#{@shortName.toLowerCase()}#{path}", express.static dirname
 
 		_.each ['get', 'post', 'put', 'delete', 'patch', 'all'], (mode) =>

@@ -21,7 +21,9 @@
     "storage": "mongo",
     "storageURL": "localhost:27017",
 
-    "webPort": 80,
+    "webPort": 8080,
+    "realPort": 80,
+	"webURL": "http://localhost",
 
     "ignoredModules": [
         "MongoHalModule",
