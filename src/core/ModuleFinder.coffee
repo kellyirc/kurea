@@ -65,7 +65,7 @@ exports.loadFile = (file, moduleManager) ->
 	fileModules = {}
 
 	{Module} = require './Module'
-	return unless (file.endsWith '.coffee') or (file.endsWith '.js')
+	return unless (file.indexOf('.coffee') isnt -1) or (file.indexOf('.js') isnt -1)
 	classes = require(file)(Module)
 
 	# console.log outputTree file
