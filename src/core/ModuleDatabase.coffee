@@ -73,6 +73,13 @@ class ModuleDatabase
         docs.forEach (doc) ->
           callback e, doc
 
+  mapReduce: (map, reduce, query, callback) ->
+    if databaseEngine is 'mongo'
+      Q.when @databaseReady, (db) ->
+        db.mapReduce map, reduce, query, callback
+    else
+      throw new Exception "Not implemented for nedb"
+
   ensureIndex: (data, callback) =>
     @db.ensureIndex data, callback
 
