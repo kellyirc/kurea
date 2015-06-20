@@ -6,6 +6,9 @@ Q = require 'q'
 fs = require 'fs'
 _ = require 'lodash'
 
+config = require '../../config.json'
+express = require 'express'
+
 class Module
 
 	shortName: "Unnamed"
@@ -43,6 +46,8 @@ class Module
 
 		@web =
 			raw: => @moduleManager.webServer.app
+			url: => "#{config.webURL}#{if config.webPort isnt 80 then ":#{config.webPort}" else ''}/#{@shortName.toLowerCase()}"
+			static: (path, dirname) => @moduleManager.webServer.app.use "/#{@shortName.toLowerCase()}#{path}", express.static dirname
 
 		_.each ['get', 'post', 'put', 'delete', 'patch', 'all'], (mode) =>
 			@web[mode] = (path, callback) => @moduleManager.webServer.app[mode] "/#{@shortName.toLowerCase()}#{path}", callback
