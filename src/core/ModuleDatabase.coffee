@@ -80,6 +80,13 @@ class ModuleDatabase
     else
       throw new Exception "Not implemented for nedb"
 
+  findAndModify: (crit, sort, update, options, callback) ->
+    if databaseEngine is 'mongo'
+      Q.when @databaseReady, (db) ->
+        db.findAndModify crit, sort, update, options, callback
+    else
+      throw new Exception "Not implemented for nedb"
+
   ensureIndex: (data, callback) =>
     @db.ensureIndex data, callback
 
