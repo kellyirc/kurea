@@ -25,7 +25,7 @@ module.exports = (Module) ->
 
 				if !_.contains @algorithms, algo
 					@reply origin, "No such hash function exists."
-					retunr
+					return
 
 				hashed = crypto.createHash algo
 					.update text, "utf-8"
