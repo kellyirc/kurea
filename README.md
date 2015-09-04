@@ -105,3 +105,7 @@ Some modules like WordnikModule or WolframModule require API keys to access thei
 }
 ```
 
+Quiet Bot
+=========
+Is the bot too quiet? That means you have to turn on the modules. `!toggle all-on` will fix that.
+
