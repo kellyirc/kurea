@@ -17,7 +17,7 @@ module.exports = (Module) ->
 				for chan in chans
 					bot.part chan, =>
 						@reply origin, "I have left #{chan}."
-			@addRoute "part", (origin, route) =>
+			@addRoute "part", "core.manage.channel.part", (origin, route) =>
 				[bot, user, channel] = [origin.bot, origin.user, origin.channel]
 				bot.part channel
 	
